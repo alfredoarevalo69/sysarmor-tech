@@ -15,34 +15,37 @@
   <!-- Capa overlay de gradiente para contraste WCAG -->
   <div class="hero-overlay"></div>
 
-  <!-- Bloque de contenido principal -->
-  <div class="hero-content">
-    <h1 class="hero-title">
-      Proteja y modernice su infraestructura <span class="highlight">sin detener la operación</span>
-    </h1>
+  <!-- Contenedor general que limita el ancho al mismo tamaño que la Navbar -->
+  <div class="hero-inner">
+    <!-- Bloque de contenido principal -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Proteja y modernice su infraestructura <span class="highlight">sin detener la operación</span>
+      </h1>
 
-    <p class="hero-description">
-      Ayudamos a empresas con infraestructura crítica o <strong class="highlight-yellow">ecosistema Microsoft</strong> a resolver problemas de seguridad, sistemas legados, migraciones y operaciones de Nivel 3.
-    </p>
+      <p class="hero-description">
+        Ayudamos a empresas con infraestructura crítica o <strong class="highlight-yellow">ecosistema Microsoft</strong> a resolver problemas de seguridad, sistemas legados, migraciones y operaciones de Nivel 3.
+      </p>
 
-    <div class="hero-cta">
-      <a href="#contacto" class="btn-primary">Solicitar Evaluación Técnica</a>
+      <div class="hero-cta">
+        <a href="#contacto" class="btn-primary">Solicitar Evaluación Técnica</a>
+      </div>
+
+      <ul class="hero-features">
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>+20 años de experiencia en infraestructura y seguridad</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Garantía de continuidad operativa durante migraciones</span>
+        </li>
+      </ul>
     </div>
-
-    <ul class="hero-features">
-      <li>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span>+20 años de experiencia en infraestructura y seguridad</span>
-      </li>
-      <li>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span>Garantía de continuidad operativa durante migraciones</span>
-      </li>
-    </ul>
   </div>
 </section>
 
@@ -51,12 +54,22 @@
   .hero-container {
     position: relative;
     width: 100%;
-    min-height: calc(100vh - 76px); /* Ocupa el 100% de la pantalla visible restando la Navbar */
+    min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 2rem;
+    padding: 4rem 1.5rem;
+  }
+
+  /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
+  .hero-inner {
+    width: 100%;
+    max-width: 1280px; /* Mismo max-width estándar que usa tu Navbar */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 3;
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -70,7 +83,7 @@
     z-index: 1;
   }
 
-  /* --- OVERLAY DE GRADIENTE (Ajustado para pantallas grandes) --- */
+  /* --- OVERLAY DE GRADIENTE --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
@@ -91,12 +104,7 @@
 
   /* --- CONTENIDO CON ANIMACIÓN FADE-UP --- */
   .hero-content {
-    position: relative;
-    z-index: 3;
     max-width: 680px;
-    margin-left: 0;
-    margin-right: auto;
-    width: 100%;
     text-align: left;
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
@@ -190,7 +198,11 @@
   /* --- AJUSTES RESPONSIVE --- */
   @media (max-width: 768px) {
     .hero-container {
-      padding: 3rem 1rem;
+      padding: 3rem 0;
+    }
+
+    .hero-inner {
+      padding: 0 1rem;
     }
 
     .hero-bg {
