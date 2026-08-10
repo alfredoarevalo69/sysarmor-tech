@@ -4,9 +4,10 @@
 const whatsappNumber = "573126030958"; 
 const whatsappMessage = encodeURIComponent("Hola, me gustaría solicitar una Evaluación Técnica Inicial de 30 minutos para mi infraestructura.");
 ---
-<section id="contacto" class="py-8 px-6 bg-[#020617] scroll-mt-6">
+<!-- Eliminado scroll-mt-6 y agregadas las clases de alineación global -->
+<section id="contacto" class="w-full py-16 px-6 bg-[#020617] flex flex-col justify-center">
   <!-- Contenedor principal -->
-  <div class="max-w-2xl mx-auto bg-[#0a0a0a] border border-[#262626] rounded-2xl p-8 shadow-xl space-y-6">
+  <div class="max-w-2xl mx-auto bg-[#0a0a0a] border border-[#262626] rounded-2xl p-8 shadow-xl space-y-6 w-full">
     
     <!-- Encabezado -->
     <div class="text-center space-y-2">
@@ -54,18 +55,15 @@ const whatsappMessage = encodeURIComponent("Hola, me gustaría solicitar una Eva
         Solicitar Evaluación Técnica
       </a>
       
-      <!-- Texto Reloj: Agrandado a text-sm -->
       <p class="text-sm text-center text-neutral-300 font-medium">
         ⏱️ Atendemos cada solicitud con la mayor celeridad posible.
       </p>
     </div>
 
-    <!-- Opción secundaria de correo: Textos agrandados -->
+    <!-- Opción secundaria de correo -->
     <div class="pt-5 border-t border-[#1f1f1f] text-center space-y-3">
-      <!-- Pregunta: Agrandado a text-sm -->
       <p class="text-sm text-neutral-400">¿Prefieres contactarnos por correo?</p>
       
-      <!-- Enlace Correo: Agrandado a text-base -->
       <div class="flex items-center justify-center gap-4 text-base font-semibold">
         <a href="mailto:contacto@sysarmortech.com?subject=Solicitud%20de%20Evaluaci%C3%B3n%20T%C3%A9cnica" 
            class="text-neutral-200 hover:text-[#D4AF37] transition-colors flex items-center gap-2">

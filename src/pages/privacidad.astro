@@ -3,29 +3,41 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<!-- AQUÍ AGREGAMOS variant="legal" -->
 <Layout title="Política de Privacidad | SysArmor Tech" variant="legal">
-  <div class="max-w-4xl mx-auto py-20 px-6 text-slate-200">
-    <h1 class="text-4xl font-bold mb-6 text-white">Política de Privacidad</h1>
-    <p class="mb-8 text-slate-400">Última actualización: Julio 2026</p>
+  <div class="max-w-4xl mx-auto py-16 px-6 text-slate-200">
+    <h1 class="text-3xl md:text-4xl font-display font-bold mb-3 text-white">Política de Privacidad</h1>
+    <p class="mb-8 text-sm text-slate-400 font-sans">Última actualización: Julio 2026</p>
 
-    <h2 class="text-2xl font-semibold mb-4 text-white">1. Recolección de Información</h2>
-    <p class="mb-6 leading-relaxed">
-      En SysArmor Tech recopilamos únicamente la información necesaria para ponernos en contacto con usted y evaluar las necesidades de su infraestructura digital. Los datos recolectados a través de nuestros canales de contacto (correo electrónico, formulario o WhatsApp) incluyen: nombre, dirección de correo corporativo, teléfono de contacto y detalles técnicos suministrados voluntariamente.
-    </p>
+    <div class="space-y-8 font-sans leading-relaxed text-sm md:text-base">
+      <div>
+        <p class="font-bold text-lg text-white mb-3">1. Recolección de Información</p>
+        <p class="text-slate-300">
+          En SysArmor Tech recopilamos únicamente la información necesaria para ponernos en contacto con usted y evaluar las necesidades de su infraestructura digital. Los datos recolectados a través de nuestros canales de contacto (correo electrónico, formulario o WhatsApp) incluyen: nombre, dirección de correo corporativo, teléfono de contacto y detalles técnicos suministrados voluntariamente.
+        </p>
+      </div>
 
-    <h2 class="text-2xl font-semibold mb-4 text-white">2. Uso de la Información</h2>
-    <p class="mb-4">La información recolectada se utiliza exclusivamente para:</p>
-    <ul class="list-disc ml-6 mb-8 space-y-2 text-slate-300">
-      <li>Coordinar la sesión de Evaluación Gratuita o diagnóstico técnico.</li>
-      <li>Enviar propuestas de servicios de ingeniería, hardening o soporte Nivel 3.</li>
-      <li>Responder a consultas técnicas directas.</li>
-    </ul>
+      <div>
+        <p class="font-bold text-lg text-white mb-3">2. Uso de la Información</p>
+        <p class="text-slate-300 mb-4">La información recolectada se utiliza exclusivamente para:</p>
+        <ul class="list-disc ml-6 space-y-2 text-slate-300">
+          <li>Coordinar la sesión de Evaluación Gratuita o diagnóstico técnico.</li>
+          <li>Enviar propuestas de servicios de ingeniería, hardening o soporte Nivel 3.</li>
+          <li>Responder a consultas técnicas directas.</li>
+        </ul>
+      </div>
 
-    <div class="p-6 bg-blue-900/30 border border-blue-500/30 rounded-lg">
-      <p class="font-bold text-white">
-        No vendemos, alquilamos ni compartimos sus datos personales o empresariales con terceros con fines comerciales.
-      </p>
+      <div>
+        <p class="font-bold text-lg text-white mb-3">3. Derechos del Titular (Habeas Data)</p>
+        <p class="text-slate-300">
+          De conformidad con la normativa de protección de datos personales, usted tiene derecho a conocer, actualizar, rectificar y solicitar la supresión de sus datos de nuestras bases de datos en cualquier momento enviando un correo a <a href="mailto:contacto@sysarmortech.com" class="text-blue-400 hover:text-blue-300 underline">contacto@sysarmortech.com</a>.
+        </p>
+      </div>
+
+      <div class="p-6 bg-blue-950/40 border border-blue-500/30 rounded-xl shadow-inner">
+        <p class="font-bold text-white text-center">
+          No vendemos, alquilamos ni compartimos sus datos personales o empresariales con terceros con fines comerciales.
+        </p>
+      </div>
     </div>
   </div>
 </Layout>

@@ -28,6 +28,11 @@
 }
 
 @layer base {
+  /* Habilita el desplazamiento suave global */
+  html {
+    scroll-behavior: smooth;
+  }
+
   /* KEYFRAMES */
   @keyframes subtle-pulse {
     0%, 100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5)); opacity: 1; }
@@ -47,12 +52,20 @@
   /* Aplicación de fuentes y color global forzado */
   body {
     @apply font-sans;
-    /* Color de fondo neutro y forzado */
     background-color: #020617 !important;
     color: white;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
+  }
+
+  /* --- CORRECCIÓN DE PANTALLAS GRANDES Y NAVEGACIÓN (AJUSTADO A 76PX) --- */
+  section[id] {
+    scroll-margin-top: 76px;
+    min-height: calc(100vh - 76px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }

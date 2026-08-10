@@ -1,25 +1,32 @@
 ---
 // src/components/Footer.astro
+const currentYear = new Date().getFullYear();
 ---
-<!-- He reemplazado 'bg-brand-dark' por 'bg-[#020617]' para matar el tinte azul -->
-<footer class="bg-[#020617] border-t border-[#1e293b] py-8 px-4">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-brand-muted">
+
+<footer class="bg-[#020617] border-t border-[#1e293b] py-8 px-6 w-full">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
     
     <!-- Lado Izquierdo: Marca y Copyright -->
     <div class="flex items-center gap-2">
-      <span class="font-bold text-white">SYSARMOR <span class="text-brand-accent">TECH</span></span>
-      <span class="text-slate-500">— &copy; 2026 Todos los derechos reservados.</span>
+      <span class="font-bold text-white font-display">
+        SYSARMOR <span class="text-blue-500">TECH</span>
+      </span>
+      <span class="text-slate-500">— &copy; {currentYear} Todos los derechos reservados.</span>
     </div>
 
     <!-- Centro: Enlaces Legales -->
-    <div class="flex items-center gap-4">
-      <a href="/privacidad" class="hover:text-white transition-colors">Política de Privacidad</a>
-      <span class="text-slate-700">|</span>
-      <a href="/terminos" class="hover:text-white transition-colors">Términos de Servicio</a>
+    <div class="flex items-center gap-4 text-xs md:text-sm">
+      <a href="/privacidad" class="text-slate-400 hover:text-white transition-colors duration-200">
+        Política de Privacidad
+      </a>
+      <span class="text-slate-700" aria-hidden="true">|</span>
+      <a href="/terminos" class="text-slate-400 hover:text-white transition-colors duration-200">
+        Términos de Servicio
+      </a>
     </div>
 
     <!-- Lado Derecho: Slogan -->
-    <div class="text-slate-500">
+    <div class="text-slate-500 text-xs md:text-sm text-center md:text-right font-sans">
       SecOps, Hardening e Infraestructura Híbrida de Nivel 3.
     </div>
 

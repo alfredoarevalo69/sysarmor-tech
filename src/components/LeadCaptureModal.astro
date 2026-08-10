@@ -4,7 +4,7 @@
 
 <div class="space-y-6">
   <div>
-    <h3 class="text-xl font-bold text-white mb-2">Descarga la Guía Técnica PDF</h3>
+    <h3 class="text-xl font-bold text-white mb-2 font-display">Descarga la Guía Técnica PDF</h3>
     <p class="text-slate-300 text-sm">
       Completa tus datos para recibir el acceso directo al documento y recursos de automatización.
     </p>
@@ -12,9 +12,12 @@
 
   <form id="lead-form" class="space-y-4">
     <div>
-      <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nombre Completo</label>
+      <label for="lead-nombre" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+        Nombre Completo
+      </label>
       <input 
         type="text" 
+        id="lead-nombre"
         name="nombre"
         required 
         placeholder="Ej. Carlos Mendoza" 
@@ -23,9 +26,12 @@
     </div>
 
     <div>
-      <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Correo Electrónico Profesional</label>
+      <label for="lead-correo" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+        Correo Electrónico Profesional
+      </label>
       <input 
         type="email" 
+        id="lead-correo"
         name="correo"
         required 
         placeholder="carlos@tuempresa.com" 
@@ -34,9 +40,12 @@
     </div>
 
     <div>
-      <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Empresa / Organización</label>
+      <label for="lead-empresa" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+        Empresa / Organización
+      </label>
       <input 
         type="text" 
+        id="lead-empresa"
         name="empresa"
         required 
         placeholder="Ej. SysArmor Tech" 
@@ -44,15 +53,15 @@
       />
     </div>
 
-    <div class="flex items-start gap-2 pt-1">
+    <div class="flex items-start gap-2.5 pt-1">
       <input 
         type="checkbox" 
         id="consent" 
         name="aceptaOfertas"
         required 
-        class="mt-1 rounded border-slate-700 bg-slate-950 text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-slate-900"
+        class="mt-0.5 rounded border-slate-700 bg-slate-950 text-[#D4AF37] focus:ring-[#D4AF37] focus:ring-offset-slate-900 cursor-pointer"
       />
-      <label for="consent" class="text-xs text-slate-400 leading-relaxed">
+      <label for="consent" class="text-xs text-slate-400 leading-relaxed cursor-pointer select-none">
         Acepto recibir la guía técnica y comunicaciones de ingeniería de SysArmor Tech.
       </label>
     </div>
@@ -60,7 +69,7 @@
     <button 
       type="submit" 
       id="submit-btn"
-      class="w-full py-3.5 px-4 bg-[#D4AF37] hover:bg-white text-slate-950 font-bold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 mt-2 cursor-pointer"
+      class="w-full py-3.5 px-4 bg-[#D4AF37] hover:bg-white text-slate-950 font-bold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 mt-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <span id="btn-text">Acceder a la Guía PDF</span>
       <svg id="btn-spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
@@ -91,44 +100,55 @@
 </div>
 
 <script>
-  const form = document.getElementById('lead-form') as HTMLFormElement;
-  const downloadSection = document.getElementById('download-section');
-  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const btnText = document.getElementById('btn-text');
-  const btnSpinner = document.getElementById('btn-spinner');
+  function setupLeadForm() {
+    const form = document.getElementById('lead-form') as HTMLFormElement | null;
+    const downloadSection = document.getElementById('download-section');
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement | null;
 
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYuNxe88JFcNCsTf0HnWIeI-uhAsQknikYGQIkQZGoDK-_c_dvtvC32v-JQeJEYeI/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYuNxe88JFcNCsTf0HnWIeI-uhAsQknikYGQIkQZGoDK-_c_dvtvC32v-JQeJEYeI/exec';
 
-  if (form && downloadSection) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    if (form && downloadSection && submitBtn && btnText && btnSpinner) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      if (submitBtn && btnText && btnSpinner) {
         submitBtn.disabled = true;
         btnText.textContent = 'Procesando...';
         btnSpinner.classList.remove('hidden');
-      }
 
-      const formData = new FormData(form);
-      const params = new URLSearchParams({
-        fecha: new Date().toLocaleString(),
-        nombre: formData.get('nombre')?.toString() || '',
-        correo: formData.get('correo')?.toString() || '',
-        empresa: formData.get('empresa')?.toString() || '',
-        aceptaOfertas: formData.get('aceptaOfertas') ? 'SÍ' : 'NO'
-      });
-
-      try {
-        await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-          method: 'GET',
-          mode: 'no-cors'
+        const formData = new FormData(form);
+        const params = new URLSearchParams({
+          fecha: new Date().toLocaleString(),
+          nombre: formData.get('nombre')?.toString() || '',
+          correo: formData.get('correo')?.toString() || '',
+          empresa: formData.get('empresa')?.toString() || '',
+          aceptaOfertas: formData.get('aceptaOfertas') ? 'SÍ' : 'NO'
         });
-      } catch (error) {
-        console.error('Error al registrar lead:', error);
-      }
 
-      form.style.display = 'none';
-      downloadSection.classList.remove('hidden');
-    });
+        try {
+          await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'no-cors'
+          });
+        } catch (error) {
+          console.error('Error enviando datos al webhook:', error);
+        } finally {
+          // Ocultar formulario y mostrar sección de descarga
+          form.classList.add('hidden');
+          downloadSection.classList.remove('hidden');
+
+          // Trigger opcional de descarga automática
+          if (downloadBtn) {
+            downloadBtn.click();
+          }
+        }
+      });
+    }
   }
+
+  // Ejecución segura en carga inicial e integración con View Transitions de Astro
+  document.addEventListener('DOMContentLoaded', setupLeadForm);
+  document.addEventListener('astro:page-load', setupLeadForm);
 </script>

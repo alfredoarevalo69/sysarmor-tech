@@ -22,12 +22,16 @@ const faqs: FaqItem[] = [
 ];
 ---
 
-<section class="py-20 bg-slate-100 px-6">
-  <div class="max-w-3xl mx-auto space-y-12">
-    <h2 class="text-3xl font-bold text-neutral-900 text-center">
+<!-- Agregado id="faq", py-16 y clases de centrado flex -->
+<section id="faq" class="w-full py-16 bg-slate-100 border-t border-slate-200 px-6 flex flex-col justify-center">
+  <div class="max-w-3xl mx-auto space-y-12 w-full">
+    
+    <!-- Encabezado -->
+    <h2 class="text-3xl font-display font-bold text-neutral-900 text-center uppercase tracking-wide">
       Preguntas Frecuentes
     </h2>
     
+    <!-- Lista de FAQ con acordeón -->
     <div class="space-y-4" role="region" aria-label="Preguntas frecuentes">
       {faqs.map((faq) => (
         <details class="group bg-white border border-slate-300 rounded-xl shadow-sm open:border-slate-400 open:shadow-md transition-all duration-300 overflow-hidden">
@@ -39,11 +43,12 @@ const faqs: FaqItem[] = [
               </svg>
             </span>
           </summary>
-          <div class="text-neutral-600 px-6 pb-6 leading-relaxed border-t border-slate-100 pt-4">
+          <div class="text-neutral-600 px-6 pb-6 leading-relaxed border-t border-slate-100 pt-4 font-sans text-sm md:text-base">
             <p>{faq.answer}</p>
           </div>
         </details>
       ))}
     </div>
+
   </div>
 </section>

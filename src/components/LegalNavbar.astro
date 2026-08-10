@@ -1,16 +1,26 @@
 ---
 // src/components/LegalNavbar.astro
 ---
-<nav class="py-6 px-6 border-b border-slate-800 flex items-center justify-between bg-[#0a1628]">
-  <a href="/" class="flex items-center gap-3">
-    <!-- Asegúrate de que esta ruta a tu logo sea correcta -->
-    <img src="/images/logo.png" alt="SysArmor Tech Logo" class="h-10 w-auto" />
-    <span class="text-xl font-bold tracking-tight text-white">
-      SYSARMOR <span class="text-blue-500">TECH</span>
-    </span>
-  </a>
-  
-  <a href="/" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 font-medium">
-    &larr; Volver al Inicio
-  </a>
-</nav>
+
+<header class="w-full bg-[#0a1628] border-b border-slate-800 sticky top-0 z-50">
+  <nav class="max-w-7xl mx-auto h-[76px] px-6 flex items-center justify-between">
+    <!-- Brand Logo -->
+    <a href="/" class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg">
+      <img 
+        src="/images/logo.png" 
+        alt="SysArmor Tech Logo" 
+        class="h-10 w-auto object-contain"
+        loading="eager"
+      />
+      <span class="text-xl font-bold tracking-tight text-white font-display">
+        SYSARMOR <span class="text-blue-500">TECH</span>
+      </span>
+    </a>
+    
+    <!-- Navigation Back Link -->
+    <a href="/" 
+       class="text-slate-400 hover:text-white transition-colors duration-200 flex items-center gap-2 font-medium text-sm md:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg px-2 py-1">
+      <span aria-hidden="true">&larr;</span> Volver al Inicio
+    </a>
+  </nav>
+</header>

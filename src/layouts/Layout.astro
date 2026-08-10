@@ -10,25 +10,33 @@ interface Props {
   title: string;
   description?: string;
   variant?: 'home' | 'legal';
+  ogImage?: string;
 }
 
 const { 
   title, 
-  description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones sin costo ni compromiso.", 
-  variant = 'home' 
+  description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
+  variant = 'home',
+  ogImage = '/images/og-image.png' // Se recomienda crear una imagen de 1200x630px
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, 'https://sysarmortech.com');
+// Asegura la URL canónica utilizando la configuración del proyecto
+const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
+const canonicalURL = new URL(Astro.url.pathname, siteURL);
+const fullOgImageUrl = new URL(ogImage, siteURL).href;
 
-// Datos estructurados Schema.org optimizados para autoridad de marca y alcance regional
+// Título formateado limpio
+const pageTitle = title.includes('SysArmor Tech') ? title : `${title} | SysArmor Tech`;
+
+// Datos estructurados Schema.org optimizados
 const schemaOrgData = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "SysArmor Tech",
   "alternateName": "SysArmorTech",
-  "url": "https://sysarmortech.com",
-  "logo": "https://sysarmortech.com/favicon.png",
-  "image": "https://sysarmortech.com/favicon.png",
+  "url": siteURL,
+  "logo": `${siteURL}/favicon.png`,
+  "image": fullOgImageUrl,
   "description": description,
   "areaServed": {
     "@type": "AdministrativeArea",
@@ -50,36 +58,44 @@ const schemaOrgData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
     
-    <!-- Favicon optimizado apuntando directamente al nuevo PNG -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     
-    <title>{title} | SysArmor Tech</title>
-    
+    <!-- SEO Core -->
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:image" content="https://sysarmortech.com/favicon.png" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImageUrl} />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImageUrl} />
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
   </head>
   
-  <body class="bg-[#020617] text-white selection:bg-slate-500/30">
+  <body class="bg-[#020617] text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased">
     
     {variant === 'home' ? <Navbar /> : <LegalNavbar />}
     
-    <main class="bg-[#020617] min-h-screen">
+    <main class="flex-grow w-full">
       <slot />
     </main>
     
     <Footer />
     
-    <!-- Componente de analíticas para registrar el tráfico en Vercel -->
     <Analytics />
   </body>
 </html>
