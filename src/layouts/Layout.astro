@@ -1,4 +1,3 @@
----
 // src/layouts/Layout.astro
 import Navbar from '../components/Navbar.astro';
 import LegalNavbar from '../components/LegalNavbar.astro';
@@ -17,39 +16,67 @@ const {
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   variant = 'home',
-  ogImage = '/images/og-image.png' // Se recomienda crear una imagen de 1200x630px
+  ogImage = '/images/og-image.png'
 } = Astro.props;
 
-// Asegura la URL canónica utilizando la configuración del proyecto
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
 const canonicalURL = new URL(Astro.url.pathname, siteURL);
 const fullOgImageUrl = new URL(ogImage, siteURL).href;
 
-// Título formateado limpio
 const pageTitle = title.includes('SysArmor Tech') ? title : `${title} | SysArmor Tech`;
 
-// Datos estructurados Schema.org optimizados
+// Datos estructurados Schema.org geolocalizados en Engativá, Bogotá, Colombia
 const schemaOrgData = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "SysArmor Tech",
-  "alternateName": "SysArmorTech",
-  "url": siteURL,
-  "logo": `${siteURL}/favicon.png`,
-  "image": fullOgImageUrl,
-  "description": description,
-  "areaServed": {
-    "@type": "AdministrativeArea",
-    "name": "Bogotá, Colombia"
-  },
-  "serviceType": [
-    "Infraestructura IT",
-    "SecOps",
-    "Active Directory",
-    "Windows Server",
-    "Hardening"
-  ],
-  "priceRange": "$$$"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteURL}/#organization`,
+      "name": "SysArmor Tech",
+      "alternateName": ["SysArmor Tech Colombia", "SysArmorTech"],
+      "url": siteURL,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteURL}/favicon.png`
+      },
+      "description": "Firma de consultoría e ingeniería especializada en infraestructura crítica, ecosistema Microsoft, Nivel 3 y SecOps.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Engativá, Bogotá",
+        "addressRegion": "Cundinamarca",
+        "addressCountry": "CO"
+      }
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteURL}/#service`,
+      "name": "SysArmor Tech",
+      "url": siteURL,
+      "image": fullOgImageUrl,
+      "description": description,
+      "priceRange": "$$$",
+      "parentOrganization": {
+        "@id": `${siteURL}/#organization`
+      },
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "Engativá, Bogotá"
+        },
+        {
+          "@type": "Country",
+          "name": "Colombia"
+        }
+      ],
+      "serviceType": [
+        "Ingeniería de Infraestructura IT",
+        "SecOps y Hardening",
+        "Active Directory & Windows Server",
+        "Soporte Nivel 3",
+        "Migraciones Corporativas"
+      ]
+    }
+  ]
 };
 ---
 
@@ -82,7 +109,7 @@ const schemaOrgData = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullOgImageUrl} />
 
-    <!-- Schema.org JSON-LD -->
+    <!-- Schema.org JSON-LD (Optimizada la entidad para Google AI) -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
   </head>
   
