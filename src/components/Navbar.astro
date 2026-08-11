@@ -46,7 +46,11 @@
   </nav>
 
   <!-- Menú Mobile Overlay -->
-  <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-[76px] bg-[#020617] p-6 flex flex-col gap-6 text-xl text-center z-40">
+  <!-- 
+    CORRECCIÓN: Se remueve 'flex' inicial de la lista de clases de Tailwind.
+    El script manipulará las clases 'hidden' y 'flex' al abrir/cerrar.
+  -->
+  <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-[76px] bg-[#020617] p-6 flex-col gap-6 text-xl text-center z-50 h-[calc(100vh-76px)] overflow-y-auto">
     <a href="/#servicios" class="text-white hover:text-[#D4AF37] py-2">Servicios</a>
     <a href="/#enfoque-tecnico" class="text-white hover:text-[#D4AF37] py-2">Enfoque Técnico</a>
     <a href="/#casos-de-exito" class="text-white hover:text-[#D4AF37] py-2">Casos de Éxito</a>
@@ -63,12 +67,15 @@
   const menu = document.getElementById('mobile-menu');
 
   btn?.addEventListener('click', () => {
+    // Alterna la visibilidad y el modelo de caja flex
     menu?.classList.toggle('hidden');
+    menu?.classList.toggle('flex');
   });
 
   menu?.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       menu?.classList.add('hidden');
+      menu?.classList.remove('flex');
     });
   });
 </script>
