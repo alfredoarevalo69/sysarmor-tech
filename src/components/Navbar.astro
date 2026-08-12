@@ -1,5 +1,5 @@
----
 // src/components/Navbar.astro
+---
 ---
 
 <header class="sticky top-0 z-50 h-[76px] w-full bg-[#020617]/95 backdrop-blur-md border-b border-slate-700/50">
@@ -26,6 +26,11 @@
         Casos de Éxito
         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
       </a>
+      <!-- Nuevo enlace al Blog Desktop -->
+      <a href="/blog" class="group relative hover:text-white transition-colors duration-300 text-[#D4AF37]">
+        Blog
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
+      </a>
       <a href="/#contacto" class="group relative hover:text-white transition-colors duration-300">
         Contacto
         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
@@ -33,7 +38,7 @@
       
       <!-- Botón CTA -->
       <a href="/#contacto" class="px-6 py-2.5 rounded-md bg-[#D4AF37] hover:bg-white text-[#020617] font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-        Solicitar Evaluación Técnica
+        Evaluación Técnica
       </a>
     </div>
 
@@ -46,14 +51,12 @@
   </nav>
 
   <!-- Menú Mobile Overlay -->
-  <!-- 
-    CORRECCIÓN: Se remueve 'flex' inicial de la lista de clases de Tailwind.
-    El script manipulará las clases 'hidden' y 'flex' al abrir/cerrar.
-  -->
   <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-[76px] bg-[#020617] p-6 flex-col gap-6 text-xl text-center z-50 h-[calc(100vh-76px)] overflow-y-auto">
     <a href="/#servicios" class="text-white hover:text-[#D4AF37] py-2">Servicios</a>
     <a href="/#enfoque-tecnico" class="text-white hover:text-[#D4AF37] py-2">Enfoque Técnico</a>
     <a href="/#casos-de-exito" class="text-white hover:text-[#D4AF37] py-2">Casos de Éxito</a>
+    <!-- Nuevo enlace al Blog Mobile -->
+    <a href="/blog" class="text-[#D4AF37] font-bold py-2">Blog</a>
     <a href="/#contacto" class="text-white hover:text-[#D4AF37] py-2">Contacto</a>
 
     <a href="/#contacto" class="mt-2 px-5 py-4 rounded-lg bg-[#D4AF37] text-[#020617] font-bold text-lg hover:bg-white transition-colors">
@@ -67,7 +70,6 @@
   const menu = document.getElementById('mobile-menu');
 
   btn?.addEventListener('click', () => {
-    // Alterna la visibilidad y el modelo de caja flex
     menu?.classList.toggle('hidden');
     menu?.classList.toggle('flex');
   });

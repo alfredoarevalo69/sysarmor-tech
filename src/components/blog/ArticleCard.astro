@@ -1,0 +1,30 @@
+---
+const { title, description, category, pubDate, slug, image } = Astro.props;
+---
+
+<article class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden flex flex-col justify-between hover:border-amber-500/50 transition-colors">
+  {image && (
+    <img src={image} alt={title} class="w-full h-48 object-cover" />
+  )}
+  <div class="p-5 flex flex-col flex-grow">
+    <div class="mb-3">
+      <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">
+        {category}
+      </span>
+    </div>
+    <h3 class="text-lg font-bold text-white mb-2 line-clamp-2">
+      <a href={`/blog/${slug}`} class="hover:text-amber-400 transition-colors">
+        {title}
+      </a>
+    </h3>
+    <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+      {description}
+    </p>
+    <div class="mt-auto pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+      <span>{new Date(pubDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+      <a href={`/blog/${slug}`} class="text-amber-400 font-medium hover:underline">
+        Leer artículo &rarr;
+      </a>
+    </div>
+  </div>
+</article>

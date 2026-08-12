@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArticleCard from '../../components/blog/ArticleCard.astro';
+
+// Obtenemos todos los posts de la colección de recursos/blog
+const posts = await getCollection('recursos');
+---
+
+<Layout title="Blog de Ingeniería y Operaciones | SysArmor Tech">
+  <main class="bg-slate-100 min-h-screen text-slate-800 pb-20">
+    
+    {/* --- BANNER PANORÁMICO PEGADO A LA NAVEGACIÓN (SIN LÍNEAS) --- */}
+    <section class="w-full bg-slate-900 overflow-hidden pt-0 pb-0">
+      <div class="w-full px-0">
+        <img 
+          src="/images/Imagen_blog.png" 
+          alt="SysArmorTech Blog - Seguridad, administración y buenas prácticas para infraestructura TI" 
+          class="w-full h-auto max-h-[420px] object-cover object-center block"
+        />
+      </div>
+    </section>
+
+    {/* --- BARRA DE CATEGORÍAS TIPO TABS (FILTRADO INSTANTÁNEO) --- */}
+    <div class="bg-white border-b border-slate-200 shadow-sm py-4 mb-10">
+      <div class="container mx-auto max-w-7xl px-6 flex flex-wrap items-center gap-3" id="filter-buttons">
+        <button data-filter="todos" class="filter-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors shadow-sm bg-slate-900 text-white cursor-pointer">
+          Todos
+        </button>
+        <button data-filter="seguridad en la nube" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
+          Seguridad en la Nube
+        </button>
+        <button data-filter="microsoft 365" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
+          Microsoft 365
+        </button>
+        <button data-filter="infraestructura ti" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
+          Infraestructura TI
+        </button>
+      </div>
+    </div>
+
+    {/* --- CONTENEDOR PRINCIPAL A ANCHO COMPLETO --- */}
+    <div class="container mx-auto max-w-7xl px-6">
+      
+      <div class="border-b border-slate-300 pb-3 mb-6 flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Últimos Artículos</h2>
+      </div>
+      
+      {posts.length === 0 ? (
+        <div class="bg-white border border-slate-200 p-8 rounded-lg text-center text-slate-500 shadow-sm">
+          <p>No hay artículos publicados todavía. Revisa tu colección en markdown.</p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="articles-grid">
+          {posts.map((post) => (
+            <div class="article-item" data-category={post.data.category?.toLowerCase() || ''}>
+              <ArticleCard 
+                title={post.data.title}
+                description={post.data.description}
+                category={post.data.category}
+                pubDate={post.data.pubDate}
+                slug={post.id}
+                image={post.data.image}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+    </div>
+  </main>
+
+  {/* Script para el filtrado instantáneo en cliente */}
+  <script>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const articles = document.querySelectorAll('.article-item');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        buttons.forEach(btn => {
+          btn.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
+          btn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+        });
+        button.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+        button.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
+
+        const filter = button.getAttribute('data-filter');
+
+        articles.forEach(article => {
+          const category = article.getAttribute('data-category');
+          if (filter === 'todos' || category === filter) {
+            article.style.display = 'block';
+          } else {
+            article.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</Layout>
