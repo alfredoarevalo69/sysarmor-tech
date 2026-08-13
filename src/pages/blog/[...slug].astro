@@ -18,7 +18,11 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const data = post?.data || {};
 const title = data.title || "Artículo del Blog";
+const description = data.description || "Caso práctico de diseño, configuración y hardening de DNS en Active Directory sobre EDC, IDC y Azure.";
 const category = data.category || "Infraestructura TI";
+
+// Renderizar el contenido Markdown si la colección lo tiene (crucial para SEO)
+const { Content } = post?.render ? await post.render() : { Content: null };
 
 // 3. Ruta del PDF y URL absoluta para el visor móvil
 const pdfPath = data.pdfUrl || "/docs/optimizacion-dns-active-directory-hub-spoke-hibrido.pdf";
@@ -27,7 +31,8 @@ const fullPdfUrl = new URL(pdfPath, siteUrl).href;
 const googleDocsViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPdfUrl)}&embedded=true`;
 ---
 
-<Layout title={`${title} | SysArmor Tech`} bgColor="#ffffff">
+<!-- Le pasamos la descripción al Layout para las metatags SEO -->
+<Layout title={`${title} | SysArmor Tech`} description={description} bgColor="#ffffff">
   
   <main class="bg-white min-h-screen py-6 text-slate-800" style="background-color: #ffffff !important;">
     <div class="container mx-auto max-w-6xl px-4">
@@ -57,17 +62,27 @@ const googleDocsViewerUrl = `https://docs.google.com/viewer?url=${encodeURICompo
         </div>
       </div>
 
-      {/* --- CONTENEDOR DEL VISOR (Diferenciado para PC y Móvil) --- */}
-      <div class="w-full bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xl" style="height: 78vh;">
+      {/* --- ENCABEZADO H1 INDEXABLE POR GOOGLE --- */}
+      <header class="mb-6">
+        <h1 class="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
+          {title}
+        </h1>
+        <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+          {description}
+        </p>
+      </header>
+
+      {/* --- CONTENEDOR DEL VISOR PDF --- */}
+      <div class="w-full bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xl mb-8" style="height: 78vh;">
         
-        {/* Visor Nativo para Desktop / Laptop */}
+        {/* Visor Nativo para Desktop */}
         <iframe 
           src={pdfPath} 
           class="w-full h-full border-none hidden md:block"
           title={title}
         ></iframe>
 
-        {/* Visor Embed de Google Docs para Celulares (Android / iOS) */}
+        {/* Visor Embed de Google Docs para Celulares */}
         <iframe 
           src={googleDocsViewerUrl} 
           class="w-full h-full border-none block md:hidden"
@@ -80,8 +95,14 @@ const googleDocsViewerUrl = `https://docs.google.com/viewer?url=${encodeURICompo
             </a>
           </p>
         </iframe>
-
       </div>
+
+      {/* --- SECCIÓN TEXTO HTML PARA RASTREO Y POSICIONAMIENTO DE GOOGLE --- */}
+      {Content && (
+        <article class="prose prose-slate max-w-none border-t border-slate-200 pt-8 mt-8">
+          <Content />
+        </article>
+      )}
 
     </div>
   </main>
