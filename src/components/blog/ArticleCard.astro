@@ -1,30 +1,52 @@
 ---
-const { title, description, category, pubDate, slug, image } = Astro.props;
+const { title, category, pubDate, slug, image } = Astro.props;
+
+// Enlace interno a la vista dinámica del blog
+const articleUrl = `/blog/${slug}`;
 ---
 
-<article class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden flex flex-col justify-between hover:border-amber-500/50 transition-colors">
-  {image && (
-    <img src={image} alt={title} class="w-full h-48 object-cover" />
+<article class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col justify-between hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300 group">
+  
+  {/* --- IMAGEN PORTADA COMPLETA --- */}
+  {image ? (
+    <a href={articleUrl} class="block overflow-hidden bg-slate-950 aspect-[16/10] relative">
+      <img 
+        src={image} 
+        alt={title} 
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+      />
+    </a>
+  ) : (
+    /* Fallback por si algún artículo futuro no tiene portada */
+    <div class="h-44 bg-gradient-to-br from-slate-800 via-slate-900 to-amber-950/30 p-5 flex flex-col justify-between border-b border-slate-800/80">
+      <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 class="text-white font-bold text-base line-clamp-2">{title}</h3>
+    </div>
   )}
-  <div class="p-5 flex flex-col flex-grow">
-    <div class="mb-3">
-      <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">
+
+  {/* --- FOOTER MINIMALISTA Y LIMPIO --- */}
+  <div class="p-4 flex items-center justify-between text-xs text-slate-400 bg-slate-900/90 border-t border-slate-800/80">
+    <div class="flex items-center gap-2">
+      <span class="font-semibold px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20 text-[11px]">
         {category}
       </span>
+      {pubDate && (
+        <span class="text-slate-500 text-[11px]">
+          {new Date(pubDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}
+        </span>
+      )}
     </div>
-    <h3 class="text-lg font-bold text-white mb-2 line-clamp-2">
-      <a href={`/blog/${slug}`} class="hover:text-amber-400 transition-colors">
-        {title}
-      </a>
-    </h3>
-    <p class="text-slate-400 text-sm mb-4 line-clamp-3">
-      {description}
-    </p>
-    <div class="mt-auto pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
-      <span>{new Date(pubDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-      <a href={`/blog/${slug}`} class="text-amber-400 font-medium hover:underline">
-        Leer artículo &rarr;
-      </a>
-    </div>
+
+    <a 
+      href={articleUrl} 
+      class="text-amber-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 hover:text-amber-300"
+    >
+      Leer artículo &rarr;
+    </a>
   </div>
+
 </article>

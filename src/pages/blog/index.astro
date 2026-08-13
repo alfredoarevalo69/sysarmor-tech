@@ -3,57 +3,87 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ArticleCard from '../../components/blog/ArticleCard.astro';
 
-// Obtenemos todos los posts de la colección de recursos/blog
+// Obtener todos los artículos de la colección 'recursos'
 const posts = await getCollection('recursos');
+
+// Ordenar por fecha (los más recientes primero)
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate || 0).getTime();
+  const dateB = new Date(b.data.pubDate || 0).getTime();
+  return dateB - dateA;
+});
+
+// Extraer categorías únicas para los botones de filtro
+const categories = ['Todos', ...new Set(posts.map((post) => post.data.category).filter(Boolean))];
 ---
 
 <Layout title="Blog de Ingeniería y Operaciones | SysArmor Tech">
-  <main class="bg-slate-100 min-h-screen text-slate-800 pb-20">
-    
-    {/* --- BANNER PANORÁMICO PEGADO A LA NAVEGACIÓN (SIN LÍNEAS) --- */}
-    <section class="w-full bg-slate-900 overflow-hidden pt-0 pb-0">
-      <div class="w-full px-0">
-        <img 
-          src="/images/Imagen_blog.png" 
-          alt="SysArmorTech Blog - Seguridad, administración y buenas prácticas para infraestructura TI" 
-          class="w-full h-auto max-h-[420px] object-cover object-center block"
-        />
-      </div>
-    </section>
-
-    {/* --- BARRA DE CATEGORÍAS TIPO TABS (FILTRADO INSTANTÁNEO) --- */}
-    <div class="bg-white border-b border-slate-200 shadow-sm py-4 mb-10">
-      <div class="container mx-auto max-w-7xl px-6 flex flex-wrap items-center gap-3" id="filter-buttons">
-        <button data-filter="todos" class="filter-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors shadow-sm bg-slate-900 text-white cursor-pointer">
-          Todos
-        </button>
-        <button data-filter="seguridad en la nube" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
-          Seguridad en la Nube
-        </button>
-        <button data-filter="microsoft 365" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
-          Microsoft 365
-        </button>
-        <button data-filter="infraestructura ti" class="filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer">
-          Infraestructura TI
-        </button>
-      </div>
+  
+  {/* --- 1. HERO BANNER PRINCIPAL (UTILIZANDO TU IMAGEN PUBLIC/IMAGES/IMAGEN_BLOG.PNG) --- */}
+  <section class="w-full bg-slate-950 overflow-hidden">
+    <div class="container mx-auto max-w-6xl px-4">
+      <img 
+        src="/images/Imagen_blog.png" 
+        alt="Blog de Ingeniería & Operaciones - SysArmor Tech" 
+        class="w-full h-auto object-cover block"
+      />
     </div>
+  </section>
 
-    {/* --- CONTENEDOR PRINCIPAL A ANCHO COMPLETO --- */}
-    <div class="container mx-auto max-w-7xl px-6">
+  {/* --- 2. FRANJA CON BOTONES DE FILTRO Y BÚSQUEDA (ESTILO EXACTO A TU CAPTURA) --- */}
+  <section class="bg-white py-4 border-b border-slate-200 shadow-sm sticky top-0 z-30">
+    <div class="container mx-auto max-w-6xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
       
-      <div class="border-b border-slate-300 pb-3 mb-6 flex justify-between items-center">
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Últimos Artículos</h2>
+      {/* Botones de Categoría (Chips) */}
+      <div class="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <button
+            class={`category-filter px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              category === 'Todos'
+                ? 'bg-slate-900 text-white active-filter'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        ))}
       </div>
-      
-      {posts.length === 0 ? (
-        <div class="bg-white border border-slate-200 p-8 rounded-lg text-center text-slate-500 shadow-sm">
-          <p>No hay artículos publicados todavía. Revisa tu colección en markdown.</p>
+
+      {/* Buscador de documentos por título/palabra clave */}
+      <div class="w-full md:w-72 relative">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar documentos..."
+          class="w-full pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all"
+        />
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
-      ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="articles-grid">
-          {posts.map((post) => (
-            <div class="article-item" data-category={post.data.category?.toLowerCase() || ''}>
+      </div>
+
+    </div>
+  </section>
+
+  {/* --- 3. SECCIÓN DE ARTÍCULOS CON FONDO CLARO TENUE --- */}
+  <main class="bg-slate-100 min-h-screen py-10 text-slate-800">
+    <div class="container mx-auto max-w-6xl px-4">
+      
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">Últimos Artículos</h2>
+
+      {/* Grid de Tarjetas */}
+      {sortedPosts.length > 0 ? (
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedPosts.map((post) => (
+            <div 
+              class="article-item" 
+              data-category={post.data.category?.toLowerCase() || ''}
+              data-title={post.data.title?.toLowerCase() || ''}
+              data-description={post.data.description?.toLowerCase() || ''}
+            >
               <ArticleCard 
                 title={post.data.title}
                 description={post.data.description}
@@ -65,36 +95,85 @@ const posts = await getCollection('recursos');
             </div>
           ))}
         </div>
+      ) : (
+        <div class="text-center py-12 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <p class="text-slate-500">No hay artículos disponibles en este momento.</p>
+        </div>
       )}
+
+      {/* Mensaje cuando no hay coincidencias de búsqueda */}
+      <div id="no-results" class="hidden text-center py-12 bg-white rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-slate-500">No se encontraron documentos que coincidan con la búsqueda.</p>
+      </div>
 
     </div>
   </main>
 
-  {/* Script para el filtrado instantáneo en cliente */}
-  <script>
-    const buttons = document.querySelectorAll('.filter-btn');
+</Layout>
+
+{/* --- SCRIPT PARA BÚSQUEDA Y FILTRADO POR CATEGORÍA EN TIEMPO REAL --- */}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.category-filter');
     const articles = document.querySelectorAll('.article-item');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const noResults = document.getElementById('no-results');
 
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        buttons.forEach(btn => {
-          btn.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
-          btn.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+    let currentCategory = 'todos';
+    let currentQuery = '';
+
+    function filterArticles() {
+      let visibleCount = 0;
+
+      articles.forEach((article) => {
+        const cat = article.getAttribute('data-category') || '';
+        const title = article.getAttribute('data-title') || '';
+        const desc = article.getAttribute('data-description') || '';
+
+        const matchesCategory = currentCategory === 'todos' || cat === currentCategory;
+        const matchesQuery = !currentQuery || title.includes(currentQuery) || desc.includes(currentQuery);
+
+        if (matchesCategory && matchesQuery) {
+          (article as HTMLElement).style.display = 'block';
+          visibleCount++;
+        } else {
+          (article as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      }
+    }
+
+    // Evento de clic en Categorías
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentCategory = btn.getAttribute('data-category') || 'todos';
+
+        // Estilos exactos: Oscuro para el activo, Claro para inactivos
+        filterButtons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'active-filter');
+          b.classList.add('bg-slate-100', 'text-slate-700');
         });
-        button.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
-        button.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
 
-        const filter = button.getAttribute('data-filter');
+        btn.classList.remove('bg-slate-100', 'text-slate-700');
+        btn.classList.add('bg-slate-900', 'text-white', 'active-filter');
 
-        articles.forEach(article => {
-          const category = article.getAttribute('data-category');
-          if (filter === 'todos' || category === filter) {
-            article.style.display = 'block';
-          } else {
-            article.style.display = 'none';
-          }
-        });
+        filterArticles();
       });
     });
-  </script>
-</Layout>
+
+    // Evento de búsqueda dinámica en el input
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        filterArticles();
+      });
+    }
+  });
+</script>

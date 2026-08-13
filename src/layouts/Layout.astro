@@ -10,13 +10,15 @@ interface Props {
   description?: string;
   variant?: 'home' | 'legal';
   ogImage?: string;
+  bgColor?: string; // Prop en formato color o HEX
 }
 
 const { 
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   variant = 'home',
-  ogImage = '/images/og-image.png'
+  ogImage = '/images/og-image.png',
+  bgColor = '#020617' // Color oscuro por defecto
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
@@ -25,7 +27,6 @@ const fullOgImageUrl = new URL(ogImage, siteURL).href;
 
 const pageTitle = title.includes('SysArmor Tech') ? title : `${title} | SysArmor Tech`;
 
-// Datos estructurados Schema.org geolocalizados en Engativá, Bogotá, Colombia
 const schemaOrgData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -101,33 +102,32 @@ const schemaOrgData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     
-    <!-- SEO Core -->
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     
-    <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullOgImageUrl} />
 
-    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullOgImageUrl} />
 
-    <!-- Schema.org JSON-LD (Optimizada la entidad para Google AI) -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
   </head>
   
-  <body class="bg-[#020617] text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased">
+  {/* APLICAMOS EL COLOR DIRECTO AL STYLE PARA QUE NADA LO BLOQUEE */}
+  <body 
+    class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
+    style={`background-color: ${bgColor} !important;`}
+  >
     
     {variant === 'home' ? <Navbar /> : <LegalNavbar />}
     
