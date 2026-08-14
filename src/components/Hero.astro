@@ -65,7 +65,7 @@
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
   .hero-inner {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1280px; /* Mismo max-width estándar que usa tu Navbar */
     margin: 0 auto;
     padding: 0 1.5rem;
     position: relative;
@@ -102,7 +102,7 @@
     z-index: 2;
   }
 
-  /* --- CONTENIDO --- */
+  /* --- CONTENIDO CON ANIMACIÓN FADE-UP --- */
   .hero-content {
     max-width: 680px;
     text-align: left;
@@ -120,7 +120,7 @@
     }
   }
 
-  /* --- TIPOGRAFÍA Y BOTONES --- */
+  /* --- TIPOGRAFÍA --- */
   .hero-title {
     font-size: clamp(2.2rem, 5vw, 3.5rem);
     font-weight: 800;
@@ -129,7 +129,9 @@
     margin-bottom: 1.5rem;
   }
 
-  .highlight { color: #eab308; }
+  .highlight {
+    color: #eab308;
+  }
 
   .hero-description {
     font-size: clamp(1rem, 2vw, 1.125rem);
@@ -143,7 +145,10 @@
     font-weight: 700;
   }
 
-  .hero-cta { margin-bottom: 2rem; }
+  /* --- BOTÓN Y LISTA --- */
+  .hero-cta {
+    margin-bottom: 2rem;
+  }
 
   .btn-primary {
     display: inline-block;
@@ -190,10 +195,31 @@
     flex-shrink: 0;
   }
 
+  /* --- AJUSTES RESPONSIVE --- */
   @media (max-width: 768px) {
-    .hero-container { padding: 3rem 0; }
-    .hero-inner { padding: 0 1rem; }
-    .hero-bg { object-position: 85% center; }
-    .btn-primary { max-width: 100%; }
+    .hero-container {
+      padding: 3rem 0;
+    }
+
+    .hero-inner {
+      padding: 0 1rem;
+    }
+
+    .hero-bg {
+      object-position: 85% center;
+    }
+
+    .hero-overlay {
+      background: linear-gradient(
+        180deg, 
+        rgba(5, 10, 20, 0.88) 0%, 
+        rgba(5, 10, 20, 0.82) 70%, 
+        rgba(5, 10, 20, 0.95) 100%
+      );
+    }
+
+    .btn-primary {
+      max-width: 100%;
+    }
   }
 </style>
