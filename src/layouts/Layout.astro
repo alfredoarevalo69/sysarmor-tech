@@ -38,7 +38,7 @@ const schemaOrgData = {
       "url": siteURL,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteURL}/favicon.png`
+        "url": `${siteURL}/favicon.png?v=2`
       },
       "description": "Firma de consultoría e ingeniería especializada en infraestructura crítica, ecosistema Microsoft, Nivel 3 y SecOps.",
       "address": {
@@ -102,7 +102,10 @@ const schemaOrgData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- FAVICON CONFIGURATION WITH CACHE-BUSTING -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=2" />
+    <link rel="shortcut icon" href="/favicon.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=2" />
     
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
@@ -123,7 +126,6 @@ const schemaOrgData = {
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
   </head>
   
-  {/* APLICAMOS EL COLOR DIRECTO AL STYLE PARA QUE NADA LO BLOQUEE */}
   <body 
     class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
     style={`background-color: ${bgColor} !important;`}
