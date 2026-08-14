@@ -1,3 +1,54 @@
+---
+// No requiere import de imágenes al estar en /public/images/
+---
+
+<section class="hero-container">
+  <!-- Imagen de fondo -->
+  <img 
+    src="/images/hero-datacenter.webp" 
+    alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
+    class="hero-bg"
+    loading="eager" 
+    fetchpriority="high"
+  />
+
+  <!-- Capa overlay de gradiente para contraste WCAG -->
+  <div class="hero-overlay"></div>
+
+  <!-- Contenedor general que limita el ancho al mismo tamaño que la Navbar -->
+  <div class="hero-inner">
+    <!-- Bloque de contenido principal -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Proteja y modernice su infraestructura <span class="highlight">sin detener la operación</span>
+      </h1>
+
+      <p class="hero-description">
+        Ayudamos a empresas con infraestructura crítica o <strong class="highlight-yellow">ecosistema Microsoft</strong> a resolver problemas de seguridad, sistemas legados, migraciones y operaciones de Nivel 3.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#contacto" class="btn-primary">Solicitar Evaluación Técnica</a>
+      </div>
+
+      <ul class="hero-features">
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>+20 años de experiencia en infraestructura y seguridad</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Garantía de continuidad operativa durante migraciones</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <style>
   /* --- CONTENEDOR PRINCIPAL --- */
   .hero-container {
@@ -7,8 +58,8 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    background-color: #020617; /* Slate-950 alineado a tu layout */
-    padding: 4rem 0; /* Removido padding lateral para permitir full bleed */
+    background-color: #050a14;
+    padding: 4rem 1.5rem;
   }
 
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
@@ -21,35 +72,39 @@
     z-index: 3;
   }
 
-  /* --- IMAGEN DE FONDO FULL WIDTH --- */
+  /* --- IMAGEN DE FONDO --- */
   .hero-bg {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: right center; /* Empuja el gráfico principal a la derecha */
+    object-position: center;
     z-index: 1;
   }
 
-  /* --- OVERLAY OPTIMIZADO PARA CONTRASTE Y COBERTURA COMPLETA --- */
+  /* --- OVERLAY DE GRADIENTE --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
-    /* Unificamos el gradiente para que no lave en exceso los bordes */
     background: linear-gradient(
+      180deg, 
+      rgba(5, 10, 20, 0.85) 0%, 
+      rgba(5, 10, 20, 0.70) 60%, 
+      rgba(5, 10, 20, 1) 100%
+    ),
+    linear-gradient(
       90deg, 
-      rgba(2, 6, 23, 0.95) 0%, 
-      rgba(2, 6, 23, 0.75) 45%, 
-      rgba(2, 6, 23, 0.30) 100%
+      rgba(5, 10, 20, 0.95) 0%, 
+      rgba(5, 10, 20, 0.60) 50%, 
+      rgba(5, 10, 20, 0.10) 100%
     );
     z-index: 2;
   }
 
-  /* --- CONTENIDO CON ANIMACIÓN FADE-UP --- */
+  /* --- CONTENIDO --- */
   .hero-content {
-    max-width: 650px;
+    max-width: 680px;
     text-align: left;
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
@@ -65,7 +120,7 @@
     }
   }
 
-  /* --- TIPOGRAFÍA --- */
+  /* --- TIPOGRAFÍA Y BOTONES --- */
   .hero-title {
     font-size: clamp(2.2rem, 5vw, 3.5rem);
     font-weight: 800;
@@ -74,9 +129,7 @@
     margin-bottom: 1.5rem;
   }
 
-  .highlight {
-    color: #eab308;
-  }
+  .highlight { color: #eab308; }
 
   .hero-description {
     font-size: clamp(1rem, 2vw, 1.125rem);
@@ -90,10 +143,7 @@
     font-weight: 700;
   }
 
-  /* --- BOTÓN Y LISTA --- */
-  .hero-cta {
-    margin-bottom: 2rem;
-  }
+  .hero-cta { margin-bottom: 2rem; }
 
   .btn-primary {
     display: inline-block;
@@ -140,31 +190,10 @@
     flex-shrink: 0;
   }
 
-  /* --- AJUSTES RESPONSIVE --- */
   @media (max-width: 768px) {
-    .hero-container {
-      padding: 3rem 0;
-    }
-
-    .hero-inner {
-      padding: 0 1rem;
-    }
-
-    .hero-bg {
-      object-position: center center;
-    }
-
-    .hero-overlay {
-      background: linear-gradient(
-        180deg, 
-        rgba(2, 6, 23, 0.90) 0%, 
-        rgba(2, 6, 23, 0.80) 60%, 
-        rgba(2, 6, 23, 0.95) 100%
-      );
-    }
-
-    .btn-primary {
-      max-width: 100%;
-    }
+    .hero-container { padding: 3rem 0; }
+    .hero-inner { padding: 0 1rem; }
+    .hero-bg { object-position: 85% center; }
+    .btn-primary { max-width: 100%; }
   }
 </style>
