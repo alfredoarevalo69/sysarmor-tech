@@ -5,7 +5,7 @@ pubDate: 2026-08-14
 category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/dns-architecture.png"
+image: "/images/DNS-HUB/dns-architecture.png"
 pdfUrl: "/docs/optimizacion-dns-active-directory-hub-spoke-hibrido.pdf"
 ---
 
@@ -35,7 +35,7 @@ La arquitectura estaba distribuida a través de tres sitios clave:
 
 La siguiente imagen muestra el punto de partida de la infraestructura que fue revisada con el fin de mejorar y optimizar su funcionamiento:
 
-![Topología Inicial de Resolución DNS en Active Directory](/images/dns-hub-spoke-1.png)
+![Topología Inicial de Resolución DNS en Active Directory](/images/DNS-HUB/dns-hub-spoke-1.png)
 
 ---
 
@@ -45,7 +45,7 @@ La siguiente configuración que se muestra en la imagen es una configuración es
 
 Esta es la configuración DNS en un DC haciendo reenvío a nube:
 
-![Configuración Estándar de Forwarders en Consola DNS](/images/dns-hub-spoke-2.png)
+![Configuración Estándar de Forwarders en Consola DNS](/images/DNS-HUB/dns-hub-spoke-2.png)
 
 ### Diagnóstico de Problemas Comunes en la Topología Inicial
 
@@ -116,7 +116,7 @@ Para que el DNS sea robusto en esta infraestructura:
 *   **DNS Secundario:** IP de un DC de un sitio distinto (ej. EDC apunta a IDC).
 *   **DNS Terciario:** `127.0.0.1` (Loopback). Nunca pongas IPs externas (`8.8.8.8`) en la configuración de la tarjeta de red de un Domain Controller; eso solo va en la consola de DNS.
 
-![Configuración de Tarjeta de Red en DCppal1](/images/dns-hub-spoke-3.png)
+![Configuración de Tarjeta de Red en DCppal1](/images/DNS-HUB/dns-hub-spoke-3.png)
 
 ### Puntos claves - Resumen:
 
@@ -134,7 +134,7 @@ Para que el DNS sea robusto en esta infraestructura:
 
 La siguiente imagen fue nuestra configuración definitiva que mejoró notablemente los problemas mencionados:
 
-![Arquitectura DNS Propuesta - Modelo Hub y Spoke](/images/dns-hub-spoke-4.png)
+![Arquitectura DNS Propuesta - Modelo Hub y Spoke](/images/DNS-HUB/dns-hub-spoke-4.png)
 
 ---
 
