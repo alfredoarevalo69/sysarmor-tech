@@ -34,9 +34,17 @@ const pdfPath = data.pdfUrl ? String(data.pdfUrl).trim() : null;
 const formattedDate = pubDate 
   ? new Date(pubDate).toLocaleDateString('es-ES', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' })
   : null;
+
+// 6. Construcción de URL canónica para posicionamiento e indexación en Google
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title={`${title} | SysArmor Tech`} description={description} bgColor="#ffffff">
+<Layout 
+  title={`${title} | SysArmor Tech`} 
+  description={description} 
+  canonical={canonicalUrl}
+  bgColor="#ffffff"
+>
   
   <main class="bg-white min-h-screen py-8 text-slate-800" style="background-color: #ffffff !important;">
     <article class="container mx-auto max-w-4xl px-4">
