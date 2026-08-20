@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* 1. Fuentes desde Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap');
-
 @theme {
   /* --- TIPOGRAFÍA --- */
   --font-sans: 'Inter', sans-serif;
