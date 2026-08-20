@@ -38,7 +38,7 @@ const schemaOrgData = {
       "url": siteURL,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteURL}/favicon.png?v=4`
+        "url": `${siteURL}/favicon.png?v=5`
       },
       "description": "Firma de consultoría e ingeniería especializada en infraestructura crítica, ecosistema Microsoft, Nivel 3 y SecOps.",
       "address": {
@@ -107,12 +107,12 @@ const schemaOrgData = {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
 
-    <!-- CONFIGURACIÓN COMPATIBLE DE FAVICON PARA GOOGLE BOT (ICO + PNG) -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />
-    <link rel="shortcut icon" href="/favicon.ico?v=4" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png?v=4" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=4" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=4" />
+    <!-- CONFIGURACIÓN DE FAVICON CON CACHE-BUSTING (v5) -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=5" />
+    <link rel="shortcut icon" href="/favicon.ico?v=5" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png?v=5" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=5" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=5" />
     
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
