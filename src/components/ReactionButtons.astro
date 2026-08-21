@@ -1,0 +1,129 @@
+---
+// src/components/ReactionButtons.astro
+interface Props {
+  articleTitle: string;
+}
+
+const { articleTitle } = Astro.props;
+---
+
+<div class="reaction-wrapper my-8 p-6 bg-slate-900 border border-slate-800 rounded-2xl text-center shadow-md">
+  <p class="text-sm font-semibold text-slate-200 mb-3">¿Te resultó útil esta documentación?</p>
+
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-3 mb-4">
+    <button 
+      type="button"
+      class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-medium text-sm border border-slate-700 cursor-pointer disabled:opacity-50 transition-all active:scale-95" 
+      data-vote="like"
+      data-title={articleTitle}
+    >
+      👍 <span>Útil</span>
+    </button>
+
+    <button 
+      type="button"
+      class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm border border-slate-700 cursor-pointer disabled:opacity-50 transition-all active:scale-95" 
+      data-vote="dislike"
+      data-title={articleTitle}
+    >
+      👎 <span>No útil</span>
+    </button>
+  </div>
+
+  <div class="max-w-xs mx-auto mb-3">
+    <label for="reason-select" class="block text-xs text-slate-400 mb-1">Motivo (Opcional):</label>
+    <select id="reason-select" class="w-full bg-slate-800 text-slate-200 text-xs rounded-lg border border-slate-700 p-2 focus:ring-1 focus:ring-amber-400 outline-none">
+      <!-- Se llena dinámicamente según el voto -->
+      <option value="Explicación clara y directa">Explicación clara y directa</option>
+      <option value="Solucionó mi problema técnico">Solucionó mi problema técnico</option>
+      <option value="Excelente paso a paso">Excelente paso a paso</option>
+    </select>
+  </div>
+
+  <p id="feedback-msg" class="text-xs text-emerald-400 font-semibold hidden">
+    ¡Gracias! Tu interacción se envió correctamente.
+  </p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.reaction-btn');
+    const feedbackMsg = document.getElementById('feedback-msg');
+    const reasonSelect = document.getElementById('reason-select') as HTMLSelectElement;
+
+    // Opciones según el tipo de voto
+    const optionsLike = [
+      'Explicación clara y directa',
+      'Solucionó mi problema técnico',
+      'Excelente paso a paso'
+    ];
+
+    const optionsDislike = [
+      'Falta información o contexto',
+      'No solucionó mi problema técnico',
+      'Instrucciones desactualizadas o erróneas'
+    ];
+
+    // Cambiar las opciones del select según el botón que toque/hover el usuario
+    buttons.forEach((button) => {
+      button.addEventListener('mouseenter', () => {
+        const vote = button.getAttribute('data-vote');
+        updateSelectOptions(vote === 'like' ? optionsLike : optionsDislike);
+      });
+
+      button.addEventListener('click', async () => {
+        const vote = button.getAttribute('data-vote');
+        const articleTitle = button.getAttribute('data-title') || document.title;
+
+        // Asegurar que las opciones correspondan al botón presionado antes de leer el valor
+        updateSelectOptions(vote === 'like' ? optionsLike : optionsDislike);
+        const reason = reasonSelect ? reasonSelect.value : 'Sin motivo especificado';
+
+        buttons.forEach(b => (b as HTMLButtonElement).disabled = true);
+
+        try {
+          const response = await fetch('/api/reaction', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ articleTitle, vote, reason }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            feedbackMsg?.classList.remove('hidden');
+          } else {
+            alert(`Error ${response.status}: ${data.error || 'Respuesta no válida'}`);
+            buttons.forEach(b => (b as HTMLButtonElement).disabled = false);
+          }
+        } catch (error) {
+          alert(`Error de red: ${error}`);
+          buttons.forEach(b => (b as HTMLButtonElement).disabled = false);
+        }
+      });
+    });
+
+    function updateSelectOptions(options: string[]) {
+      if (!reasonSelect) return;
+      const currentValue = reasonSelect.value;
+      
+      // Solo actualiza si las opciones son diferentes para no resetear innecesariamente
+      if (reasonSelect.options[0]?.value !== options[0]) {
+        reasonSelect.innerHTML = options
+          .map(opt => `<option value="${opt}">${opt}</option>`)
+          .join('');
+      }
+    }
+  });
+</script>
+
+<style>
+  .reaction-wrapper, 
+  .reaction-wrapper * {
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
+    pointer-events: auto !important;
+  }
+</style>
