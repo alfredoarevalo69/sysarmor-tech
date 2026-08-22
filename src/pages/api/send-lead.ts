@@ -1,4 +1,3 @@
-// src/pages/api/send-lead.ts
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 
@@ -6,11 +5,16 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // 1. Obtención y validación estricta de la API Key de Resend desde variables de entorno
-    const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
+    // 1. Obtención, limpieza y validación estricta de la API Key de Resend
+    const rawApiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
+    const apiKey = typeof rawApiKey === 'string' ? rawApiKey.trim() : '';
 
-    if (!apiKey) {
-      throw new Error('La API Key de Resend no está configurada en las variables de entorno.');
+    if (!apiKey || apiKey === 'undefined' || apiKey === 'null') {
+      console.error('[Config Error]: La API Key de Resend no está configurada en las variables de entorno.');
+      return new Response(
+        JSON.stringify({ success: false, error: 'Configuración de servidor incompleta (API Key).' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     const resend = new Resend(apiKey);
