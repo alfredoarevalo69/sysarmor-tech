@@ -17,6 +17,14 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ['nodemailer'],
+    },
+    build: {
+      rollupOptions: {
+        external: ['nodemailer'],
+      },
+    },
   },
 
   adapter: vercel(),
