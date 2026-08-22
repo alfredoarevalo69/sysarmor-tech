@@ -1,24 +1,10 @@
 import type { APIRoute } from 'astro';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // Lectura directa de la variable de entorno que tienes configurada en Vercel
-    const runtimeApiKey = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
-    
-    console.log('[DEBUG RUNTIME KEY LENGTH]:', runtimeApiKey ? runtimeApiKey.length : 'UNDEFINED');
-
-    if (!runtimeApiKey || typeof runtimeApiKey !== 'string' || runtimeApiKey.trim() === '') {
-      console.error('[CRITICAL]: La API Key de Resend no está disponible en process.env.');
-      return new Response(
-        JSON.stringify({ success: false, error: 'API Key no disponible en process.env.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const resend = new Resend(runtimeApiKey.trim());
     const data = await request.json();
     const { email, articleTitle, pdfUrl } = data;
 
@@ -31,7 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 2. Registro de Lead en Google Sheets
+    // 1. Registro de Lead en Google Sheets
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEpHpTu-pR_zeP7emUlxokosRotexwBMl09q1nRdQmu2pjUUGYj_pi_QP4E6I_Ql94/exec';
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
@@ -49,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('[Google Script Error]', gErr);
     }
 
-    // 3. Notificación instantánea en Telegram
+    // 2. Notificación instantánea en Telegram
     const token = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN || "8814870414:AAGKNSU4AQIlY6td7TP6jkDHA4IH6yfdOVk";
     const chatId = import.meta.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID || "7845018728";
 
@@ -78,67 +64,67 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 4. Envío del correo con el remitente universal de pruebas de Resend
-    const fullPdfUrl = pdfUrl 
-      ? (pdfUrl.startsWith('http') ? pdfUrl : `https://sysarmortech.com${pdfUrl}`) 
-      : 'https://sysarmortech.com/blog';
+    // 3. Envío de Correo mediante SMTP configurado para Gmail
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
 
-    let mailResult = null;
-    try {
-      mailResult = await resend.emails.send({
-        from: 'SysArmor Tech <onboarding@resend.dev>', 
-        to: [email],
-        subject: `📄 Tu recurso técnico: ${articleTitle}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f172a; color: #f8fafc; padding: 24px; border-radius: 12px;">
-            <h2 style="color: #fbbf24; margin-bottom: 16px;">¡Hola! Aquí tienes la guía solicitada.</h2>
-            <p style="font-size: 14px; line-height: 1.6; color: #cbd5e1;">
-              Gracias por consultar la documentación sobre <strong>"${articleTitle}"</strong> en SysArmor Tech.
-            </p>
-            <div style="margin: 24px 0; text-align: center;">
-              <a href="${fullPdfUrl}" target="_blank" style="background-color: #f59e0b; color: #020617; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 14px; display: inline-block;">
-                📥 Descargar Recurso PDF
-              </a>
-            </div>
-            <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;" />
-            <p style="font-size: 11px; color: #64748b; text-align: center;">
-              SysArmor Tech — Infraestructura, Seguridad & Hardening de TI.
-            </p>
-          </div>
-        `,
-      });
-
-      console.log('[RESEND SUCCESS DATA]:', mailResult);
-
-      if (mailResult.error) {
-        console.error('[RESEND API RETURNED ERROR]:', mailResult.error);
-        return new Response(
-          JSON.stringify({ success: false, error: mailResult.error.message }),
-          { status: 400, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-    } catch (rErr) {
-      console.error('[RESEND EXCEPTION THROWN]:', rErr);
+    if (!smtpUser || !smtpPass) {
+      console.error('[CRITICAL]: Faltan credenciales SMTP_USER o SMTP_PASS.');
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: rErr instanceof Error ? rErr.message : 'Error inesperado en Resend' 
-        }),
+        JSON.stringify({ success: false, error: 'Configuración SMTP incompleta en el servidor.' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
+    // Configuración de transporte específica para Gmail (Puerto 465 seguro)
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, // true para puerto 465
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
+
+    const fullPdfUrl = pdfUrl 
+      ? (pdfUrl.startsWith('http') ? pdfUrl : `https://sysarmortech.com${pdfUrl}`) 
+      : 'https://sysarmortech.com/blog';
+
+    await transporter.sendMail({
+      from: `"SysArmor Tech" <${smtpUser}>`,
+      to: email,
+      subject: `📄 Tu recurso técnico: ${articleTitle}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f172a; color: #f8fafc; padding: 24px; border-radius: 12px;">
+          <h2 style="color: #fbbf24; margin-bottom: 16px;">¡Hola! Aquí tienes la guía solicitada.</h2>
+          <p style="font-size: 14px; line-height: 1.6; color: #cbd5e1;">
+            Gracias por consultar la documentación sobre <strong>"${articleTitle}"</strong> en SysArmor Tech.
+          </p>
+          <div style="margin: 24px 0; text-align: center;">
+            <a href="${fullPdfUrl}" target="_blank" style="background-color: #f59e0b; color: #020617; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 14px; display: inline-block;">
+              📥 Descargar Recurso PDF
+            </a>
+          </div>
+          <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;" />
+          <p style="font-size: 11px; color: #64748b; text-align: center;">
+            SysArmor Tech — Infraestructura, Seguridad & Hardening de TI.
+          </p>
+        </div>
+      `,
+    });
+
     return new Response(
-      JSON.stringify({ success: true, message: 'Lead registrado y correo enviado correctamente.' }),
+      JSON.stringify({ success: true, message: 'Correo enviado por Gmail SMTP correctamente.' }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('[Send Lead Server Error]', error);
+    console.error('[SMTP Server Error]', error);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error instanceof Error ? error.message : 'Error interno al procesar la solicitud.' 
+        error: error instanceof Error ? error.message : 'Error interno al enviar el correo.' 
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
