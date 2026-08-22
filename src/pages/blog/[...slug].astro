@@ -3,6 +3,7 @@ export const prerender = true;
 
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import ReactionButtons from '../../components/ReactionButtons.astro';
 
 // 1. Definir rutas estáticas para la colección
 export async function getStaticPaths() {
@@ -27,7 +28,7 @@ const pubDate = data.pubDate || null;
 // 3. Renderizar el Markdown con la API de Astro 5
 const { Content } = await render(post);
 
-// 4. Ruta del recurso PDF (Sanitizada)
+// 4. Ruta del recurso PDF (Sanitizada para pasar al componente de reacciones)
 const pdfPath = data.pdfUrl ? String(data.pdfUrl).trim() : null;
 
 // 5. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
@@ -49,7 +50,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   <main class="bg-white min-h-screen py-8 text-slate-800" style="background-color: #ffffff !important;">
     <article class="container mx-auto max-w-4xl px-4">
       
-      {/* --- BARRA SUPERIOR DE NAVEGACIÓN Y ACCIONES --- */}
+      {/* --- BARRA SUPERIOR DE NAVEGACIÓN --- */}
       <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl shadow-lg mb-8 border border-slate-800">
         <a 
           href="/blog" 
@@ -58,22 +59,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
           &larr; Volver al Blog
         </a>
 
-        <div class="flex items-center gap-2 md:gap-3">
-          {category && (
-            <span class="hidden md:inline-block text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
-              {category}
-            </span>
-          )}
-          {pdfPath && (
-            <a 
-              href={pdfPath} 
-              download 
-              class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-sm"
-            >
-              Descargar PDF &darr;
-            </a>
-          )}
-        </div>
+        {category && (
+          <span class="text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
+            {category}
+          </span>
+        )}
       </div>
 
       {/* --- ENCABEZADO PRINCIPAL (SEO H1) --- */}
@@ -97,22 +87,8 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         <Content />
       </div>
 
-      {/* --- BLOQUE CTA FINAL PARA DESCARGAR PDF --- */}
-      {pdfPath && (
-        <div class="mt-12 p-6 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 class="text-lg font-bold text-slate-900">¿Deseas conservar la documentación oficial?</h4>
-            <p class="text-sm text-slate-600">Puedes descargar la versión estructurada de este documento en formato PDF.</p>
-          </div>
-          <a 
-            href={pdfPath} 
-            download 
-            class="bg-slate-950 hover:bg-slate-800 text-amber-400 font-bold px-5 py-3 rounded-xl text-sm transition-colors whitespace-nowrap shadow-md"
-          >
-            Descargar PDF &darr;
-          </a>
-        </div>
-      )}
+      {/* --- COMPONENTE DE REACCIONES Y CAPTURA DE LEADS --- */}
+      <ReactionButtons articleTitle={title} pdfUrl={pdfPath} />
 
     </article>
   </main>
