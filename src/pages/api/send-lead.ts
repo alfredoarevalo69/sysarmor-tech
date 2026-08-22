@@ -5,19 +5,18 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // 1. Obtención, limpieza y validación estricta de la API Key de Resend
-    const rawApiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
-    const apiKey = typeof rawApiKey === 'string' ? rawApiKey.trim() : '';
+    // Lectura robusta compatible con SSR de Astro y Vercel
+    const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
 
-    if (!apiKey || apiKey === 'undefined' || apiKey === 'null') {
-      console.error('[Config Error]: La API Key de Resend no está configurada en las variables de entorno.');
+    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
+      console.error('[Config Error]: La API Key de Resend no está configurada o llegó vacía.');
       return new Response(
         JSON.stringify({ success: false, error: 'Configuración de servidor incompleta (API Key).' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    const resend = new Resend(apiKey);
+    const resend = new Resend(apiKey.trim());
     const data = await request.json();
     const { email, articleTitle, pdfUrl } = data;
 
@@ -106,8 +105,6 @@ export const POST: APIRoute = async ({ request }) => {
           </div>
         `,
       });
-
-      console.log('[RESEND SUCCESS DATA]:', mailResult);
 
       if (mailResult.error) {
         console.error('[RESEND API RETURNED ERROR]:', mailResult.error);
