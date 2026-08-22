@@ -28,7 +28,7 @@ const pubDate = data.pubDate || null;
 // 3. Renderizar el Markdown con la API de Astro 5
 const { Content } = await render(post);
 
-// 4. Ruta del recurso PDF (Sanitizada)
+// 4. Ruta del recurso PDF (Sanitizada para pasar al componente de reacciones)
 const pdfPath = data.pdfUrl ? String(data.pdfUrl).trim() : null;
 
 // 5. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
@@ -50,7 +50,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   <main class="bg-white min-h-screen py-8 text-slate-800" style="background-color: #ffffff !important;">
     <article class="container mx-auto max-w-4xl px-4">
       
-      {/* --- BARRA SUPERIOR DE NAVEGACIÓN Y ACCIONES --- */}
+      {/* --- BARRA SUPERIOR DE NAVEGACIÓN --- */}
       <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl shadow-lg mb-8 border border-slate-800">
         <a 
           href="/blog" 
@@ -59,22 +59,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
           &larr; Volver al Blog
         </a>
 
-        <div class="flex items-center gap-2 md:gap-3">
-          {category && (
-            <span class="hidden md:inline-block text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
-              {category}
-            </span>
-          )}
-          {pdfPath && (
-            <a 
-              href={pdfPath} 
-              download 
-              class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-sm"
-            >
-              Descargar PDF &darr;
-            </a>
-          )}
-        </div>
+        {category && (
+          <span class="text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
+            {category}
+          </span>
+        )}
       </div>
 
       {/* --- ENCABEZADO PRINCIPAL (SEO H1) --- */}
