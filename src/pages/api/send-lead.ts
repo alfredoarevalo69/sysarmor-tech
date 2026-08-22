@@ -5,8 +5,8 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // Forzar lectura directa y exclusiva del proceso de Node en Vercel
-    const runtimeApiKey = process.env.RES_API_KEY_LIVE || process.env.RESEND_API_KEY;
+    // Lectura directa de la variable de entorno que tienes configurada en Vercel
+    const runtimeApiKey = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
     
     console.log('[DEBUG RUNTIME KEY LENGTH]:', runtimeApiKey ? runtimeApiKey.length : 'UNDEFINED');
 
