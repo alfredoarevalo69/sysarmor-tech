@@ -5,21 +5,20 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // Diagnóstico en vivo en los logs de Vercel
-    console.log('[ENV CHECK] import.meta.env.RESEND_API_KEY exists:', !!import.meta.env.RESEND_API_KEY);
-    console.log('[ENV CHECK] process.env.RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+    // Forzar lectura directa y exclusiva del proceso de Node en Vercel
+    const runtimeApiKey = process.env.RES_API_KEY_LIVE || process.env.RESEND_API_KEY;
+    
+    console.log('[DEBUG RUNTIME KEY LENGTH]:', runtimeApiKey ? runtimeApiKey.length : 'UNDEFINED');
 
-    const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
-
-    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '') {
-      console.error('[CRITICAL]: La API Key de Resend es totalmente indefinida en este entorno de Vercel.');
+    if (!runtimeApiKey || typeof runtimeApiKey !== 'string' || runtimeApiKey.trim() === '') {
+      console.error('[CRITICAL]: La API Key de Resend no está disponible en process.env.');
       return new Response(
-        JSON.stringify({ success: false, error: 'API Key no encontrada por el servidor.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: 'API Key no disponible en process.env.' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    const resend = new Resend(apiKey.trim());
+    const resend = new Resend(runtimeApiKey.trim());
     const data = await request.json();
     const { email, articleTitle, pdfUrl } = data;
 
