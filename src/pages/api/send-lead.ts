@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 4. Envío del correo desde dominio verificado sysarmortech.com
+    // 4. Envío del correo con el remitente universal de pruebas de Resend
     const fullPdfUrl = pdfUrl 
       ? (pdfUrl.startsWith('http') ? pdfUrl : `https://sysarmortech.com${pdfUrl}`) 
       : 'https://sysarmortech.com/blog';
@@ -87,7 +87,7 @@ export const POST: APIRoute = async ({ request }) => {
     let mailResult = null;
     try {
       mailResult = await resend.emails.send({
-        from: 'SysArmor Tech <notificaciones@sysarmortech.com>', 
+        from: 'SysArmor Tech <onboarding@resend.dev>', 
         to: [email],
         subject: `📄 Tu recurso técnico: ${articleTitle}`,
         html: `
