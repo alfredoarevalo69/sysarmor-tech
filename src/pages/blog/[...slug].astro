@@ -28,15 +28,12 @@ const pubDate = data.pubDate || null;
 // 3. Renderizar el Markdown con la API de Astro 5
 const { Content } = await render(post);
 
-// 4. Ruta del recurso PDF (Sanitizada para pasar al componente de reacciones)
-const pdfPath = data.pdfUrl ? String(data.pdfUrl).trim() : null;
-
-// 5. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
+// 4. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
 const formattedDate = pubDate 
   ? new Date(pubDate).toLocaleDateString('es-ES', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' })
   : null;
 
-// 6. Construcción de URL canónica para posicionamiento e indexación en Google
+// 5. Construcción de URL canónica para posicionamiento e indexación en Google
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -89,23 +86,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
       {/* --- COMPONENTE DE REACCIONES (TELEGRAM) --- */}
       <ReactionButtons articleTitle={title} />
-
-      {/* --- BLOQUE CTA FINAL PARA DESCARGAR PDF --- */}
-      {pdfPath && (
-        <div class="mt-12 p-6 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 class="text-lg font-bold text-slate-900">¿Deseas conservar la documentación oficial?</h4>
-            <p class="text-sm text-slate-600">Puedes descargar la versión estructurada de este documento en formato PDF.</p>
-          </div>
-          <a 
-            href={pdfPath} 
-            download 
-            class="bg-slate-950 hover:bg-slate-800 text-amber-400 font-bold px-5 py-3 rounded-xl text-sm transition-colors whitespace-nowrap shadow-md"
-          >
-            Descargar PDF &darr;
-          </a>
-        </div>
-      )}
 
     </article>
   </main>
