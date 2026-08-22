@@ -83,10 +83,25 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
-    // Construcción directa de la URL hacia el PDF estático en /public/docs/
-    // Esto asegura que el enlace abra el visor nativo del PDF en lugar del post del blog
-    const formattedPdfName = `${articleTitle}.pdf`;
-    const fullPdfUrl = `https://sysarmortech.com/docs/${encodeURIComponent(formattedPdfName)}`;
+    // Mapeo seguro y exacto del nombre del archivo PDF según el título del artículo
+    let pdfFileName = 'Hardening Correo Corporativo.pdf'; // Valor por defecto
+    const lowerTitle = (articleTitle || '').toLowerCase();
+
+    if (lowerTitle.includes('correo')) {
+      pdfFileName = 'Hardening Correo Corporativo.pdf';
+    } else if (lowerTitle.includes('dmsa')) {
+      pdfFileName = 'implementacion-cuentas-dmsa-windows-2025.pdf';
+    } else if (lowerTitle.includes('laps')) {
+      pdfFileName = 'Instalar y configurar LAPS.pdf';
+    } else if (lowerTitle.includes('entra') || lowerTitle.includes('sso')) {
+      pdfFileName = 'Integracion SSO con Entra ID.pdf';
+    } else if (lowerTitle.includes('intune')) {
+      pdfFileName = 'Intune Implementacion Hibrida.pdf';
+    } else if (lowerTitle.includes('dns')) {
+      pdfFileName = 'optimizacion-dns-active-directory-hub-spoke-hibrido.pdf';
+    }
+
+    const fullPdfUrl = `https://sysarmortech.com/docs/${encodeURIComponent(pdfFileName)}`;
 
     await transporter.sendMail({
       from: `"SysArmor Tech" <${smtpUser}>`,
