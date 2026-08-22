@@ -8,110 +8,114 @@ const { articleTitle } = Astro.props;
 ---
 
 <div class="reaction-wrapper my-8 p-6 bg-slate-900 border border-slate-800 rounded-2xl text-center shadow-md">
-  <p class="text-sm font-semibold text-slate-200 mb-3">¿Te resultó útil esta documentación?</p>
+  <!-- Estado Inicial: Botones -->
+  <div id="fb-initial-view">
+    <p class="text-sm font-semibold text-slate-200 mb-3">¿Te resultó útil esta documentación?</p>
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+      <button 
+        type="button"
+        class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-medium text-sm border border-slate-700 cursor-pointer transition-all active:scale-95" 
+        data-vote="like"
+        data-title={articleTitle}
+      >
+        👍 <span>Útil</span>
+      </button>
 
-  <div class="flex flex-col sm:flex-row justify-center items-center gap-3 mb-4">
-    <button 
-      type="button"
-      class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-medium text-sm border border-slate-700 cursor-pointer disabled:opacity-50 transition-all active:scale-95" 
-      data-vote="like"
-      data-title={articleTitle}
-    >
-      👍 <span>Útil</span>
-    </button>
-
-    <button 
-      type="button"
-      class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm border border-slate-700 cursor-pointer disabled:opacity-50 transition-all active:scale-95" 
-      data-vote="dislike"
-      data-title={articleTitle}
-    >
-      👎 <span>No útil</span>
-    </button>
+      <button 
+        type="button"
+        class="reaction-btn flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm border border-slate-700 cursor-pointer transition-all active:scale-95" 
+        data-vote="dislike"
+        data-title={articleTitle}
+      >
+        👎 <span>No útil</span>
+      </button>
+    </div>
   </div>
 
-  <div class="max-w-xs mx-auto mb-3">
-    <label for="reason-select" class="block text-xs text-slate-400 mb-1">Motivo (Opcional):</label>
-    <select id="reason-select" class="w-full bg-slate-800 text-slate-200 text-xs rounded-lg border border-slate-700 p-2 focus:ring-1 focus:ring-amber-400 outline-none">
-      <!-- Se llena dinámicamente según el voto -->
-      <option value="Explicación clara y directa">Explicación clara y directa</option>
-      <option value="Solucionó mi problema técnico">Solucionó mi problema técnico</option>
-      <option value="Excelente paso a paso">Excelente paso a paso</option>
-    </select>
+  <!-- Tarjeta de Éxito (Voto Útil) -->
+  <div id="fb-card-useful" class="hidden text-center py-2">
+    <div class="text-emerald-400 font-semibold text-sm mb-1 flex items-center justify-center gap-2">
+      <span>✨</span> ¡Muchas gracias por tu feedback positivo!
+    </div>
+    <p class="text-xs text-slate-400">Tu opinión nos ayuda a mejorar continuamente los manuales de infraestructura.</p>
   </div>
 
-  <p id="feedback-msg" class="text-xs text-emerald-400 font-semibold hidden">
-    ¡Gracias! Tu interacción se envió correctamente.
-  </p>
+  <!-- Tarjeta de Feedback Negativo (Voto No Útil) -->
+  <div id="fb-card-useless" class="hidden text-left max-w-md mx-auto py-2">
+    <p class="text-xs font-semibold text-slate-200 mb-2 text-center">Ayúdanos a mejorar:</p>
+    <div class="space-y-2">
+      <select id="reason-select" class="w-full bg-slate-800 text-slate-200 text-xs rounded-lg border border-slate-700 p-2 focus:ring-1 focus:ring-amber-400 outline-none">
+        <option value="Falta información o contexto">Falta información o contexto</option>
+        <option value="No solucionó mi problema técnico">No solucionó mi problema técnico</option>
+        <option value="Instrucciones desactualizadas o erróneas">Instrucciones desactualizadas o erróneas</option>
+      </select>
+      <button 
+        type="button" 
+        id="submit-reason-btn"
+        class="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs rounded-lg transition-all cursor-pointer"
+      >
+        Enviar comentario
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje de agradecimiento final post-comentario -->
+  <div id="fb-final-msg" class="hidden text-center py-2">
+    <p class="text-xs text-emerald-400 font-semibold">¡Gracias por tus comentarios! Los hemos registrado correctamente.</p>
+  </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const initialView = document.getElementById('fb-initial-view');
+    const cardUseful = document.getElementById('fb-card-useful');
+    const cardUseless = document.getElementById('fb-card-useless');
+    const finalMsg = document.getElementById('fb-final-msg');
     const buttons = document.querySelectorAll('.reaction-btn');
-    const feedbackMsg = document.getElementById('feedback-msg');
     const reasonSelect = document.getElementById('reason-select') as HTMLSelectElement;
+    const submitReasonBtn = document.getElementById('submit-reason-btn');
 
-    // Opciones según el tipo de voto
-    const optionsLike = [
-      'Explicación clara y directa',
-      'Solucionó mi problema técnico',
-      'Excelente paso a paso'
-    ];
+    let currentVoteData = { vote: '', articleTitle: '' };
 
-    const optionsDislike = [
-      'Falta información o contexto',
-      'No solucionó mi problema técnico',
-      'Instrucciones desactualizadas o erróneas'
-    ];
-
-    // Cambiar las opciones del select según el botón que toque/hover el usuario
     buttons.forEach((button) => {
-      button.addEventListener('mouseenter', () => {
-        const vote = button.getAttribute('data-vote');
-        updateSelectOptions(vote === 'like' ? optionsLike : optionsDislike);
-      });
-
       button.addEventListener('click', async () => {
         const vote = button.getAttribute('data-vote');
         const articleTitle = button.getAttribute('data-title') || document.title;
+        currentVoteData = { vote: vote || '', articleTitle };
 
-        // Asegurar que las opciones correspondan al botón presionado antes de leer el valor
-        updateSelectOptions(vote === 'like' ? optionsLike : optionsDislike);
-        const reason = reasonSelect ? reasonSelect.value : 'Sin motivo especificado';
+        if (vote === 'like') {
+          // Ocultar vista inicial y mostrar tarjeta útil
+          initialView?.classList.add('hidden');
+          cardUseful?.classList.remove('hidden');
 
-        buttons.forEach(b => (b as HTMLButtonElement).disabled = true);
-
-        try {
-          const response = await fetch('/api/reaction', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ articleTitle, vote, reason }),
-          });
-
-          const data = await response.json();
-
-          if (response.ok && data.success) {
-            feedbackMsg?.classList.remove('hidden');
-          } else {
-            alert(`Error ${response.status}: ${data.error || 'Respuesta no válida'}`);
-            buttons.forEach(b => (b as HTMLButtonElement).disabled = false);
-          }
-        } catch (error) {
-          alert(`Error de red: ${error}`);
-          buttons.forEach(b => (b as HTMLButtonElement).disabled = false);
+          // Enviar de inmediato al backend
+          await sendReaction(vote, articleTitle, 'Explicación clara y directa');
+        } else {
+          // Ocultar vista inicial y mostrar formulario de motivo
+          initialView?.classList.add('hidden');
+          cardUseless?.classList.remove('hidden');
         }
       });
     });
 
-    function updateSelectOptions(options: string[]) {
-      if (!reasonSelect) return;
-      const currentValue = reasonSelect.value;
+    submitReasonBtn?.addEventListener('click', async () => {
+      const reason = reasonSelect ? reasonSelect.value : 'Sin motivo especificado';
       
-      // Solo actualiza si las opciones son diferentes para no resetear innecesariamente
-      if (reasonSelect.options[0]?.value !== options[0]) {
-        reasonSelect.innerHTML = options
-          .map(opt => `<option value="${opt}">${opt}</option>`)
-          .join('');
+      cardUseless?.classList.add('hidden');
+      finalMsg?.classList.remove('hidden');
+
+      await sendReaction(currentVoteData.vote, currentVoteData.articleTitle, reason);
+    });
+
+    async function sendReaction(vote: string, articleTitle: string, reason: string) {
+      try {
+        await fetch('/api/reaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ articleTitle, vote, reason }),
+        });
+      } catch (error) {
+        console.error('Error enviando reacción:', error);
       }
     }
   });
