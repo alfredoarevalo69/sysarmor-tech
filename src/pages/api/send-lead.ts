@@ -8,7 +8,7 @@ export const POST: APIRoute = async ({ request }) => {
     const data = await request.json();
     const { email, articleTitle, pdfUrl } = data;
 
-    // Validación del formato del correo
+    // Validación del formato del correo electrónico
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return new Response(
@@ -40,13 +40,10 @@ export const POST: APIRoute = async ({ request }) => {
     const chatId = import.meta.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID || "7845018728";
 
     if (token && chatId) {
-      const fileName = pdfUrl ? pdfUrl.split('/').pop() : 'Documento técnico';
       const telegramMessage = 
         `🔥 *NUEVO LEAD CAPTURADO (PDF)*\n\n` +
         `📧 *Correo:* \`${email}\`\n` +
         `📌 *Artículo:* ${articleTitle}\n` +
-        `📄 *Archivo:* \`${fileName}\`\n` +
-        `🔗 *Ruta PDF:* \`${pdfUrl || 'N/A'}\`\n` +
         `⏰ *Fecha:* ${new Date().toLocaleString('es-CO')}`;
 
       try {
@@ -64,7 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 3. Envío de Correo mediante SMTP configurado para Gmail
+    // 3. Configuración del Transporte SMTP (Gmail)
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
 
@@ -76,20 +73,20 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Configuración de transporte específica para Gmail (Puerto 465 seguro)
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
-      secure: true, // true para puerto 465
+      secure: true,
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
     });
 
-    const fullPdfUrl = pdfUrl 
-      ? (pdfUrl.startsWith('http') ? pdfUrl : `https://sysarmortech.com${pdfUrl}`) 
-      : 'https://sysarmortech.com/blog';
+    // Construcción directa de la URL hacia el PDF estático en /public/docs/
+    // Esto asegura que el enlace abra el visor nativo del PDF en lugar del post del blog
+    const formattedPdfName = `${articleTitle}.pdf`;
+    const fullPdfUrl = `https://sysarmortech.com/docs/${encodeURIComponent(formattedPdfName)}`;
 
     await transporter.sendMail({
       from: `"SysArmor Tech" <${smtpUser}>`,
@@ -99,11 +96,11 @@ export const POST: APIRoute = async ({ request }) => {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f172a; color: #f8fafc; padding: 24px; border-radius: 12px;">
           <h2 style="color: #fbbf24; margin-bottom: 16px;">¡Hola! Aquí tienes la guía solicitada.</h2>
           <p style="font-size: 14px; line-height: 1.6; color: #cbd5e1;">
-            Gracias por consultar la documentación sobre <strong>"${articleTitle}"</strong> en SysArmor Tech.
+            Gracias por consultar la documentación técnica sobre <strong>"${articleTitle}"</strong> en SysArmor Tech.
           </p>
           <div style="margin: 24px 0; text-align: center;">
             <a href="${fullPdfUrl}" target="_blank" style="background-color: #f59e0b; color: #020617; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 14px; display: inline-block;">
-              📥 Descargar Recurso PDF
+              📥 Ver / Descargar Documento PDF
             </a>
           </div>
           <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;" />
@@ -115,7 +112,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Correo enviado por Gmail SMTP correctamente.' }),
+      JSON.stringify({ success: true, message: 'Correo enviado correctamente.' }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 
