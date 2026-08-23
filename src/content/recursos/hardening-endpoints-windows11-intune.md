@@ -1,142 +1,235 @@
 ---
-title: "Hardening de Endpoints con Windows 11 mediante Microsoft Intune: BitLocker, ASR y Security Baselines"
-description: "🛠️ [VERSIÓN EN BORRADOR] Aprende a desplegar la línea base de ciberseguridad para Windows 11 unida a Entra ID mediante Intune."
-pubDate: 2026-08-20
+title: "Hardening Mínimo de Endpoints Windows 11 con Microsoft Intune"
+description: "Aprende a desplegar políticas de hardening básico en Windows 11 utilizando Microsoft Intune y Entra ID: BitLocker, ASR Rules, Schannel, Defender AV, WUfB y control de USB."
+pubDate: 2026-08-23
 category: "Ciberseguridad"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/Intune-Hardening/IntuneH.png"
-pdfUrl: "/docs/Hardening Endpoints Windows 11 Intune.pdf"
+image: "/images/Hardening_Endpoints/Hardening_Endpoints.png"
+pdfUrl: "/docs/Hardening-Endpoints-con-MS-Intune.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Ciberseguridad, Operación e Innovación  
+> **Enfoque:** Infraestructura, Seguridad de la Información, Operación e Innovación  
 
 ---
 
-## Introducción — La postura Zero Trust en el Endpoint
+## Objetivo del documento
 
-En entornos de trabajo híbridos o de acceso remoto directo a la nube, el perímetro de red tradicional ha desaparecido. Los dispositivos corporativos se convierten en la primera línea de defensa frente a vectores de ataque comunes como ransomware, exfiltración de credenciales y ejecución de código malicioso local.
+Este manual reúne un conjunto de recomendaciones mínimas de seguridad para estaciones de trabajo con Windows 11 administradas mediante Microsoft Intune y Microsoft Entra ID. No reemplaza políticas corporativas más completas, sino que ofrece un punto de partida práctico para fortalecer la seguridad básica de los equipos.
 
-Para garantizar la integridad del dispositivo antes de otorgarle acceso a recursos de la organización, la arquitectura **Zero Trust** exige validar que el sistema operativo esté endurecido (*hardened*), con cifrado inmutable de almacenamiento y reglas de reducción de superficie de ataque estrictas.
+Las configuraciones incluyen: cifrado de disco, reducción de superficie de ataque, mitigación de protocolos obsoletos, firewall, actualizaciones de seguridad y control de dispositivos externos. Cada organización puede ampliar o ajustar estas medidas según sus necesidades y nivel de riesgo.
 
-Este manual técnico cubre la implementación de una línea base de ciberseguridad para estaciones de trabajo **Windows 11 (Pro/Enterprise)** unidas directamente a **Microsoft Entra ID** e integradas a **Microsoft Intune**, estructurada en tres pilares operativos:
-
-* **Pilar 1: Cifrado Inmutable y Protección de Datos:** Configuración de BitLocker con cifrado XTS-AES 256, módulo TPM obligatorio y respaldo inmutable de claves en Entra ID.
-* **Pilar 2: Reducción de la Superficie de Ataque (ASR):** Mitigación de vectores de ejecución no autorizados (macros, scripts en memoria y volcado de credenciales de LSASS).
-* **Pilar 3: Despliegue de Windows 11 Security Baseline:** Aplicación de la plantilla nativa de hardening de Microsoft desde la consola MDM.
+El valor principal de este documento es detallar por dónde se configuran las opciones en Intune y explicar su impacto en la protección del endpoint. Aunque existen otras configuraciones más avanzadas o críticas, estas recomendaciones mínimas garantizan un nivel de seguridad razonable y fácil de implementar, incluso en entornos de prueba o laboratorios.
 
 ---
 
-## Requisitos Previos y Enrolamiento del Dispositivo
+## Arquitectura y Recursos Previos
 
-* **Suscripción y Licenciamiento:** Tenant de Microsoft 365 con licencias activas de *Microsoft Intune Plan 1* o *Microsoft 365 Business Premium*.
-* **Rol de Administración:** Privilegios de *Intune Administrator* o *Global Administrator*.
-* **Sistema Operativo:** Windows 11 Pro, Enterprise o Education (Windows Home no cuenta con soporte para BitLocker empresarial ni gestión MDM completa).
+Para la elaboración de las pruebas se utilizó la siguiente arquitectura:
 
-### Registro del Dispositivo (Entra ID Join + Intune MDM)
+*   **Consola de Gestión:** Microsoft Intune Admin Center (`intune.microsoft.com`).
+*   **DC 2025:** Controlador de dominio.
+*   **Servicio de Identidad:** Windows Server 2025 con Microsoft Entra ID (`entra.microsoft.com`).
+*   **Repositorio CDN Público:** Repositorio GitHub (`recursos-publicos`) para el alojamiento de assets HTTP/HTTPS.
+*   **Equipo Cliente:** Windows 11 Enterprise/Pro.
 
-Para este escenario de nube pura sin integración previa con Active Directory local (*On-premises*), el registro se realiza directamente desde la estación de trabajo:
-
-1. Ir a **Configuración** > **Cuentas** > **Acceder a trabajo o colegio**.
-2. Seleccionar **Conectar** y hacer clic en **"Unir este dispositivo a Microsoft Entra ID"**.
-3. Autenticarse con la cuenta corporativa asignada al usuario en Intune.
-4. Confirmar el enrolamiento en los portales administrativos:
-   * **Entra ID (`entra.microsoft.com`):** *Devices > All devices* (Estado: *Microsoft Entra joined*).
-   * **Intune (`intune.microsoft.com`):** *Devices > Windows* (Estado: *Managed by Intune*).
-
-![Sincronización del dispositivo en el portal de Intune](/images/Intune-Hardening/Intune1.png)
-## PARTE 1: Hardening de Identidad y Cifrado (BitLocker Baseline)
-
-**Ubicación en portal:** `intune.microsoft.com` > **Endpoint security** > **Disk encryption** > **Create Policy**
-
-Crear una directiva de cifrado para plataforma **Windows 10 and later** bajo el perfil **BitLocker**.
-
-### Parámetros Críticos de Configuración
-* **Require Device Encryption:** Enabled.
-* **Encryption Method:** XTS-AES 256-bit (proporciona mayor resistencia criptográfica sobre el estándar AES-128).
-* **Base Drive Encryption:**
-  * **Require TPM:** Enabled (obliga al uso del chip criptográfico físico del equipo).
-  * **Compatible TPM Startup PIN:** Allowed o Required según el nivel de seguridad del cliente.
-* **Recovery Key Backup:** Save BitLocker recovery information to Microsoft Entra ID before enabling BitLocker. (Garantiza que la unidad no se cifre si falla el envío de la clave de recuperación a la nube).
-
-![Directiva de Cifrado BitLocker en Intune](/images/Intune-Hardening/Intune2.png)
-
-#### Verificación del Cifrado en el Cliente (PowerShell L3)
-
-Ejecutar en la estación Windows 11 con privilegios elevados:
-
-Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, EncryptionMethod, ProtectionStatus
-
-#### Recuperación de Claves desde Entra ID
-Los administradores del SOC pueden auditar o recuperar la clave de cifrado navegando a:
-`entra.microsoft.com` > **Devices** > **All devices** > *[Seleccionar Dispositivo]* > **BitLocker Keys**.
-
-![Claves de recuperación de BitLocker en Entra ID](/images/Intune-Hardening/Intune3.png)
+![Arquitectura Laboratorio Intune y Windows 11](/images/Hardening_Endpoints/Hardening_Endpoints1.png)
 
 ---
 
-## PARTE 2: Reducción de Superficie de Ataque (Attack Surface Reduction - ASR)
+## Personalización Corporativa (Branding)
 
-Las reglas ASR bloquean comportamientos frecuentemente explotados por malware antes de que logren ejecutarse.
+Mantener un branding uniforme en estaciones de trabajo refuerza la identidad corporativa y evita configuraciones no autorizadas.
 
-**Ubicación en portal:** `intune.microsoft.com` > **Endpoint security** > **Attack surface reduction** > **Create Policy**
+### Configuración en Intune
+*   **Ruta:** `Devices` → `Configuration profiles` → `Templates` → `Device restrictions`.
+*   **Perfil:** `WIN11-PR-Personalization-SysArmor`.
+*   **Desktop target wallpaper URL:** `https://raw.githubusercontent.com/alfredoarevalo69/recursos-publicos/main/WallPaper_SysArmorTech.png`
+*   **Lock screen background image URL:** `https://raw.githubusercontent.com/alfredoarevalo69/recursos-publicos/main/WallPaper_SysArmorTech.png`
 
-Crear perfil de tipo **Attack Surface Reduction rules** y configurar los siguientes identificadores clave en modo **Block**:
-
-* **Bloqueo de volcado de memoria de LSASS:** *Block credential stealing from the Windows local security authority subsystem (lsass.exe)*.
-* **Bloqueo de procesos secundarios en Microsoft Office:** *Block Office applications from creating child processes*.
-* **Bloqueo de scripts ejecutable desatendidos:** *Block executable content from email client and webmail*.
-* **Protección contra ejecuciones no firmadas:** *Block unexecutable files from running unless they meet an allowlist criteria*.
-
-![Configuración de Reglas ASR en Intune](/images/Intune-Hardening/Intune4.png)
-
-#### Auditoría de Eventos ASR en el Cliente (PowerShell)
-
-Para rastrear en el cliente qué ejecuciones o scripts han sido bloqueados por las reglas ASR, consultar el registro de eventos de Defender:
-
-Get-WinEvent -ProviderName "Microsoft-Windows-Windows Defender" | Where-Object {$_.Id -eq 1121} | Format-List -Property TimeCreated, Message
-## PARTE 3: Aplicación del Windows 11 Security Baseline
-
-Microsoft proporciona plantillas preconfiguradas con cientos de ajustes probados por sus equipos de ciberdefensa.
-
-**Ubicación en portal:** `intune.microsoft.com` > **Endpoint security** > **Security baselines** > **Windows 11 Security Baseline**
-
-1. Seleccionar **Create profile**, asignar un nombre descriptivo (ejemplo: `W11-Security-Baseline-Corporate`).
-2. **Ajustes de Configuración Recomendados:**
-   * **SmartScreen:** Require Admin approval before running unknown apps.
-   * **Remote Desktop:** Block or Require NLA (Network Level Authentication).
-   * **Account Options:** Disable guest account, enforce Local Account Passwords.
-   * **DMA Guard:** Enable Kernel DMA Protection to mitigate Direct Memory Access attacks via Thunderbolt ports.
-3. Asignar la directiva al grupo de dispositivos `GRP-Endpoints-Windows11-Prod`.
-
-![Despliegue del Security Baseline de Windows 11](/images/Intune-Hardening/Intune5.png)
+![Personalización de pantalla de bloqueo](/images/Hardening_Endpoints/Hardening_Endpoints2.png)
 
 ---
 
-## PARTE 4: Pruebas de Laboratorio y Evidencia de Cumplimiento
+## Cifrado y Custodia de Claves (BitLocker)
 
-### 1. Validación de Estado de Cumplimiento (Compliance)
-En la consola de Intune, el dispositivo debe reportar el estado **Compliant** tras procesar las políticas de cifrado y el baseline.
+BitLocker cifra discos y protege datos en reposo. Al habilitarlo de forma centralizada desde Intune, se asegura que todos los datos estén cifrados y que las claves de recuperación se custodien en un repositorio seguro (Microsoft Entra ID).
 
-![Dispositivo en estado Compliant en Intune](/images/Intune-Hardening/Intune6.png)
+### Configuración en Intune
+*   **Ruta:** `Endpoint security` → `Disk encryption` → `BitLocker`.
+*   **Perfil:** `BitLocker_SysArmor.
+*   **Método:** XTS-AES 256-bit.
+*   **Custodia:** Guardar claves en Entra ID / AD DS.
 
-### 2. Prueba de Concepto de Ataque LSASS
-Al intentar utilizar herramientas de volcado de memoria (como `mimikatz` o un script en PowerShell orientado a leer la memoria del proceso `lsass.exe`), la regla ASR correspondiente interviene inmediatamente:
-
-* **Resultado en cliente:** Acceso denegado al proceso.
-* **Notificación visual:** Alerta del sistema indicando que el Administrador de TI ha bloqueado la acción por políticas de seguridad.
+![Configuración de BitLocker en Intune](/images/Hardening_Endpoints/Hardening_Endpoints3.png)
 
 ---
 
-## Alcance del Servicio SysArmorTech
+## Reducción de Superficie de Ataque (ASR Rules)
 
-En **SysArmorTech** transformamos la gestión de dispositivos en una postura de seguridad robusta alineada a estándares internacionales (NIST / CIS Benchmarks), maximizando las capacidades nativas del ecosistema Microsoft 365.
+Las ASR Rules son un conjunto de políticas de Microsoft Defender que limitan comportamientos comunes utilizados por malware, como macros maliciosas, scripts sospechosos o procesos que intentan modificar configuraciones críticas.
 
-### Servicios de Implementación MDM / Zero Trust
-* **Enrolamiento e Identidad:** Configuración de arquitecturas Entra ID Join e Híbridas.
-* **Hardening de Endpoints:** Despliegue de BitLocker, perfiles ASR y Security Baselines personalizados sin impacto operativo.
-* **Gestión de LAPS y Credenciales:** Control de cuentas de administrador local centralizado desde la nube.
-* **Políticas de Acceso Condicional:** Bloqueo de dispositivos no conformes para asegurar el acceso a Microsoft 365.
+### Modos de Aplicación
+*   **No configurado:** Usa la configuración predeterminada de Windows Defender.
+*   **Desactivado:** La regla se apaga explícitamente.
+*   **Bloque:** Aplica en modo estricto e impide la acción.
+*   **Auditoría:** Registra los eventos en el log de seguridad sin bloquear.
+*   **Advertir:** Notifica al usuario, permitiéndole continuar si lo desea.
 
-👉 **Solicita tu consultoría de hardening con nuestro equipo técnico:** [https://sysarmortech.com](https://sysarmortech.com)
+> **Estrategia de Despliegue Recomendada:**
+> 1. Configurar la regla en modo **Auditoría** para evaluar impacto en aplicaciones legítimas.
+> 2. Auditar eventos en el portal de Microsoft Defender.
+> 3. Definir exclusiones si es necesario.
+> 4. Cambiar la regla a modo **Bloque**.
+
+![Reglas de reducción de superficie expuesta a ataques](/images/Hardening_Endpoints/Hardening_Endpoints4.png)
+
+---
+
+## Hardening de Red y Protección LSASS (Settings Catalog)
+
+El hardening de red reduce la exposición de servicios obsoletos y protege el proceso LSASS (*Local Security Authority Subsystem Service*) contra el robo de credenciales en memoria.
+
+| Categoría en Catálogo | Nombre de la Regla | Valor Requerido | Objetivo de Seguridad |
+| :--- | :--- | :--- | :--- |
+| **Administrative Templates > Network > DNS Client** | Turn off multicast name resolution | Enabled | Inhabilita LLMNR contra ataques de envenenamiento (Responder). |
+| **Administrative Templates > Network > Lanman Server** | Enable SMB v1 protocol | Disabled | Bloquea el protocolo SMBv1 (Mitigación EternalBlue). |
+| **Device Guard** | Turn On Virtualization Based Security | Enabled | Habilita seguridad basada en virtualización (VBS). |
+| **Device Guard** | LSA Protection | Enabled with UEFI Lock | Activa Credential Guard para proteger la memoria de LSASS. |
+
+---
+
+## Deshabilitación de Protocolos Cifrados Obsoletos
+
+Windows 11 incluye soporte para múltiples protocolos que representan un riesgo por vulnerabilidades conocidas (SSL 2.0/3.0, TLS 1.0/1.1).
+
+### Despliegue mediante PowerShell Script
+*   **Ruta en Intune:** Devices → Scripts → PowerShell.
+*   **Script:** WIN11-SEC-Disable-LegacyProtocols.ps1.
+
+"powershell"
+# ==============================================================================
+# Script: WIN11-SEC-Disable-LegacyProtocols.ps1
+# Objetivo: Hardening de Schannel (SSL/TLS Obsoletos) y desactivación de PS v2
+# ==============================================================================
+
+# 1. Deshabilitar SSL 2.0, SSL 3.0, TLS 1.0 y TLS 1.1 en Schannel
+$protocols = @("SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1")
+
+```powershell
+# ==============================================================================
+# Script: Disable-LegacyProtocols.ps1
+# Objetivo: Hardening de Schannel (SSL/TLS Obsoletos) y desactivación de PS v2
+# ==============================================================================
+
+$protocols = @("SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1")
+
+foreach ($protocol in $protocols) {
+    # Servidor
+    $serverPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$protocol\Server"
+    if (!(Test-Path $serverPath)) { 
+        New-Item -Path $serverPath -Force | Out-Null 
+    }
+    Set-ItemProperty -Path $serverPath -Name "Enabled" -Value 0 -Type DWord
+    Set-ItemProperty -Path $serverPath -Name "DisabledByDefault" -Value 1 -Type DWord
+
+    # Cliente
+    $clientPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$protocol\Client"
+    if (!(Test-Path $clientPath)) { 
+        New-Item -Path $clientPath -Force | Out-Null 
+    }
+    Set-ItemProperty -Path $clientPath -Name "Enabled" -Value 0 -Type DWord
+    Set-ItemProperty -Path $clientPath -Name "DisabledByDefault" -Value 1 -Type DWord
+}
+
+# Deshabilitar Motor Legacy de PowerShell v2 (Evade escaneo AMSI)
+if ((Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq "Enabled") {
+    Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root -NoRestart
+}
+```
+---
+
+## Configurar Firewall y Defender AV
+
+Configurar Microsoft Defender Antivirus y Firewall de forma centralizada asegura protección activa en tiempo real contra conexiones no autorizadas y malware.
+
+### Tamper Protection (Protección contra alteraciones)
+Evita que usuarios locales o procesos maliciosos deshabiliten la protección en tiempo real, las exclusiones de antivirus o las reglas ASR. Una vez activa, ni siquiera un administrador local puede deshabilitarla manualmente.
+
+![Configuración de Tamper Protection en Defender](/images/Hardening_Endpoints/Hardening_Endpoints7.png)
+
+![Estado de supervisión en tiempo real y en la nube](/images/Hardening_Endpoints/Hardening_Endpoints8.png)
+
+---
+
+## Configurar Actualizaciones de Seguridad (WUfB)
+
+Windows Update for Business garantiza que los endpoints reciban parches de seguridad acumulativos sin depender del mantenimiento manual del usuario.
+
+*   **Ruta en Intune:** `Devices` → `Configuration profiles` → `Windows Update for Business`.
+*   **Perfil:** `WIN11-SEC-WUfB`.
+
+![Parámetros de Windows Update para Empresas](/images/Hardening_Endpoints/Hardening_Endpoints9.png)
+
+---
+
+## Restringir Dispositivos Externos (USB)
+
+Controlar el almacenamiento removible previene la fuga de datos confidenciales y bloquea la ejecución de vectores maliciosos físicos.
+
+*   **Ruta en Intune:** `Devices` → `Configuration profiles` → `Templates` → `Device restrictions`.
+*   **Regla:** `Removable Disk Deny Write Access` → **Habilitado**.
+
+![Restricción de lectura y escritura en almacenamiento USB](/images/Hardening_Endpoints/Hardening_Endpoints10.png)
+
+---
+
+## Firewall de Windows
+
+Aplica reglas estrictas en los perfiles de red Dominio, Privado y Público.
+
+![Opciones de Firewall de red de dominio](/images/Hardening_Endpoints/Hardening_Endpoints11.png)
+
+---
+
+## Configuración de Wi-Fi Corporativo
+
+Permite el aprovisionamiento automático de perfiles Wi-Fi seguros con estándares de cifrado WPA2/WPA3 Empresa.
+
+![Perfil de configuración Wi-Fi Empresa](/images/Hardening_Endpoints/Hardening_Endpoints12.png)
+
+---
+
+## Políticas de Seguridad de Cuentas Locales
+
+Aplica restricciones sobre credenciales locales, bloqueo de cuenta tras intentos fallidos y derechos de inicio de sesión.
+
+![Resumen de directiva Endpoint Protection para cuentas](/images/Hardening_Endpoints/Hardening_Endpoints13.png)
+
+---
+
+## Forzar Sincronización y Diagnóstico
+
+### Métodos para Forzar la Sincronización
+
+1. **Desde la CLI de Windows (Administrador):**
+   cmd
+   Start-Process "C:\Windows\System32\DeviceEnroller.exe" /c
+   dsregcmd /sync
+   ```
+2. **Desde el Visor de Eventos:**  
+   Ruta: `Applications and Services Logs` → `Microsoft` → `Windows` → `DeviceManagement-Enterprise-Diagnostics-Provider` → `Admin`.
+   *   **Event ID 2019:** Política recibida.
+   *   **Event ID 2020:** Política aplicada correctamente.
+   *   **Event ID 404:** Error al aplicar directiva.
+
+![Monitoreo y diagnóstico de políticas MDM](/images/Hardening_Endpoints/Hardening_Endpoints15.png)
+
+> **Nota de troubleshooting:** Si alguna política de Defender o Settings Catalog muestra estado *Error* en la consola de Intune, valida la existencia de conflictos con GPOs locales procedentes del Active Directory (resolución de conflictos MDM vs GPO mediante *PolicyManager CSP*).
+
+---
+
+## Conclusión
+
+El endurecimiento de estaciones de trabajo mediante Microsoft Intune permite establecer un estándar de ciberseguridad homogéneo en toda la organización. Al combinar controles de cifrado, reducción de superficie de ataque y restricción de protocolos legados, se reduce drásticamente el riesgo de exposición ante incidentes de ciberseguridad.
