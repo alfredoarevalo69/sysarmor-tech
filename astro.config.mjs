@@ -8,11 +8,15 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://sysarmortech.com',
 
-  // <--- OBLIGATORIO: Habilita Serverless / SSR
+  // Habilita Serverless / SSR
   output: 'server',
 
   redirects: {
     '/servicios': '/#servicios',
+    
+    // Redirecciones 301 para slugs de recursos que fueron renombrados
+    '/recursos/implementacion-cuentas-dmsa-windows-2025': '/recursos/implementacion-cuentas-dmsa',
+    '/recursos/hardening-correo-corporativo': '/recursos/hardening-correo-corporativo-m365',
   },
 
   vite: {
