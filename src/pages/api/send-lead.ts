@@ -83,22 +83,35 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
-    // Mapeo seguro y exacto del nombre del archivo PDF según el título del artículo
-    let pdfFileName = 'Hardening Correo Corporativo.pdf'; // Valor por defecto
-    const lowerTitle = (articleTitle || '').toLowerCase();
+    // 4. Mapeo dinámico y seguro del archivo PDF
+    let pdfFileName = '';
 
-    if (lowerTitle.includes('correo')) {
-      pdfFileName = 'Hardening Correo Corporativo.pdf';
-    } else if (lowerTitle.includes('dmsa')) {
-      pdfFileName = 'implementacion-cuentas-dmsa-windows-2025.pdf';
-    } else if (lowerTitle.includes('laps')) {
-      pdfFileName = 'Instalar y configurar LAPS.pdf';
-    } else if (lowerTitle.includes('entra') || lowerTitle.includes('sso')) {
-      pdfFileName = 'Integracion SSO con Entra ID.pdf';
-    } else if (lowerTitle.includes('intune')) {
-      pdfFileName = 'Intune Implementacion Hibrida.pdf';
-    } else if (lowerTitle.includes('dns')) {
-      pdfFileName = 'optimizacion-dns-active-directory-hub-spoke-hibrido.pdf';
+    if (pdfUrl) {
+      // Extrae únicamente el nombre del archivo enviando desde el frontmatter
+      pdfFileName = pdfUrl.split('/').pop() || '';
+    }
+
+    // Fallback: Mapeo por palabras clave si pdfUrl viene vacío
+    if (!pdfFileName) {
+      const lowerTitle = (articleTitle || '').toLowerCase();
+
+      if (lowerTitle.includes('windows 11') || lowerTitle.includes('hardening mín') || lowerTitle.includes('endpoints')) {
+        pdfFileName = 'hardening-endpoints-windows11-intune.pdf';
+      } else if (lowerTitle.includes('correo')) {
+        pdfFileName = 'Hardening Correo Corporativo.pdf';
+      } else if (lowerTitle.includes('dmsa')) {
+        pdfFileName = 'implementacion-cuentas-dmsa-windows-2025.pdf';
+      } else if (lowerTitle.includes('laps')) {
+        pdfFileName = 'Instalar y configurar LAPS.pdf';
+      } else if (lowerTitle.includes('entra') || lowerTitle.includes('sso')) {
+        pdfFileName = 'Integracion SSO con Entra ID.pdf';
+      } else if (lowerTitle.includes('hibrida') || lowerTitle.includes('híbrida')) {
+        pdfFileName = 'Intune Implementacion Hibrida.pdf';
+      } else if (lowerTitle.includes('dns')) {
+        pdfFileName = 'optimizacion-dns-active-directory-hub-spoke-hibrido.pdf';
+      } else {
+        pdfFileName = 'Hardening Correo Corporativo.pdf';
+      }
     }
 
     const fullPdfUrl = `https://sysarmortech.com/docs/${encodeURIComponent(pdfFileName)}`;
