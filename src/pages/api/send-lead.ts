@@ -8,7 +8,7 @@ export const POST: APIRoute = async ({ request }) => {
     const data = await request.json();
     const { email, articleTitle, pdfUrl } = data;
 
-    // Validación del formato del correo electrónico
+    // 1. Validación del formato del correo electrónico
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return new Response(
@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // 1. Registro de Lead en Google Sheets
+    // 2. Registro de Lead en Google Sheets
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEpHpTu-pR_zeP7emUlxokosRotexwBMl09q1nRdQmu2pjUUGYj_pi_QP4E6I_Ql94/exec';
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('[Google Script Error]', gErr);
     }
 
-    // 2. Notificación instantánea en Telegram
+    // 3. Notificación instantánea en Telegram
     const token = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN || "8814870414:AAGKNSU4AQIlY6td7TP6jkDHA4IH6yfdOVk";
     const chatId = import.meta.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID || "7845018728";
 
@@ -61,7 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 3. Configuración del Transporte SMTP (Gmail)
+    // 4. Configuración del Transporte SMTP (Gmail)
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
 
@@ -83,20 +83,24 @@ export const POST: APIRoute = async ({ request }) => {
       },
     });
 
-    // 4. Mapeo dinámico y seguro del archivo PDF
+    // 5. Mapeo y procesamiento seguro de la URL del PDF
     let pdfFileName = '';
 
     if (pdfUrl) {
-      // Extrae únicamente el nombre del archivo enviando desde el frontmatter
-      pdfFileName = pdfUrl.split('/').pop() || '';
+      // Extrae el nombre del archivo eliminando la ruta /docs/
+      pdfFileName = decodeURIComponent(pdfUrl.split('/').pop() || '');
     }
 
-    // Fallback: Mapeo por palabras clave si pdfUrl viene vacío
+    // Fallback: Mapeo exacto si pdfUrl no vino en el request
     if (!pdfFileName) {
       const lowerTitle = (articleTitle || '').toLowerCase();
 
-      if (lowerTitle.includes('windows 11') || lowerTitle.includes('hardening mín') || lowerTitle.includes('endpoints')) {
-        pdfFileName = 'hardening-endpoints-windows11-intune.pdf';
+      if (
+        lowerTitle.includes('windows 11') || 
+        lowerTitle.includes('hardening mín') || 
+        lowerTitle.includes('endpoints')
+      ) {
+        pdfFileName = 'hardening-endpoints-ms-intune.pdf';
       } else if (lowerTitle.includes('correo')) {
         pdfFileName = 'Hardening Correo Corporativo.pdf';
       } else if (lowerTitle.includes('dmsa')) {
@@ -114,8 +118,16 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    const fullPdfUrl = `https://sysarmortech.com/docs/${encodeURIComponent(pdfFileName)}`;
+    // Garantizar que siempre termine en .pdf
+    if (pdfFileName && !pdfFileName.endsWith('.pdf')) {
+      pdfFileName += '.pdf';
+    }
 
+    // Formatear espacios únicamente a %20 para prevenir URLs rotas por encodeURIComponent excesivo
+    const cleanFileName = pdfFileName.replace(/ /g, '%20');
+    const fullPdfUrl = `https://sysarmortech.com/docs/${cleanFileName}`;
+
+    // 6. Envío del correo electrónico
     await transporter.sendMail({
       from: `"SysArmor Tech" <${smtpUser}>`,
       to: email,
