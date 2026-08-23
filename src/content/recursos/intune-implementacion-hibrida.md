@@ -6,7 +6,7 @@ category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
 image: "/images/MDM_Intune/MDM_Intune.png"
-pdfUrl: "/docs/Intune Implementacion Hibrida.pdf"
+pdfUrl: "/docs/intune-implementacion-hibrida.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  

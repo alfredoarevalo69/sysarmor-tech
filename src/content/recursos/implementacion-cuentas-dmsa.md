@@ -6,7 +6,7 @@ category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
 image: "/images/dMSA/dMSA_blog.png"
-pdfUrl: "/docs/implementacion-cuentas-dmsa-windows-2025.pdf"
+pdfUrl: "/docs/implementacion-cuentas-dmsa.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  

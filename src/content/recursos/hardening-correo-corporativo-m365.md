@@ -6,7 +6,7 @@ category: "Ciberseguridad"
 isFeatured: true
 author: "SYSARMOR TECH"
 image: "/images/MS-Defender/MS-Defender.png"
-pdfUrl: "/docs/Hardening Correo Corporativo.pdf"
+pdfUrl: "/docs/hardening-correo-corporativo-m365.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  
