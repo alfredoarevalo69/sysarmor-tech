@@ -6,7 +6,7 @@ category: "Ciberseguridad"
 isFeatured: true
 author: "SYSARMOR TECH"
 image: "/images/Hardening_Endpoints/Hardening_Endpoints.png"
-pdfUrl: "/docs/Hardening Endpoints con MS Intune.pdf"
+pdfUrl: "/docs/hardening-endpoints-ms-intune.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  
