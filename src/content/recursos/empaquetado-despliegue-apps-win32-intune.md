@@ -6,7 +6,7 @@ category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
 image: "/images/Despliegue-Apps-Win32-con-Intune/Despliegue-Apps-Intune.png"
-pdfUrl: "/docs/Empaquetado-despliegue-Apps-Win32-con-Intune.pdf"
+pdfUrl: "/docs/empaquetado-despliegue-apps-win32-intune.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH  
