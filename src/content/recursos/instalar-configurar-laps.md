@@ -5,8 +5,8 @@ pubDate: 2026-08-15
 category: "Seguridad e Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/LAPS/LAPS.png"
-pdfUrl: "/docs/Instalar%20y%20configurar%20LAPS.pdf"
+image: "/images/LAPS/LAPS.jpeg"
+pdfUrl: "/docs/instalar-configurar-laps.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH <br />
