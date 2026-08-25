@@ -1,15 +1,21 @@
 ---
-// No requiere import de imágenes al estar en /public/images/
+import { Image } from 'astro:assets';
+import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo -->
-  <img 
-    src="/images/hero-datacenter.webp" 
+  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel -->
+  <Image 
+    src={heroBgImg} 
     alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
-    class="hero-bg"
+    width={1920}
+    height={1080}
+    format="webp"
+    quality={75}
     loading="eager" 
     fetchpriority="high"
+    decoding="sync"
+    class="hero-bg"
   />
 
   <!-- Capa overlay de gradiente para contraste WCAG -->
@@ -65,7 +71,7 @@
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
   .hero-inner {
     width: 100%;
-    max-width: 1280px; /* Mismo max-width estándar que usa tu Navbar */
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 1.5rem;
     position: relative;
@@ -102,22 +108,10 @@
     z-index: 2;
   }
 
-  /* --- CONTENIDO CON ANIMACIÓN FADE-UP --- */
+  /* --- CONTENIDO SIN ANIMACIÓN DELAY EN LCP --- */
   .hero-content {
     max-width: 680px;
     text-align: left;
-    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(24px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   /* --- TIPOGRAFÍA --- */
