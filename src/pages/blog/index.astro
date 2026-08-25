@@ -28,7 +28,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   canonical={canonicalUrl}
 >
   
-  {/* --- 1. HERO BANNER PRINCIPAL CON PROMEZA DE VALOR COMPACTA --- */}
+  {/* --- 1. HERO BANNER PRINCIPAL CON PILARES DESTACADOS --- */}
   <section class="w-full bg-[#050a14] text-white pt-8 pb-6 border-b border-slate-800 relative overflow-hidden">
     {/* Resplandor decorativo de fondo */}
     <div class="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -37,7 +37,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     <div class="container mx-auto max-w-6xl px-4 relative z-10">
       
       {/* Bloque Superior: Título + Badges */}
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-6">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
         
         {/* Contenido principal */}
         <div class="max-w-2xl">
@@ -50,7 +50,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
             Soluciones de TI que <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">protegen, optimizan</span> y hacen crecer tu negocio
           </h1>
           
-          <p class="text-slate-400 text-xs sm:text-sm mt-2 leading-relaxed">
+          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
             Experiencia, seguridad y automatización al servicio de tu infraestructura y productividad.
           </p>
         </div>
@@ -73,47 +73,51 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
       </div>
 
-      {/* Bloque Inferior: Franja Ultra-Compacta de Valor Comercial */}
-      <div class="pt-4 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      {/* Bloque Inferior: Franja Comercial con Títulos Amarillos y Mayor Tamaño */}
+      <div class="pt-5 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-4">
         
-        <div class="flex items-center gap-2.5 text-slate-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        {/* Pilar 1 */}
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
           <div>
-            <span class="font-semibold text-white block leading-none">Seguridad</span>
-            <span class="text-[10px] text-slate-400">Nivel empresarial</span>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Seguridad</span>
+            <span class="text-xs text-slate-300">Nivel empresarial</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 text-slate-300 md:border-l md:border-slate-800/80 md:pl-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        {/* Pilar 2 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
           <div>
-            <span class="font-semibold text-white block leading-none">Infraestructura</span>
-            <span class="text-[10px] text-slate-400">Resiliente y eficiente</span>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Infraestructura</span>
+            <span class="text-xs text-slate-300">Resiliente y eficiente</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 text-slate-300 md:border-l md:border-slate-800/80 md:pl-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        {/* Pilar 3 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
           <div>
-            <span class="font-semibold text-white block leading-none">Expertos Certificados</span>
-            <span class="text-[10px] text-slate-400">Soporte Nivel 2 y 3</span>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Expertos Certificados</span>
+            <span class="text-xs text-slate-300">Soporte Nivel 2 y 3</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5 text-slate-300 md:border-l md:border-slate-800/80 md:pl-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-cyan-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        {/* Pilar 4 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           <div>
-            <span class="font-semibold text-white block leading-none">Automatización</span>
-            <span class="text-[10px] text-slate-400">E innovación constante</span>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Automatización</span>
+            <span class="text-xs text-slate-300">E innovación constante</span>
           </div>
         </div>
 
