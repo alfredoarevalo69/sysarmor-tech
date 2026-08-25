@@ -5,7 +5,7 @@ pubDate: 2026-08-24
 category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/Despliegue-Apps-Win32-con-Intune/Despliegue-Apps-Intune.png"
+image: "/images/Despliegue-Apps-Win32-con-Intune/Despliegue-Apps-Intune.jpeg"
 pdfUrl: "/docs/empaquetado-despliegue-apps-win32-intune.pdf"
 ---
 

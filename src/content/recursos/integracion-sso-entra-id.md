@@ -5,8 +5,8 @@ pubDate: 2026-08-18
 category: "Seguridad e Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/SAML/SAML_SSO.png"
-pdfUrl: "/docs/Integracion%SSO%con%Entra%ID.pdf"
+image: "/images/SAML/SAML_SSO.jpeg"
+pdfUrl: "/docs/integracion-sso-entra-id.pdf"
 ---
 
 > **Autor:** SYSARMOR TECH <br />
