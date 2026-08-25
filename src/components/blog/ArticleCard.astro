@@ -12,13 +12,21 @@ const formattedDate = pubDate
 
 <article class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col justify-between hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300 group h-full">
   
-  {/* IMAGEN PORTADA */}
+  {/* IMAGEN PORTADA CON FONDO DIFUMINADO Y CONTENIDO COMPLETO */}
   {image ? (
-    <a href={articleUrl} class="block overflow-hidden bg-slate-950 aspect-[16/10] relative border-b border-slate-800/80 shrink-0">
+    <a href={articleUrl} class="block overflow-hidden bg-slate-950 aspect-[16/10] relative border-b border-slate-800/80 shrink-0 w-full">
+      {/* Fondo difuminado para rellenar espacios vacíos sin cortar la imagen principal */}
+      <img 
+        src={image} 
+        alt="" 
+        class="absolute inset-0 w-full h-full object-cover blur-md opacity-40 scale-110 pointer-events-none" 
+        aria-hidden="true"
+      />
+      {/* Imagen principal completa */}
       <img 
         src={image} 
         alt={title} 
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+        class="relative w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 block z-10" 
         loading="lazy"
       />
     </a>
@@ -35,7 +43,6 @@ const formattedDate = pubDate
   {/* CUERPO DEL TEXTO CON FLEX-1 PARA EMPUJAR EL FOOTER */}
   <div class="p-5 flex-1 flex flex-col justify-between">
     <div>
-      {/* min-h-[5.5rem] o min-h-[6rem] garantiza la misma altura para títulos de 3 o 4 líneas */}
       <h3 class="text-white font-bold text-base md:text-lg leading-snug group-hover:text-amber-400 transition-colors mb-2 min-h-[5.5rem] flex items-start">
         <a href={articleUrl} class="block">
           {title}
