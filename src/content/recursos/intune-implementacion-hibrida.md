@@ -5,7 +5,7 @@ pubDate: 2026-08-21
 category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/MDM_Intune/MDM_Intune.png"
+image: "/images/MDM_Intune/MDM_Intune.jpeg"
 pdfUrl: "/docs/intune-implementacion-hibrida.pdf"
 ---
 
