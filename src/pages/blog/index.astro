@@ -2,10 +2,8 @@
 export const prerender = true;
 
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import ArticleCard from '../../components/blog/ArticleCard.astro';
-import blogBannerImg from '../../assets/images/Imagen_blog.png';
 
 // Obtener todos los artículos de la colección 'recursos'
 const posts = await getCollection('recursos');
@@ -30,20 +28,47 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   canonical={canonicalUrl}
 >
   
-  {/* --- 1. HERO BANNER PRINCIPAL OPTIMIZADO --- */}
-  <section class="w-full bg-[#050a14] overflow-hidden">
-    <Image 
-      src={blogBannerImg} 
-      alt="Blog de Ingeniería & Operaciones - SysArmor Tech" 
-      width={1920}
-      height={450}
-      format="webp"
-      quality={80}
-      loading="eager"
-      fetchpriority="high"
-      decoding="sync"
-      class="w-full h-auto max-h-[450px] object-cover object-center block"
-    />
+  {/* --- 1. HERO BANNER PRINCIPAL COMPACTO Y RESPONSIVO --- */}
+  <section class="w-full bg-[#050a14] text-white py-10 border-b border-slate-800 relative overflow-hidden">
+    {/* Resplandor decorativo de fondo */}
+    <div class="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="container mx-auto max-w-6xl px-4 relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      
+      {/* Contenido principal (Título y Subtítulo) */}
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          Blog de Ingeniería & Operaciones
+        </div>
+        
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          Soluciones de TI que <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">protegen, optimizan</span> y hacen crecer tu negocio
+        </h1>
+        
+        <p class="text-slate-400 text-xs sm:text-sm mt-3 leading-relaxed">
+          Experiencia, seguridad y automatización al servicio de tu infraestructura y productividad.
+        </p>
+      </div>
+
+      {/* Badges de Especialidades Técnicas */}
+      <div class="flex flex-wrap md:flex-col gap-2.5 shrink-0 w-full md:w-auto">
+        <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-2 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+          <span class="font-medium">Windows Server & Active Directory</span>
+        </div>
+        <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-2 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span class="font-medium">Microsoft 365 & Intune</span>
+        </div>
+        <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-2 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span class="font-medium">Azure & Cloud Security</span>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   {/* --- 2. FRANJA CON BOTONES DE FILTRO Y BÚSQUEDA --- */}
@@ -171,6 +196,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       btn.addEventListener('click', () => {
         currentCategory = btn.getAttribute('data-category') || 'todos';
 
+        // Estilos exactos: Oscuro para el activo, Claro para inactivos
         filterButtons.forEach((b) => {
           b.classList.remove('bg-slate-900', 'text-white', 'active-filter');
           b.classList.add('bg-slate-100', 'text-slate-700');
@@ -192,6 +218,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     }
   };
 
+  // Inicialización compatible con navegaciones tradicionales y View Transitions de Astro
   document.addEventListener('DOMContentLoaded', setupBlogFilters);
   document.addEventListener('astro:page-load', setupBlogFilters);
 </script>
