@@ -5,7 +5,7 @@ pubDate: 2026-08-14
 category: "Infraestructura TI"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/DNS-HUB/dns-architecture.png"
+image: "/images/DNS-HUB/dns-architecture.jpeg"
 pdfUrl: "/docs/optimizacion-dns-active-directory-hub-spoke-hibrido.pdf"
 ---
 
