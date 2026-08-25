@@ -5,7 +5,7 @@ pubDate: 2026-08-23
 category: "Ciberseguridad"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/Hardening_Endpoints/Hardening_Endpoints.png"
+image: "/images/Hardening_Endpoints/Hardening_Endpoints.jpeg"
 pdfUrl: "/docs/hardening-endpoints-windows11-intune.pdf"
 ---
 
