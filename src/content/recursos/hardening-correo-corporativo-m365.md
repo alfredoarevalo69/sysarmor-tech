@@ -5,7 +5,7 @@ pubDate: 2026-08-19
 category: "Ciberseguridad"
 isFeatured: true
 author: "SYSARMOR TECH"
-image: "/images/MS-Defender/MS-Defender.png"
+image: "/images/MS-Defender/MS-Defender.jpeg"
 pdfUrl: "/docs/hardening-correo-corporativo-m365.pdf"
 ---
 
