@@ -28,11 +28,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   canonical={canonicalUrl}
 >
   
-  {/* --- 1. HERO BANNER PRINCIPAL CON PILARES DESTACADOS --- */}
+  {/* --- 1. HERO BANNER PRINCIPAL (OPTIMIZADO PARA LCP Y MOBILE RENDERING) --- */}
   <section class="w-full bg-[#050a14] text-white pt-8 pb-6 border-b border-slate-800 relative overflow-hidden">
-    {/* Resplandor decorativo de fondo */}
-    <div class="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    {/* Resplandor decorativo deshabilitado en mobile para evitar GPU Bottleneck */}
+    <div class="hidden md:block absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="hidden md:block absolute bottom-0 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="container mx-auto max-w-6xl px-4 relative z-10">
       
@@ -42,7 +42,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         {/* Contenido principal */}
         <div class="max-w-2xl">
           <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
             Blog de Ingeniería & Operaciones
           </div>
           
@@ -55,17 +55,17 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
           </p>
         </div>
 
-        {/* Badges de Especialidades */}
+        {/* Badges de Especialidades (Sin backdrop-blur para CPU mobile optimization) */}
         <div class="flex flex-wrap md:flex-col gap-2 shrink-0 w-full md:w-auto">
-          <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
             <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
             <span class="font-medium">Windows Server & Active Directory</span>
           </div>
-          <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span class="font-medium">Microsoft 365 & Intune</span>
           </div>
-          <div class="flex items-center gap-2.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300 shadow-sm backdrop-blur-sm">
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
             <span class="font-medium">Azure & Cloud Security</span>
           </div>
@@ -207,7 +207,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 </Layout>
 
-{/* --- SCRIPT PARA BÚSQUEDA Y FILTRADO POR CATEGORÍA EN TIEMPO REAL --- */}
+{/* --- SCRIPT OPTIMIZADO CON DEBOUNCE PARA EVITAR RE-PAINTS EN BÚSQUEDA --- */}
 <script>
   const setupBlogFilters = () => {
     const filterButtons = document.querySelectorAll('.category-filter');
@@ -217,6 +217,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
     let currentCategory = 'todos';
     let currentQuery = '';
+    let debounceTimer: ReturnType<typeof setTimeout>;
 
     function filterArticles() {
       let visibleCount = 0;
@@ -263,11 +264,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       });
     });
 
-    // Evento de búsqueda dinámica en el input
+    // Búsqueda con debounce para liberar la CPU del móvil mientras el usuario escribe
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
-        currentQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
-        filterArticles();
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          currentQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+          filterArticles();
+        }, 150);
       });
     }
   };
