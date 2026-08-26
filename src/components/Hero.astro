@@ -65,7 +65,8 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 1.5rem;
+    padding: 4rem 0; /* Quitamos los paddings laterales de aquí para evitar desbordes */
+    box-sizing: border-box;
   }
 
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
@@ -73,9 +74,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1.5rem; /* El padding seguro vive únicamente aquí */
     position: relative;
     z-index: 3;
+    box-sizing: border-box;
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -153,6 +155,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     text-decoration: none;
     border-radius: 8px;
     transition: background-color 0.2s ease, transform 0.2s ease;
+    box-sizing: border-box;
   }
 
   .btn-primary:hover {
