@@ -25,10 +25,11 @@
 }
 
 @layer base {
-  /* Habilita el desplazamiento suave global y previene desbordes laterales */
+  /* Blindaje radical para evitar desbordamientos horizontales en cualquier pantalla */
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
     width: 100%;
   }
 
@@ -48,15 +49,17 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
-  /* Aplicación de fuentes, color global y blindaje de ancho */
+  /* Aplicación de fuentes, color global y contención estricta de ancho */
   body {
     @apply font-sans;
     background-color: #020617;
     color: white;
-    overflow-x: hidden;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
     width: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
   }
 
   h1, h2, h3, h4, h5, h6 {
