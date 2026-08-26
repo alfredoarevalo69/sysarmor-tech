@@ -1,0 +1,215 @@
+---
+import { Image } from 'astro:assets';
+import heroBgImg from '../assets/images/hero-datacenter.webp';
+---
+
+<section class="hero-container">
+  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel -->
+  <Image 
+    src={heroBgImg} 
+    alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
+    width={1920}
+    height={1080}
+    format="webp"
+    quality={75}
+    loading="eager" 
+    fetchpriority="high"
+    decoding="sync"
+    class="hero-bg"
+  />
+
+  <!-- Capa overlay optimizada: Texto oscuro a la izq / Escudo y Datacenter nítidos a la der -->
+  <div class="hero-overlay"></div>
+
+  <!-- Contenedor general alineado a la Navbar -->
+  <div class="hero-inner">
+    <!-- Bloque de contenido principal -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Proteja y modernice su infraestructura <span class="highlight">sin detener la operación</span>
+      </h1>
+
+      <p class="hero-description">
+        Ayudamos a empresas con infraestructura crítica o <strong class="highlight-yellow">ecosistema Microsoft</strong> a resolver problemas de seguridad, sistemas legados, migraciones y operaciones de Nivel 3.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#contacto" class="btn-primary">Solicitar Evaluación Técnica</a>
+      </div>
+
+      <ul class="hero-features">
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>+20 años de experiencia en infraestructura y seguridad</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Garantía de continuidad operativa durante migraciones</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --- CONTENEDOR PRINCIPAL --- */
+  .hero-container {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: #050a14;
+    padding: 4rem 1.5rem;
+  }
+
+  /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
+  .hero-inner {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* --- IMAGEN DE FONDO --- */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+  }
+
+  /* --- OVERLAY CON ESCUDO Y DERECHA MÁS NÍTIDOS --- */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    background-image: linear-gradient(
+      90deg, 
+      #050a14 0%, 
+      rgba(5, 10, 20, 0.95) 40%, 
+      rgba(5, 10, 20, 0.30) 65%, 
+      rgba(5, 10, 20, 0.0) 100%
+    );
+    z-index: 2;
+  }
+
+  /* --- CONTENIDO PRINCIPAL --- */
+  .hero-content {
+    max-width: 680px;
+    text-align: left;
+  }
+
+  /* --- TIPOGRAFÍA --- */
+  .hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .highlight {
+    color: #eab308;
+  }
+
+  .hero-description {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    color: #e2e8f0;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .highlight-yellow {
+    color: #eab308;
+    font-weight: 700;
+  }
+
+  /* --- BOTÓN Y LISTA --- */
+  .hero-cta {
+    margin-bottom: 2rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    width: 100%;
+    max-width: 380px;
+    padding: 1rem 1.5rem;
+    background-color: #d97706;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #b45309;
+    transform: translateY(-2px);
+  }
+
+  .hero-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hero-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    color: #eab308;
+    flex-shrink: 0;
+  }
+
+  /* --- AJUSTES RESPONSIVE --- */
+  @media (max-width: 768px) {
+    .hero-container {
+      padding: 3rem 0;
+    }
+
+    .hero-inner {
+      padding: 0 1.5rem;
+    }
+
+    .hero-bg {
+      object-position: 85% center;
+    }
+
+    .hero-overlay {
+      background-image: linear-gradient(
+        180deg, 
+        rgba(5, 10, 20, 0.92) 0%, 
+        rgba(5, 10, 20, 0.85) 70%, 
+        rgba(5, 10, 20, 0.98) 100%
+      );
+    }
+
+    .btn-primary {
+      max-width: 100%;
+    }
+  }
+</style>

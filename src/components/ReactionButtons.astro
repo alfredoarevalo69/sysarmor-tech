@@ -1,0 +1,240 @@
+---
+// src/components/ReactionButtons.astro
+interface Props {
+  articleTitle: string;
+  pdfUrl?: string;
+}
+
+const { articleTitle, pdfUrl = '' } = Astro.props;
+---
+
+<div 
+  class="my-10 p-6 bg-[#020617] border border-slate-800 rounded-2xl shadow-xl max-w-2xl mx-auto" 
+  id="feedback-widget" 
+  data-article-title={articleTitle || ''}
+  data-pdf-url={pdfUrl}
+>
+  <div class="text-center mb-4">
+    <h3 class="text-slate-100 font-semibold text-lg mb-3">¿Te resultó útil esta documentación?</h3>
+    <div class="flex justify-center gap-4">
+      <button 
+        type="button" 
+        id="fb-useful-btn" 
+        class="px-5 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-lg text-slate-200 font-medium text-sm transition-all cursor-pointer"
+      >
+        👍 Útil
+      </button>
+      <button 
+        type="button" 
+        id="fb-useless-btn" 
+        class="px-5 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-lg text-slate-200 font-medium text-sm transition-all cursor-pointer"
+      >
+        👎 No útil
+      </button>
+    </div>
+  </div>
+
+  <!-- TARJETA: Feedback Positivo + Captura Lead para PDF -->
+  <div id="fb-card-useful" style="display: none;" class="bg-slate-900 border border-amber-500/30 rounded-xl p-5 shadow-2xl mt-4">
+    <h4 class="text-amber-400 font-bold text-base sm:text-lg mb-1 flex items-center gap-2">
+      ¡Excelente! Me alegra que te haya servido. 🚀
+    </h4>
+    <p class="text-slate-300 text-xs sm:text-sm mb-4 leading-relaxed">
+      Si quieres descargar la <strong>guía técnica completa en PDF</strong> con todos los scripts y comandos utilizados, ingresa tu correo y te la enviamos al instante.
+    </p>
+
+    <div class="my-4 text-left">
+      <label for="fb-select-useful" class="block text-xs text-slate-400 mb-2 uppercase tracking-wider font-semibold">Lo más valioso de este laboratorio:</label>
+      <select 
+        id="fb-select-useful" 
+        class="w-full bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 focus:outline-none focus:border-amber-500 cursor-pointer"
+      >
+        <option value="Guía paso a paso clara">Guía paso a paso clara y estructurada</option>
+        <option value="Scripts y comandos precisos">Scripts y comandos listos para producción</option>
+        <option value="Resolvió un problema de infraestructura">Resolvió directamente un incidente técnico</option>
+        <option value="Arquitectura y buenas prácticas">Alineado a buenas prácticas y hardening</option>
+      </select>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3">
+      <input 
+        type="email" 
+        id="fb-email"
+        placeholder="tu_correo@empresa.com" 
+        class="flex-1 bg-slate-950 text-slate-100 placeholder-slate-500 border border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-amber-500"
+      />
+      <button 
+        type="button" 
+        id="fb-submit"
+        class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-sm transition-colors cursor-pointer"
+      >
+        📥 DESCARGAR PDF
+      </button>
+    </div>
+
+    <p class="mt-2.5 text-[11px] text-slate-400/80 flex items-center gap-1.5 justify-start">
+      <span>🔒</span> Cero spam. Tus datos están 100% seguros y no los compartiremos con nadie.
+    </p>
+
+    <div id="fb-msg" class="mt-3 text-xs" style="display: none;"></div>
+  </div>
+
+  <!-- TARJETA: Feedback Negativo -->
+  <div id="fb-card-useless" style="display: none;" class="bg-slate-900 border border-rose-500/30 rounded-xl p-5 shadow-2xl mt-4">
+    <h4 class="text-rose-400 font-bold text-base sm:text-lg mb-1 flex items-center gap-2">
+      Lamentamos que no te haya sido de utilidad. 🛠️
+    </h4>
+    <p class="text-slate-300 text-xs sm:text-sm mb-4 leading-relaxed">
+      Ayúdanos a mejorar seleccionando el motivo principal:
+    </p>
+
+    <div class="my-4 text-left">
+      <label for="fb-select-useless" class="block text-xs text-slate-400 mb-2 uppercase tracking-wider font-semibold">¿Qué faltó o falló?:</label>
+      <select 
+        id="fb-select-useless" 
+        class="w-full bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 focus:outline-none focus:border-rose-500 cursor-pointer"
+      >
+        <option value="Faltan pasos de configuración">Faltan pasos detallados de configuración</option>
+        <option value="Errores en comandos o scripts">Los comandos o scripts presentaron errores</option>
+        <option value="Información desactualizada">La versión o arquitectura está desactualizada</option>
+        <option value="Explicación confusa">Explicación técnica confusa o incompleta</option>
+      </select>
+    </div>
+
+    <button 
+      type="button" 
+      id="fb-submit-useless"
+      class="bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-sm transition-colors cursor-pointer w-full sm:w-auto"
+    >
+      Enviar feedback
+    </button>
+    <div id="fb-msg-useless" class="mt-3 text-xs" style="display: none;"></div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    if (window.hasFeedbackInitialized) return;
+    window.hasFeedbackInitialized = true;
+
+    document.addEventListener('click', function(event) {
+      const widget = event.target.closest('#feedback-widget');
+      if (!widget) return;
+
+      const target = event.target;
+      const usefulBtn = target.closest('#fb-useful-btn');
+      const uselessBtn = target.closest('#fb-useless-btn');
+      const submitBtn = target.closest('#fb-submit');
+      const submitUselessBtn = target.closest('#fb-submit-useless');
+
+      const cardUseful = widget.querySelector('#fb-card-useful');
+      const cardUseless = widget.querySelector('#fb-card-useless');
+      const selectUseful = widget.querySelector('#fb-select-useful');
+      const selectUseless = widget.querySelector('#fb-select-useless');
+      const emailInput = widget.querySelector('#fb-email');
+      const msgDiv = widget.querySelector('#fb-msg');
+      const msgUselessDiv = widget.querySelector('#fb-msg-useless');
+      
+      const articleTitle = widget.getAttribute('data-article-title') || document.title;
+      const pdfUrl = widget.getAttribute('data-pdf-url') || window.location.pathname;
+
+      if (!cardUseful || !cardUseless) return;
+
+      if (usefulBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        cardUseful.style.display = 'block';
+        cardUseless.style.display = 'none';
+        
+        usefulBtn.style.background = 'rgba(245, 158, 11, 0.2)';
+        usefulBtn.style.borderColor = '#f59e0b';
+        usefulBtn.style.color = '#fbbf24';
+        uselessBtn.style.background = '';
+        uselessBtn.style.borderColor = '';
+        uselessBtn.style.color = '';
+
+        fetch('/api/reaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'useful', articleTitle, reason: selectUseful ? selectUseful.value : '' })
+        }).catch(() => {});
+      }
+
+      if (uselessBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        cardUseless.style.display = 'block';
+        cardUseful.style.display = 'none';
+
+        uselessBtn.style.background = 'rgba(244, 63, 94, 0.2)';
+        uselessBtn.style.borderColor = '#f43f5e';
+        uselessBtn.style.color = '#fb7185';
+        usefulBtn.style.background = '';
+        usefulBtn.style.borderColor = '';
+        usefulBtn.style.color = '';
+      }
+
+      if (submitUselessBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        submitUselessBtn.setAttribute('disabled', 'true');
+        submitUselessBtn.innerText = 'Enviando...';
+
+        fetch('/api/reaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'not_useful', articleTitle, reason: selectUseless ? selectUseless.value : 'No útil' })
+        })
+        .then(res => res.json())
+        .then(() => {
+          if (msgUselessDiv) {
+            msgUselessDiv.style.display = 'block';
+            msgUselessDiv.style.color = '#34d399';
+            msgUselessDiv.innerText = '¡Gracias por tu reporte! Nos ayuda a mejorar.';
+          }
+        })
+        .finally(() => {
+          submitUselessBtn.removeAttribute('disabled');
+          submitUselessBtn.innerText = 'Enviar feedback';
+        });
+      }
+
+      if (submitBtn && emailInput) {
+        event.preventDefault();
+        event.stopPropagation();
+        const email = emailInput.value.trim();
+        
+        if (!email || !email.includes('@')) {
+          if (msgDiv) {
+            msgDiv.style.display = 'block';
+            msgDiv.style.color = '#fb7185';
+            msgDiv.innerText = 'Ingresa un correo válido.';
+          }
+          return;
+        }
+
+        submitBtn.setAttribute('disabled', 'true');
+        submitBtn.innerText = 'Enviando...';
+
+        fetch('/api/send-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, articleTitle, pdfUrl })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (msgDiv) {
+            msgDiv.style.display = 'block';
+            msgDiv.style.color = data.success ? '#34d399' : '#fb7185';
+            msgDiv.innerText = data.success ? '¡Enviado con éxito! Revisa tu correo.' : (data.error || 'Error al enviar.');
+          }
+          if (data.success) emailInput.value = '';
+        })
+        .finally(() => {
+          submitBtn.removeAttribute('disabled');
+          submitBtn.innerText = '📥 DESCARGAR PDF';
+        });
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,54 @@
+---
+// src/components/FAQ.astro
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+const faqs: FaqItem[] = [
+  {
+    question: "¿Cómo se garantiza la integridad de nuestra data durante la intervención?",
+    answer: "Aplicamos principios de mínimo privilegio (Zero Trust) en todo momento. Todas nuestras intervenciones se realizan bajo acuerdos de confidencialidad (NDA) estrictos y, donde sea posible, empleamos acceso JIT (Just-In-Time) sin almacenamiento permanente de credenciales."
+  },
+  {
+    question: "¿Cómo se integra SysArmor con nuestro equipo de TI interno?",
+    answer: "No somos una fuerza de reemplazo, sino un brazo de soporte Nivel 3. Actuamos como un equipo extendido para gestionar incidentes complejos y automatización, permitiendo que su equipo interno mantenga el control estratégico de la operación diaria."
+  },
+  {
+    question: "¿Qué diferencia hay entre una auditoría estándar y su evaluación técnica?",
+    answer: "Una auditoría estándar suele limitarse a un reporte de riesgos. Nuestra evaluación incluye la remediación: diagnosticamos el fallo, diseñamos el script o configuración correctiva y validamos su implementación técnica, garantizando el cierre real de la brecha."
+  }
+];
+---
+
+<!-- Agregado id="faq", py-16 y clases de centrado flex -->
+<section id="faq" class="w-full py-16 bg-slate-100 border-t border-slate-200 px-6 flex flex-col justify-center">
+  <div class="max-w-3xl mx-auto space-y-12 w-full">
+    
+    <!-- Encabezado -->
+    <h2 class="text-3xl font-display font-bold text-neutral-900 text-center uppercase tracking-wide">
+      Preguntas Frecuentes
+    </h2>
+    
+    <!-- Lista de FAQ con acordeón -->
+    <div class="space-y-4" role="region" aria-label="Preguntas frecuentes">
+      {faqs.map((faq) => (
+        <details class="group bg-white border border-slate-300 rounded-xl shadow-sm open:border-slate-400 open:shadow-md transition-all duration-300 overflow-hidden">
+          <summary class="flex justify-between items-center font-bold text-neutral-900 p-6 cursor-pointer list-none hover:text-neutral-600 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 rounded-xl">
+            <span>{faq.question}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 text-neutral-400 shrink-0 ml-4" aria-hidden="true">
+              <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </span>
+          </summary>
+          <div class="text-neutral-600 px-6 pb-6 leading-relaxed border-t border-slate-100 pt-4 font-sans text-sm md:text-base">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+  </div>
+</section>

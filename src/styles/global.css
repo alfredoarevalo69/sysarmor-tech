@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- TIPOGRAFÍA --- */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+
+  /* --- COLORES Y BRANDING (Totalmente Neutros) --- */
+  --color-brand-dark: #020617;
+  --color-brand-card: #FFFFFF;
+  --color-brand-accent: #D4AF37; /* Dorado SysArmor */
+  --color-brand-accent-hover: #B8962D;
+  --color-brand-gold: #D4AF37;
+  --color-brand-border: #334155;
+  --color-brand-border-dark: rgba(212, 175, 55, 0.25);
+  --color-brand-text: #FFFFFF;
+  --color-brand-text-dark: #FFFFFF;
+  --color-brand-muted: #94a3b8;
+  --color-brand-muted-dark: #B0B3B8;
+
+  /* --- ANIMACIONES --- */
+  --animate-subtle-pulse: subtle-pulse 3s infinite ease-in-out;
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+  --animate-slide-in-right: slide-in-right 0.8s ease-out forwards;
+}
+
+@layer base {
+  /* Habilita el desplazamiento suave global */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* KEYFRAMES */
+  @keyframes subtle-pulse {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5)); opacity: 1; }
+    50% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8)); opacity: 0.95; }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Aplicación de fuentes y color global (SIN !important PARA PERMITIR CAMBIOS DE COLOR) */
+  body {
+    @apply font-sans;
+    background-color: #020617;
+    color: white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  /* --- CORRECCIÓN DE PANTALLAS GRANDES Y NAVEGACIÓN (AJUSTADO A 76PX) --- */
+  section[id] {
+    scroll-margin-top: 76px;
+    min-height: calc(100vh - 76px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

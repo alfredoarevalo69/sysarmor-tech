@@ -1,0 +1,98 @@
+---
+// src/components/SuccessStories.astro
+
+const successStories = [
+  {
+    category: "SECOPS & ENDPOINT SECURITY",
+    title: "Blindaje ASR en +500 Dispositivos",
+    description: "Despliegue de políticas avanzadas de Attack Surface Reduction (ASR) y afinamiento en Defender para entidad pública. Reducción drástica de la superficie de ataque y contención inmediata de vectores de riesgo.",
+    isGuide: false
+  },
+  {
+    category: "IDENTITY & CLOUD SECURITY",
+    title: "Gobierno PIM & Automatización Entra ID",
+    description: "Implementación de acceso Just-In-Time (PIM) en entorno Multitenant bancario y automatización con PowerShell, reduciendo el tiempo de aprovisionamiento en un 50%.",
+    isGuide: false
+  },
+  {
+    category: "VULNERABILITY MANAGEMENT",
+    title: "Remediación Crítica Qualys / CVE",
+    description: "Liderazgo del ciclo de remediación sobre parques de +200 servidores Windows. Hardening de llaves de registro, parcheo complejo y mitigación sin afectación operativa.",
+    isGuide: false
+  },
+  {
+    category: "CASO PRÁCTICO & GUÍA PDF",
+    title: "Cómo reemplazar un controlador de dominio defectuoso y modernizar la infraestructura minimizando la indisponibilidad",
+    description: "Windows Server 2025",
+    isGuide: true,
+    badge: "Gratis",
+    link: "/descarga-guia",
+    buttonText: "Obtener Guía"
+  }
+];
+---
+
+<!-- Removido scroll-mt-24 para adoptar los 76px globales y ajustado a flex center -->
+<section id="casos-de-exito" class="w-full py-16 bg-slate-100 border-t border-slate-200 px-4 flex flex-col justify-center">
+  <div class="max-w-[1400px] mx-auto space-y-12 w-full">
+    
+    <!-- Título de Sección -->
+    <div class="text-center space-y-2">
+      <h2 class="text-3xl font-display font-bold text-neutral-900 uppercase tracking-wide">Casos de Éxito Destacados</h2>
+      <p class="text-slate-700 font-medium text-base">Proyectos reales con impacto medible en seguridad y operación.</p>
+    </div>
+
+    <!-- Grid de 4 columnas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {successStories.map((story) => (
+        <div class={`p-6 md:p-7 rounded-xl border transition-all duration-300 flex flex-col justify-between group ${
+          story.isGuide 
+            ? 'bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border-[#D4AF37]/50 shadow-xl ring-1 ring-[#D4AF37]/30' 
+            : 'bg-white text-neutral-900 border-slate-300 shadow-md hover:shadow-lg'
+        }`}>
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h4 class={`text-xs font-bold tracking-wider uppercase truncate ${story.isGuide ? 'text-[#D4AF37]' : 'text-blue-600'}`}>
+                {story.category}
+              </h4>
+              {story.isGuide && (
+                <span class="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 px-2.5 py-0.5 rounded-full font-semibold">
+                  {story.badge}
+                </span>
+              )}
+            </div>
+
+            <!-- Título con tamaño condicional -->
+            <h3 class={`font-display font-bold mb-3 transition-colors ${
+              story.isGuide 
+                ? 'text-base md:text-lg text-white group-hover:text-[#D4AF37]' 
+                : 'text-lg md:text-xl text-neutral-900 group-hover:text-[#D4AF37]'
+            }`}>
+              {story.title}
+            </h3>
+
+            <!-- Descripción simplificada -->
+            <p class={`text-sm leading-relaxed font-sans font-normal mb-6 ${story.isGuide ? 'text-slate-300' : 'text-slate-700'}`}>
+              {story.description}
+            </p>
+          </div>
+
+          {story.isGuide && story.link && (
+            <div>
+              <a 
+                href={story.link} 
+                class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-[#D4AF37] hover:bg-white text-slate-950 font-bold text-sm rounded-xl transition-all gap-2 shadow-lg"
+              >
+                <span>{story.buttonText}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+    
+  </div>
+</section>

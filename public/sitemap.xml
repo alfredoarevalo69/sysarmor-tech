@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Página Principal -->
+  <url>
+    <loc>https://sysarmortech.com/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Artículo: Windows LAPS -->
+  <url>
+    <loc>https://sysarmortech.com/blog/implementacion-windows-laps</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: DNS Hub & Spoke -->
+  <url>
+    <loc>https://sysarmortech.com/blog/optimizacion-dns-active-directory-hub-spoke-hibrido</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
