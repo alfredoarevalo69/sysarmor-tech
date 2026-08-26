@@ -96,7 +96,7 @@ const schemaOrgData = {
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="scroll-smooth overflow-x-hidden w-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -134,13 +134,13 @@ const schemaOrgData = {
   </head>
   
   <body 
-    class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
+    class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased overflow-x-hidden w-full m-0 p-0" 
     style={`background-color: ${bgColor} !important;`}
   >
     
     {variant === 'home' ? <Navbar /> : <LegalNavbar />}
     
-    <main class="flex-grow w-full">
+    <main class="flex-grow w-full overflow-x-hidden">
       <slot />
     </main>
     
