@@ -25,9 +25,11 @@
 }
 
 @layer base {
-  /* Habilita el desplazamiento suave global */
+  /* Habilita el desplazamiento suave global y previene desbordes laterales */
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   /* KEYFRAMES */
@@ -46,23 +48,25 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
-  /* Aplicación de fuentes y color global (SIN !important PARA PERMITIR CAMBIOS DE COLOR) */
+  /* Aplicación de fuentes, color global y blindaje de ancho */
   body {
     @apply font-sans;
     background-color: #020617;
     color: white;
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
   }
 
-  /* --- CORRECCIÓN DE PANTALLAS GRANDES Y NAVEGACIÓN (AJUSTADO A 76PX) --- */
+  /* --- CORRECCIÓN DE NAVEGACIÓN GLOBAL --- */
   section[id] {
     scroll-margin-top: 76px;
-    min-height: calc(100vh - 76px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    position: relative;
+    width: 100%;
   }
 }
