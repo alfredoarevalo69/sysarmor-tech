@@ -45,7 +45,7 @@ Este gráfico resume la evolución estratégica de las identidades de servicio d
 
 ## Requisitos previos
 
-*   **Controlador de Dominio en Windows Server 2025:** Requerido para procesar las solicitudes[cite: 1]. dMSA introduce la clase `msDS-DelegatedManagedServiceAccount` en el esquema de WS2025[cite: 1].
+*   **Controlador de Dominio en Windows Server 2025:** Requerido para procesar las solicitudes. dMSA introduce la clase `msDS-DelegatedManagedServiceAccount` en el esquema de WS2025.
     > **Nota de arquitectura:** No es strictly obligatorio elevar el *Forest Functional Level* a 2025 en entornos híbridos, siempre que el esquema esté actualizado (`adprep /forestprep`) y los DCs correspondientes ejecuten WS2025.
 *   **Clave Raíz KDS activa:** Configurada en Active Directory mediante `Add-KdsRootKey`.
 *   **Módulo de PowerShell de Active Directory / RSAT:** Correspondiente a Windows Server 2025.
