@@ -1,14 +1,15 @@
 ---
+// src/components/Navbar.astro
 ---
 
 <header class="sticky top-0 z-50 h-[76px] w-full bg-[#020617]/95 backdrop-blur-md border-b border-slate-700/50">
   <nav class="container mx-auto h-full px-6 flex items-center justify-between">
-    {/* --- LOGO EN TAMAÑO IDEAL PARA BARRA COMPACTA --- */}
+    <!-- LOGO -->
     <a href="/" class="flex items-center">
       <img src="/images/logo.png" alt="SysArmor Tech Logo" class="h-14 w-auto object-contain" />
     </a>
 
-    {/* Menú Desktop */}
+    <!-- Menú Desktop -->
     <div class="hidden md:flex items-center gap-8 text-slate-300 font-medium">
       <a href="/#servicios" class="group relative hover:text-white transition-colors duration-300">
         Servicios
@@ -22,7 +23,6 @@
         Casos de Éxito
         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
       </a>
-      {/* Enlace al Blog Desktop */}
       <a href="/blog" class="group relative hover:text-white transition-colors duration-300 text-[#D4AF37]">
         Blog
         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
@@ -32,47 +32,56 @@
         <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
       </a>
       
-      {/* Botón CTA */}
-      <a href="/#contacto" class="px-6 py-2.5 rounded-md bg-[#D4AF37] hover:bg-white text-[#020617] font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+      <a href="/#contacto" class="px-6 py-2.5 rounded-md bg-[#D4AF37] hover:bg-white text-[#020617] font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)]">
         Evaluación Técnica
       </a>
     </div>
 
-    {/* Botón Hamburguesa */}
-    <button id="menu-btn" class="md:hidden text-white p-2 focus:outline-none" aria-label="Abrir menú">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Botón Hamburguesa Móvil -->
+    <button id="sys-menu-btn" type="button" class="md:hidden text-white p-2 focus:outline-none" aria-label="Abrir menú">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
       </svg>
     </button>
   </nav>
 
-  {/* Menú Mobile Overlay */}
-  <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-[76px] bg-[#020617] p-6 flex-col gap-6 text-xl text-center z-50 h-[calc(100vh-76px)] overflow-y-auto">
-    <a href="/#servicios" class="text-white hover:text-[#D4AF37] py-2">Servicios</a>
-    <a href="/#enfoque-tecnico" class="text-white hover:text-[#D4AF37] py-2">Enfoque Técnico</a>
-    <a href="/#casos-de-exito" class="text-white hover:text-[#D4AF37] py-2">Casos de Éxito</a>
-    <a href="/blog" class="text-[#D4AF37] font-bold py-2">Blog</a>
-    <a href="/#contacto" class="text-white hover:text-[#D4AF37] py-2">Contacto</a>
+  <!-- Menú Desplegable Móvil Sólido -->
+  <div id="sys-mobile-dropdown" class="hidden md:hidden absolute top-[76px] inset-x-0 bg-[#020617] border-b border-slate-800 px-6 py-8 flex-col gap-6 text-xl text-center z-50 shadow-2xl">
+    <a href="/#servicios" class="sys-link text-white hover:text-[#D4AF37] py-2 transition-colors">Servicios</a>
+    <a href="/#enfoque-tecnico" class="sys-link text-white hover:text-[#D4AF37] py-2 transition-colors">Enfoque Técnico</a>
+    <a href="/#casos-de-exito" class="sys-link text-white hover:text-[#D4AF37] py-2 transition-colors">Casos de Éxito</a>
+    <a href="/blog" class="sys-link text-[#D4AF37] font-bold py-2 transition-colors">Blog</a>
+    <a href="/#contacto" class="sys-link text-white hover:text-[#D4AF37] py-2 transition-colors">Contacto</a>
 
-    <a href="/#contacto" class="mt-2 px-5 py-4 rounded-lg bg-[#D4AF37] text-[#020617] font-bold text-lg hover:bg-white transition-colors">
+    <a href="/#contacto" class="sys-link mt-2 px-5 py-4 rounded-lg bg-[#D4AF37] text-[#020617] font-bold text-lg hover:bg-white transition-colors shadow-md">
       Evaluación Gratuita
     </a>
   </div>
 </header>
 
 <script>
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
+  function initNavMenu() {
+    const btn = document.getElementById('sys-menu-btn');
+    const menu = document.getElementById('sys-mobile-dropdown');
 
-  btn?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
-    menu?.classList.toggle('flex');
-  });
+    if (btn && menu) {
+      const freshBtn = btn.cloneNode(true);
+      btn.parentNode?.replaceChild(freshBtn, btn);
 
-  menu?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      menu?.classList.add('hidden');
-      menu?.classList.remove('flex');
-    });
-  });
+      freshBtn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+        menu.classList.toggle('flex');
+      });
+
+      menu.querySelectorAll('.sys-link').forEach(link => {
+        link.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          menu.classList.remove('flex');
+        });
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initNavMenu);
+  document.addEventListener('astro:page-load', initNavMenu);
 </script>

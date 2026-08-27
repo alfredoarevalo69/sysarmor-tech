@@ -1,10 +1,11 @@
 ---
+// src/components/Hero.astro
 import { Image } from 'astro:assets';
 import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel -->
+  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel (solo desktop) -->
   <Image 
     src={heroBgImg} 
     alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
@@ -18,7 +19,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Capa overlay optimizada: Texto oscuro a la izq / Escudo y Datacenter nítidos a la der -->
+  <!-- Capa overlay optimizada para escritorio -->
   <div class="hero-overlay"></div>
 
   <!-- Contenedor general alineado a la Navbar -->
@@ -89,7 +90,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY CON ESCUDO Y DERECHA MÁS NÍTIDOS --- */
+  /* --- OVERLAY DESKTOP --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
@@ -185,7 +186,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     flex-shrink: 0;
   }
 
-  /* --- AJUSTES RESPONSIVE --- */
+  /* --- AJUSTES RESPONSIVE MÓVIL --- */
   @media (max-width: 768px) {
     .hero-container {
       padding: 3rem 0;
@@ -196,16 +197,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-bg {
-      object-position: 85% center;
+      display: none; /* Oculta la imagen en dispositivos móviles para optimizar rendimiento y evitar solapamientos */
     }
 
     .hero-overlay {
-      background-image: linear-gradient(
-        180deg, 
-        rgba(5, 10, 20, 0.92) 0%, 
-        rgba(5, 10, 20, 0.85) 70%, 
-        rgba(5, 10, 20, 0.98) 100%
-      );
+      background-image: none; /* Innecesario al ocultar la imagen de fondo */
     }
 
     .btn-primary {

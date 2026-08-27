@@ -32,9 +32,9 @@ const successStories = [
 ];
 ---
 
-<!-- Removido scroll-mt-24 para adoptar los 76px globales y ajustado a flex center -->
-<section id="casos-de-exito" class="w-full py-16 bg-slate-100 border-t border-slate-200 px-4 flex flex-col justify-center">
-  <div class="max-w-[1400px] mx-auto space-y-12 w-full">
+<!-- min-h-[calc(100vh-76px)] y centrado vertical exacto para escritorio, con flujo seguro en móvil -->
+<section id="casos-de-exito" class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 border-t border-slate-200 flex flex-col justify-center items-center">
+  <div class="max-w-[1400px] mx-auto space-y-12 w-full my-auto">
     
     <!-- Título de Sección -->
     <div class="text-center space-y-2">
