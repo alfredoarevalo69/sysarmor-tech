@@ -46,7 +46,7 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
-  /* Aplicación de fuentes y color global (SIN !important PARA PERMITIR CAMBIOS DE COLOR) */
+  /* Aplicación de fuentes y color global */
   body {
     @apply font-sans;
     background-color: #020617;
@@ -57,12 +57,9 @@
     @apply font-display;
   }
 
-  /* --- CORRECCIÓN DE PANTALLAS GRANDES Y NAVEGACIÓN (AJUSTADO A 76PX) --- */
+  /* --- CORRECCIÓN DE NAVEGACIÓN Y ANCLAS --- */
   section[id] {
     scroll-margin-top: 76px;
-    min-height: calc(100vh - 76px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    padding-top: 5rem; /* Asegura un respiro interno superior para que el contenido nunca toque el borde de la sección */
   }
 }
