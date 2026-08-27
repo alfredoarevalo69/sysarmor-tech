@@ -27,11 +27,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     <!-- Bloque de contenido principal -->
     <div class="hero-content">
       <h1 class="hero-title">
-        Proteja y modernice su infraestructura <span class="highlight">sin detener la operación</span>
+        Infraestructura segura. Operación continua. <span class="highlight">Asesoría experta.</span>
       </h1>
 
       <p class="hero-description">
-        Ayudamos a empresas con infraestructura crítica o <strong class="highlight-yellow">ecosistema Microsoft</strong> a resolver problemas de seguridad, sistemas legados, migraciones y operaciones de Nivel 3.
+        Acompañamos a empresas con entornos críticos y <strong class="highlight-yellow">ecosistema Microsoft</strong> en modernización, migraciones y soporte especializado.
       </p>
 
       <div class="hero-cta">
@@ -49,7 +49,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
           <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Garantía de continuidad operativa durante migraciones</span>
+          <span>Especialistas en Hardening, ASR y Entornos Híbridos</span>
         </li>
       </ul>
     </div>
@@ -107,7 +107,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
-    max-width: 680px;
+    max-width: 720px;
     text-align: left;
   }
 
@@ -189,23 +189,75 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   /* --- AJUSTES RESPONSIVE MÓVIL --- */
   @media (max-width: 768px) {
     .hero-container {
-      padding: 3rem 0;
+      padding: 2.5rem 1.25rem 4rem 1.25rem;
+      min-height: auto;
+      background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.15);
+    }
+
+    .hero-container::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 260px;
+      background: rgba(245, 158, 11, 0.12);
+      filter: blur(45px);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .hero-inner {
-      padding: 0 1.5rem;
+      padding: 0;
+      z-index: 2;
     }
 
     .hero-bg {
-      display: none; /* Oculta la imagen en dispositivos móviles para optimizar rendimiento y evitar solapamientos */
+      display: none;
     }
 
     .hero-overlay {
-      background-image: none; /* Innecesario al ocultar la imagen de fondo */
+      background-image: none;
+    }
+
+    .hero-title {
+      font-size: 1.85rem;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-description {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      color: #cbd5e1;
+    }
+
+    .hero-cta {
+      margin-bottom: 1.75rem;
     }
 
     .btn-primary {
+      display: block;
+      width: 100%;
       max-width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1.05rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px -4px rgba(217, 119, 6, 0.35);
+      text-align: center;
+    }
+
+    .hero-features {
+      gap: 0.6rem;
+    }
+
+    .hero-features li {
+      font-size: 0.9rem;
     }
   }
 </style>
