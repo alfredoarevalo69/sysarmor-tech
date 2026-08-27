@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
+import { getCollection } from 'astro:content';
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,6 +34,14 @@ export default defineConfig({
 
   adapter: vercel(),
   integrations: [
-    sitemap(),
+    sitemap({
+      async customPages() {
+        // Obtiene todos los documentos de tu colección de recursos
+        const recursos = await getCollection('recursos');
+        
+        // Mapea cada archivo a su URL completa correspondiente
+        return recursos.map((post) => `https://sysarmortech.com/recursos/${post.slug}`);
+      },
+    }),
   ],
 });
