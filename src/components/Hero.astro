@@ -64,15 +64,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 1.5rem;
+    padding: 4rem 0;
   }
 
-  /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
+  /* --- CONTENEDOR INTERNO (Forzamos separación real con padding izquierdo generoso en desktop) --- */
   .hero-inner {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1700px;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding-left: clamp(2rem, 8vw, 10rem); /* Empuja todo el contenido hacia el centro de forma nativa */
+    padding-right: 2rem;
     position: relative;
     z-index: 3;
     display: flex;
@@ -99,8 +100,8 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       90deg, 
       #050a14 0%,      
       #050a14 15%,     
-      rgba(5, 10, 20, 0.75) 35%, 
-      rgba(5, 10, 20, 0.2) 60%, 
+      rgba(5, 10, 20, 0.75) 40%, 
+      rgba(5, 10, 20, 0.15) 65%, 
       transparent 100%
     );
     z-index: 2;
@@ -110,7 +111,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-content {
     width: 100%;
     max-width: 680px;
-    margin-left: clamp(1rem, 5vw, 6rem); /* Control dinámico preciso para separar el texto del borde izquierdo */
     text-align: left;
     z-index: 3;
   }
@@ -217,12 +217,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     .hero-inner {
       display: flex;
       flex-direction: column;
-      padding: 0;
+      padding-left: 0;
+      padding-right: 0;
       z-index: 2;
-    }
-
-    .hero-content {
-      margin-left: 0;
     }
 
     .hero-bg {
