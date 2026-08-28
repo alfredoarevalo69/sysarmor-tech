@@ -22,9 +22,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   <!-- Capa overlay optimizada para escritorio -->
   <div class="hero-overlay"></div>
 
-  <!-- Contenedor general con mayor espacio lateral izquierdo -->
+  <!-- Contenedor general -->
   <div class="hero-inner">
-    <!-- Bloque de contenido principal -->
+    <!-- Bloque de contenido principal desplazado sutilmente hacia la izquierda -->
     <div class="hero-content">
       <h1 class="hero-title">
         Infraestructura Crítica, <br />
@@ -64,16 +64,15 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 0;
+    padding: 4rem 1rem;
   }
 
-  /* --- CONTENEDOR INTERNO (Desplazamiento lateral ampliado) --- */
+  /* --- CONTENEDOR INTERNO --- */
   .hero-inner {
     width: 100%;
-    max-width: 1700px;
+    max-width: 1650px;
     margin: 0 auto;
-    padding-left: clamp(3rem, 7vw, 8rem); /* Padding izquierdo más amplio para separarlo más del borde de la pantalla */
-    padding-right: 3rem;
+    padding: 0 1.5rem;
     position: relative;
     z-index: 3;
     display: flex;
@@ -99,18 +98,19 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-image: linear-gradient(
       90deg, 
       #050a14 0%,      
-      #050a14 15%,     
-      rgba(5, 10, 20, 0.75) 45%, 
-      rgba(5, 10, 20, 0.2) 70%, 
+      #050a14 10%,     
+      rgba(5, 10, 20, 0.75) 38%, 
+      rgba(5, 10, 20, 0.25) 65%, 
       transparent 100%
     );
     z-index: 2;
   }
 
-  /* --- CONTENIDO PRINCIPAL --- */
+  /* --- CONTENIDO PRINCIPAL (Ubicado estratégicamente más a la izquierda, aprovechando el espacio) --- */
   .hero-content {
     width: 100%;
-    max-width: 680px;
+    max-width: 690px;
+    margin-left: clamp(1rem, 3vw, 4.5rem); /* Margen izquierdo sutil para aprovechar la pantalla sin pegarse al borde */
     text-align: left;
     z-index: 3;
   }
@@ -217,9 +217,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     .hero-inner {
       display: flex;
       flex-direction: column;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 0;
       z-index: 2;
+    }
+
+    .hero-content {
+      margin-left: 0;
     }
 
     .hero-bg {
