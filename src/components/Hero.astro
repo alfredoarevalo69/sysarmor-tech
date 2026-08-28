@@ -70,9 +70,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
   .hero-inner {
     width: 100%;
-    max-width: 1560px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0 4vw;
+    padding: 0 3rem;
     position: relative;
     z-index: 3;
     display: flex;
@@ -110,7 +110,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-content {
     width: 100%;
     max-width: 680px;
-    margin-left: 2%; /* Desplaza el bloque hacia la derecha para que no quede pegado al borde */
+    margin-left: clamp(1rem, 5vw, 6rem); /* Control dinámico preciso para separar el texto del borde izquierdo */
     text-align: left;
     z-index: 3;
   }
@@ -222,7 +222,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-content {
-      margin-left: 0; /* Resetea el margen en móvil para centrarlo correctamente */
+      margin-left: 0;
     }
 
     .hero-bg {
