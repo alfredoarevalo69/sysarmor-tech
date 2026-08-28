@@ -27,13 +27,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     <!-- Bloque de contenido principal -->
     <div class="hero-content">
       <h1 class="hero-title">
-        Ingeniería de Infraestructura, <br />
-        Cloud <br />
-        <span class="highlight">Ciberseguridad Defensiva</span>
+        Infraestructura Crítica, <br />
+        Servidores y <br />
+        <span class="highlight">Alta Disponibilidad</span>
       </h1>
 
       <p class="hero-description">
-        Soluciones de alta disponibilidad, modernización a <strong class="highlight-yellow">Windows Server 2025</strong> y blindaje de entornos híbridos con más de 20 años de experiencia avalada.
+        En <strong class="highlight-yellow">SysArmor Tech</strong> ofrecemos soluciones de continuidad de negocio, modernización a <strong class="highlight-yellow">Windows Server 2025</strong> y blindaje de plataformas corporativas, respaldadas por más de dos décadas de experiencia técnica.
       </p>
 
       <div class="hero-cta">
@@ -42,16 +42,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
       <ul class="hero-features">
         <li>
-          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>+20 años de experiencia en infraestructura y seguridad</span>
+          <span class="feature-icon" aria-hidden="true">🛡️</span>
+          <span>Arquitectura de directorios corporativos y sincronización de identidades</span>
         </li>
         <li>
-          <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Especialistas en Hardening, ASR, Entra ID y Windows Server</span>
+          <span class="feature-icon" aria-hidden="true">☁️</span>
+          <span>Modernización de sistemas legados e integración con Microsoft 365</span>
         </li>
       </ul>
     </div>
@@ -92,18 +88,18 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY DESKTOP --- */
+  /* --- OVERLAY DESKTOP (Ajustado con desvanecimiento rápido para proteger el texto y dejar intacto el escudo) --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
     background-color: transparent;
     background-image: linear-gradient(
       90deg, 
-      #050a14 0%, 
-      rgba(5, 10, 20, 0.95) 35%, 
-      rgba(5, 10, 20, 0.50) 55%, 
-      rgba(5, 10, 20, 0.10) 80%, 
-      rgba(5, 10, 20, 0.0) 100%
+      #050a14 0%,      
+      #050a14 20%,     
+      rgba(5, 10, 20, 0.5) 30%, 
+      rgba(5, 10, 20, 0.0) 40%, 
+      transparent 100%
     );
     z-index: 2;
   }
@@ -182,11 +178,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     font-weight: 600;
   }
 
-  .check-icon {
-    width: 20px;
-    height: 20px;
-    color: #eab308;
+  .feature-icon {
+    font-size: 1.15rem;
     flex-shrink: 0;
+    width: 24px;
+    text-align: center;
   }
 
   /* --- AJUSTES RESPONSIVE MÓVIL --- */
