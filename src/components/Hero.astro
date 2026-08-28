@@ -5,7 +5,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo optimizada -->
+  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel (solo desktop) -->
   <Image 
     src={heroBgImg} 
     alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
@@ -19,12 +19,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Capa overlay optimizada -->
+  <!-- Capa overlay optimizada para escritorio -->
   <div class="hero-overlay"></div>
 
-  <!-- Contenedor general extendido para pantallas grandes -->
+  <!-- Contenedor general alineado a la Navbar -->
   <div class="hero-inner">
-    <!-- Bloque de contenido principal (Columna Izquierda) -->
+    <!-- Bloque de contenido principal -->
     <div class="hero-content">
       <h1 class="hero-title">
         Infraestructura Crítica, <br />
@@ -70,18 +70,18 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     padding: 4rem 1.5rem;
   }
 
-  /* --- CONTENEDOR INTERNO (Grid Simétrico Desktop) --- */
+  /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
   .hero-inner {
     width: 100%;
-    max-width: 1440px; /* Ampliado para evitar el tope brusco en pantallas grandes */
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 2.5rem;
     position: relative;
     z-index: 3;
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr; /* Distribución equilibrada texto / zona del escudo */
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: 2rem;
+    gap: 3rem;
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -113,13 +113,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
-    max-width: 720px;
+    width: 100%;
+    max-width: 620px;
     text-align: left;
     z-index: 3;
   }
 
   .hero-spacer-right {
-    /* Espacio vacío interactivo que mantiene el balance simétrico con el gráfico derecho de la imagen */
     width: 100%;
     height: 100%;
   }
