@@ -5,7 +5,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel (solo desktop) -->
+  <!-- Imagen de fondo optimizada -->
   <Image 
     src={heroBgImg} 
     alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
@@ -19,12 +19,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Capa overlay optimizada para escritorio -->
+  <!-- Capa overlay optimizada -->
   <div class="hero-overlay"></div>
 
-  <!-- Contenedor general alineado a la Navbar -->
+  <!-- Contenedor general extendido para pantallas grandes -->
   <div class="hero-inner">
-    <!-- Bloque de contenido principal -->
+    <!-- Bloque de contenido principal (Columna Izquierda) -->
     <div class="hero-content">
       <h1 class="hero-title">
         Infraestructura Crítica, <br />
@@ -51,6 +51,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
         </li>
       </ul>
     </div>
+
+    <!-- Espacio visual derecho para equilibrar el escudo de la imagen de fondo -->
+    <div class="hero-spacer-right" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -67,14 +70,18 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     padding: 4rem 1.5rem;
   }
 
-  /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
+  /* --- CONTENEDOR INTERNO (Grid Simétrico Desktop) --- */
   .hero-inner {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1440px; /* Ampliado para evitar el tope brusco en pantallas grandes */
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     position: relative;
     z-index: 3;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr; /* Distribución equilibrada texto / zona del escudo */
+    align-items: center;
+    gap: 2rem;
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -88,7 +95,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY DESKTOP (Ajustado con desvanecimiento rápido para proteger el texto y dejar intacto el escudo) --- */
+  /* --- OVERLAY DESKTOP --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
@@ -96,9 +103,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-image: linear-gradient(
       90deg, 
       #050a14 0%,      
-      #050a14 20%,     
-      rgba(5, 10, 20, 0.5) 30%, 
-      rgba(5, 10, 20, 0.0) 40%, 
+      #050a14 15%,     
+      rgba(5, 10, 20, 0.75) 35%, 
+      rgba(5, 10, 20, 0.2) 60%, 
       transparent 100%
     );
     z-index: 2;
@@ -106,13 +113,20 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
-    max-width: 760px;
+    max-width: 720px;
     text-align: left;
+    z-index: 3;
+  }
+
+  .hero-spacer-right {
+    /* Espacio vacío interactivo que mantiene el balance simétrico con el gráfico derecho de la imagen */
+    width: 100%;
+    height: 100%;
   }
 
   /* --- TIPOGRAFÍA --- */
   .hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
     font-weight: 800;
     color: #ffffff;
     line-height: 1.1;
@@ -124,7 +138,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   .hero-description {
-    font-size: clamp(1rem, 2vw, 1.125rem);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
     color: #e2e8f0;
     line-height: 1.6;
     margin-bottom: 2rem;
@@ -186,7 +200,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   /* --- AJUSTES RESPONSIVE MÓVIL --- */
-  @media (max-width: 768px) {
+  @media (max-width: 968px) {
     .hero-container {
       padding: 2.5rem 1.25rem 4rem 1.25rem;
       min-height: auto;
@@ -210,8 +224,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-inner {
+      display: flex;
+      flex-direction: column;
       padding: 0;
       z-index: 2;
+    }
+
+    .hero-spacer-right {
+      display: none;
     }
 
     .hero-bg {
