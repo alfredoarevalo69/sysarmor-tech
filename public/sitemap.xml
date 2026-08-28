@@ -3,9 +3,49 @@
   <!-- Página Principal -->
   <url>
     <loc>https://sysarmortech.com/</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- Sección Blog -->
+  <url>
+    <loc>https://sysarmortech.com/blog</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Artículo: Hardening Correo Corporativo M365 -->
+  <url>
+    <loc>https://sysarmortech.com/blog/hardening-correo-corporativo-m365</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Integración SSO Entra ID -->
+  <url>
+    <loc>https://sysarmortech.com/blog/integracion-sso-entra-id</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Implementación Cuentas dMSA -->
+  <url>
+    <loc>https://sysarmortech.com/blog/implementacion-cuentas-dmsa</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Configuración DNS AD -->
+  <url>
+    <loc>https://sysarmortech.com/blog/configuracion-dns-ad</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Artículo: Windows LAPS -->
@@ -16,10 +56,42 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Artículo: DNS Hub & Spoke -->
+  <!-- Artículo: Optimización DNS Hub & Spoke -->
   <url>
     <loc>https://sysarmortech.com/blog/optimizacion-dns-active-directory-hub-spoke-hibrido</loc>
     <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Despliegue Windows 11 con Intune y Autopilot -->
+  <url>
+    <loc>https://sysarmortech.com/blog/despliegue-windows11-con-intunet-autopilot</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Empaquetado y Despliegue Apps Win32 Intune -->
+  <url>
+    <loc>https://sysarmortech.com/blog/empaquetado-despliegue-apps-win32-intune</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Hardening Endpoints Windows 11 Intune -->
+  <url>
+    <loc>https://sysarmortech.com/blog/hardening-endpoints-windows11-intune</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículo: Intune Implementación Híbrida -->
+  <url>
+    <loc>https://sysarmortech.com/blog/intune-implementacion-hibrida</loc>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
