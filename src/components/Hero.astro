@@ -51,9 +51,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
         </li>
       </ul>
     </div>
-
-    <!-- Espacio visual derecho para equilibrar el escudo de la imagen de fondo -->
-    <div class="hero-spacer-right" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -73,15 +70,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   /* --- CONTENEDOR INTERNO ALINEADO A LA NAVBAR --- */
   .hero-inner {
     width: 100%;
-    max-width: 1320px;
+    max-width: 1560px;
     margin: 0 auto;
-    padding: 0 2.5rem;
+    padding: 0 4vw;
     position: relative;
     z-index: 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     align-items: center;
-    gap: 3rem;
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -114,14 +109,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
     width: 100%;
-    max-width: 620px;
+    max-width: 680px;
+    margin-left: 2%; /* Desplaza el bloque hacia la derecha para que no quede pegado al borde */
     text-align: left;
     z-index: 3;
-  }
-
-  .hero-spacer-right {
-    width: 100%;
-    height: 100%;
   }
 
   /* --- TIPOGRAFÍA --- */
@@ -230,8 +221,8 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       z-index: 2;
     }
 
-    .hero-spacer-right {
-      display: none;
+    .hero-content {
+      margin-left: 0; /* Resetea el margen en móvil para centrarlo correctamente */
     }
 
     .hero-bg {
