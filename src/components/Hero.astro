@@ -24,7 +24,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   <!-- Contenedor general -->
   <div class="hero-inner">
-    <!-- Bloque de contenido principal desplazado sutilmente hacia la izquierda -->
+    <!-- Bloque de contenido principal desplazado hacia la izquierda -->
     <div class="hero-content">
       <h1 class="hero-title">
         Infraestructura Crítica, <br />
@@ -64,15 +64,15 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 1rem;
+    padding: 4rem 0;
   }
 
-  /* --- CONTENEDOR INTERNO --- */
+  /* --- CONTENEDOR INTERNO (Alineado a pantalla completa sin restricciones forzosas) --- */
   .hero-inner {
     width: 100%;
-    max-width: 1650px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    max-width: 100%;
+    margin: 0;
+    padding: 0; /* Controlado por el padding del contenido para fluidez idéntica al Navbar */
     position: relative;
     z-index: 3;
     display: flex;
@@ -97,7 +97,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-color: transparent;
     background-image: linear-gradient(
       90deg, 
-      #050a14 0%,      
+      #050a14 0%,     
       #050a14 10%,     
       rgba(5, 10, 20, 0.75) 38%, 
       rgba(5, 10, 20, 0.25) 65%, 
@@ -106,13 +106,26 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 2;
   }
 
-  /* --- CONTENIDO PRINCIPAL (Ubicado estratégicamente más a la izquierda, aprovechando el espacio) --- */
+  /* --- CONTENIDO PRINCIPAL (Desplazado a la izquierda según el padding del Navbar) --- */
   .hero-content {
     width: 100%;
-    max-width: 690px;
-    margin-left: clamp(1rem, 3vw, 4.5rem); /* Margen izquierdo sutil para aprovechar la pantalla sin pegarse al borde */
+    max-width: 720px;
+    padding-left: 1rem; /* Móvil */
+    margin-left: 0;
     text-align: left;
     z-index: 3;
+  }
+
+  @media (min-width: 640px) {
+    .hero-content {
+      padding-left: 2rem; /* Coincide con sm:px-8 del Navbar */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-content {
+      padding-left: 3rem; /* Coincide con lg:px-12 del Navbar */
+    }
   }
 
   /* --- TIPOGRAFÍA --- */
@@ -222,6 +235,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-content {
+      padding-left: 0;
       margin-left: 0;
     }
 
