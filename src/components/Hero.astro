@@ -67,12 +67,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     padding: 4rem 0;
   }
 
-  /* --- CONTENEDOR INTERNO (Alineado a pantalla completa sin restricciones forzosas) --- */
+  /* --- CONTENEDOR INTERNO --- */
   .hero-inner {
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 0; /* Controlado por el padding del contenido para fluidez idéntica al Navbar */
+    padding: 0;
     position: relative;
     z-index: 3;
     display: flex;
@@ -106,11 +106,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 2;
   }
 
-  /* --- CONTENIDO PRINCIPAL (Desplazado a la izquierda según el padding del Navbar) --- */
+  /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
     width: 100%;
     max-width: 720px;
-    padding-left: 1rem; /* Móvil */
+    padding-left: 1rem;
     margin-left: 0;
     text-align: left;
     z-index: 3;
@@ -118,13 +118,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (min-width: 640px) {
     .hero-content {
-      padding-left: 2rem; /* Coincide con sm:px-8 del Navbar */
+      padding-left: 2rem;
     }
   }
 
   @media (min-width: 1024px) {
     .hero-content {
-      padding-left: 3rem; /* Coincide con lg:px-12 del Navbar */
+      padding-left: 3rem;
     }
   }
 
