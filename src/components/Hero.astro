@@ -90,23 +90,23 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY DESKTOP --- */
+  /* --- OVERLAY DESKTOP (Ajustado para despejar el escudo a la derecha) --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
     background-color: transparent;
     background-image: linear-gradient(
       90deg, 
-      #050a14 0%,     
-      #050a14 12%,     
-      rgba(5, 10, 20, 0.8) 42%, 
-      rgba(5, 10, 20, 0.3) 70%, 
-      transparent 100%
+      #050a14 0%,      
+      #050a14 20%,     
+      rgba(5, 10, 20, 0.85) 45%, 
+      rgba(5, 10, 20, 0.15) 58%, 
+      transparent 68%  
     );
     z-index: 2;
   }
 
-  /* --- CONTENIDO PRINCIPAL (Ampliamos max-width para que el título respire en una línea) --- */
+  /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
     width: 100%;
     max-width: 840px; 
@@ -135,7 +135,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     color: #ffffff;
     line-height: 1.1;
     margin-bottom: 1.5rem;
-    white-space: nowrap; /* Fuerza a que cada línea respete exactamente los saltos indicados */
+    white-space: nowrap; 
   }
 
   .highlight {
@@ -254,7 +254,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       line-height: 1.15;
       letter-spacing: -0.01em;
       margin-bottom: 1rem;
-      white-space: normal; /* Restablece salto natural en móviles por espacio */
+      white-space: normal; 
     }
 
     .hero-description {
