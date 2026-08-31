@@ -23,6 +23,7 @@ export default function CalculatorIPv6() {
     { id: '1', name: 'Sucursal Principal', hostsOrSubnets: '100' },
   ]);
   const [results, setResults] = useState<CalculatedIPv6Subnet[] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const addRequirement = () => {
     setRequirements([
@@ -39,11 +40,6 @@ export default function CalculatorIPv6() {
     setRequirements(
       requirements.map((req) => (req.id === id ? { ...req, [field]: value } : req))
     );
-  };
-
-  const handleOpenManual = (e: Event) => {
-    e.preventDefault();
-    window.open('/docs/Guia_Subnetting_IPv6.pdf', '_blank', 'noopener,noreferrer');
   };
 
   const handleCalculate = (e: Event) => {
@@ -76,7 +72,7 @@ export default function CalculatorIPv6() {
   };
 
   return (
-    <div className="space-y-6 text-black">
+    <div className="space-y-6 text-black relative">
       <div className="bg-slate-50 p-5 rounded-xl border border-slate-300 space-y-4">
         <div className="flex justify-between items-start">
           <div>
@@ -89,7 +85,7 @@ export default function CalculatorIPv6() {
           </div>
           <button
             type="button"
-            onClick={handleOpenManual}
+            onClick={() => setIsModalOpen(true)}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shrink-0 cursor-pointer"
           >
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,6 +223,39 @@ export default function CalculatorIPv6() {
               </table>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* MODAL INTEGRADO PARA VER EL MANUAL SIN SALIR DEL PORTAL */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+          <div className="bg-white w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-300">
+            {/* Cabecera del Modal */}
+            <div className="flex justify-between items-center px-6 py-4 bg-slate-900 text-white">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <h3 className="text-xs font-bold uppercase tracking-wider">Guía Práctica: Fundamentos de Subnetting y Prefijos en IPv6</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors cursor-pointer text-xs font-bold flex items-center gap-1"
+              >
+                ✕ Cerrar
+              </button>
+            </div>
+
+            {/* Contenido del PDF dentro del Portal */}
+            <div className="flex-1 bg-slate-100 p-2">
+              <iframe
+                src="/docs/Guia_Subnetting_IPv6.pdf"
+                className="w-full h-full rounded-lg border border-slate-300 bg-white"
+                title="Manual de Subnetting IPv6"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
