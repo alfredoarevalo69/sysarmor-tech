@@ -86,7 +86,7 @@ export default function CalculatorIPv6() {
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0b0f19] hover:bg-neutral-800 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm shrink-0 cursor-pointer"
           >
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -101,7 +101,7 @@ export default function CalculatorIPv6() {
             type="text"
             value={basePrefix}
             onInput={(e) => setBasePrefix(e.currentTarget.value)}
-            className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900"
+            className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
             placeholder="Ej: 2001:db8::/32"
           />
         </div>
@@ -114,7 +114,7 @@ export default function CalculatorIPv6() {
             <button
               type="button"
               onClick={addRequirement}
-              className="px-3 py-1.5 bg-neutral-900 text-white text-xs font-semibold rounded-lg hover:bg-neutral-800 transition-colors cursor-pointer"
+              className="px-3 py-1.5 bg-[#0b0f19] text-white text-xs font-semibold rounded-lg hover:bg-neutral-800 transition-colors cursor-pointer"
             >
               + Agregar Subred
             </button>
@@ -165,7 +165,7 @@ export default function CalculatorIPv6() {
 
           <button
             type="submit"
-            className="w-full mt-4 py-2.5 bg-neutral-900 text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-neutral-800 transition-colors cursor-pointer shadow-sm"
+            className="w-full mt-4 py-2.5 bg-[#0b0f19] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-neutral-800 transition-colors cursor-pointer shadow-sm"
           >
             Calcular Subredes IPv6
           </button>
@@ -175,46 +175,46 @@ export default function CalculatorIPv6() {
       {results && (
         <div className="space-y-6">
           {results.map((res, idx) => (
-            <div key={idx} className="bg-white rounded-xl border border-blue-300 overflow-hidden shadow-sm">
-              <div className="bg-slate-50 px-4 py-3 border-b border-blue-300">
+            <div key={idx} className="bg-white rounded-xl border border-slate-300 overflow-hidden shadow-sm">
+              <div className="bg-slate-100 px-4 py-3 border-b border-slate-300">
                 <h4 className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
                   Detalles de la subred: {res.name}
                 </h4>
               </div>
               <table className="w-full text-left border-collapse text-xs font-mono">
                 <tbody>
-                  <tr className="border-b border-blue-200">
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                  <tr className="border-b border-slate-300">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       IP Address:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900 font-bold">{res.ipAddress}</td>
                   </tr>
-                  <tr className="border-b border-blue-200">
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                  <tr className="border-b border-slate-300">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       Full IP Address:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900">{res.fullIpAddress}</td>
                   </tr>
-                  <tr className="border-b border-blue-200">
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                  <tr className="border-b border-slate-300">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       Total IP Addresses:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900">{res.totalIpAddresses}</td>
                   </tr>
-                  <tr className="border-b border-blue-200">
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                  <tr className="border-b border-slate-300">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       Total /64 Networks:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900">{res.total64Networks}</td>
                   </tr>
-                  <tr className="border-b border-blue-200">
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                  <tr className="border-b border-slate-300">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       Network:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900">{res.network}</td>
                   </tr>
                   <tr>
-                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-50/50 border-r border-blue-200">
+                    <th className="w-1/3 py-2.5 px-4 font-sans font-bold text-neutral-800 text-right bg-slate-100 border-r border-slate-300">
                       IP Range:
                     </th>
                     <td className="py-2.5 px-4 text-neutral-900">{res.ipRange}</td>
@@ -231,9 +231,9 @@ export default function CalculatorIPv6() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
           <div className="bg-white w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-300">
             {/* Cabecera del Modal */}
-            <div className="flex justify-between items-center px-6 py-4 bg-slate-900 text-white">
+            <div className="flex justify-between items-center px-6 py-4 bg-[#0b0f19] text-white">
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <h3 className="text-xs font-bold uppercase tracking-wider">Guía Práctica: Fundamentos de Subnetting y Prefijos en IPv6</h3>
@@ -241,7 +241,7 @@ export default function CalculatorIPv6() {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors cursor-pointer text-xs font-bold flex items-center gap-1"
+                className="text-slate-400 hover:text-white bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg transition-colors cursor-pointer text-xs font-bold flex items-center gap-1"
               >
                 ✕ Cerrar
               </button>

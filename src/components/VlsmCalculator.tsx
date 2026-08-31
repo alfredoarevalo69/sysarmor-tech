@@ -14,7 +14,7 @@ export default function VlsmCalculator() {
           onClick={() => setActiveTab('IPv4')}
           className={`flex-1 py-3 text-center font-bold text-sm rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'IPv4'
-              ? 'bg-neutral-900 text-white shadow-sm'
+              ? 'bg-zinc-600 text-white shadow-sm' // Gris neutro medio, ni muy oscuro ni azul
               : 'bg-slate-100 text-neutral-600 hover:bg-slate-200'
           }`}
         >
@@ -25,7 +25,7 @@ export default function VlsmCalculator() {
           onClick={() => setActiveTab('IPv6')}
           className={`flex-1 py-3 text-center font-bold text-sm rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'IPv6'
-              ? 'bg-neutral-900 text-white shadow-sm'
+              ? 'bg-teal-700 text-white shadow-sm' // Verde corporativo que ya te gustó
               : 'bg-slate-100 text-neutral-600 hover:bg-slate-200'
           }`}
         >

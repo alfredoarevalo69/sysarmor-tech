@@ -10,7 +10,6 @@ export default function CalculatorIPv4() {
   const [hosts, setHosts] = useState('30');
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<CalculatedIPv4Subnet[]>([]);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleAddRequirement = () => {
     setError(null);
@@ -64,20 +63,14 @@ export default function CalculatorIPv4() {
     }
   };
 
-  const handleCopy = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
-
   return (
     <div className="space-y-6 text-black">
       {/* Indicador de Pasos del Asistente */}
       <div className="flex items-center justify-between bg-slate-100 p-3 rounded-xl border border-slate-300 text-xs font-bold text-neutral-700">
-        <span className={`px-3 py-1 rounded-lg ${step === 1 ? 'bg-neutral-900 text-white' : 'text-slate-500'}`}>
+        <span className={`px-3 py-1 rounded-lg ${step === 1 ? 'bg-[#0b0f19] text-white' : 'text-slate-500'}`}>
           Paso 1: Red Base
         </span>
-        <span className={`px-3 py-1 rounded-lg ${step === 2 ? 'bg-neutral-900 text-white' : 'text-slate-500'}`}>
+        <span className={`px-3 py-1 rounded-lg ${step === 2 ? 'bg-[#0b0f19] text-white' : 'text-slate-500'}`}>
           Paso 2: Subredes
         </span>
         <span className={`px-3 py-1 rounded-lg ${step === 3 ? 'bg-emerald-700 text-white' : 'text-slate-500'}`}>
@@ -105,14 +98,14 @@ export default function CalculatorIPv4() {
                 type="text"
                 value={baseIp}
                 onInput={(e: any) => setBaseIp(e.currentTarget.value)}
-                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
                 placeholder="Ej: 192.168.0.0/16"
               />
             </div>
             <button
               type="button"
               onClick={handleNextStep}
-              className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors"
+              className="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors shadow-sm"
             >
               Siguiente: Agregar Requerimientos &rarr;
             </button>
@@ -148,7 +141,7 @@ export default function CalculatorIPv4() {
                   value={netName}
                   onInput={(e: any) => setNetName(e.currentTarget.value)}
                   placeholder="Ej: VLAN-Gerencia"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
                 />
               </div>
               <div>
@@ -159,14 +152,14 @@ export default function CalculatorIPv4() {
                   value={hosts}
                   onInput={(e: any) => setHosts(e.currentTarget.value)}
                   placeholder="Ej: 25"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
                 />
               </div>
             </div>
             <button
               type="button"
               onClick={handleAddRequirement}
-              className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-colors"
+              className="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-colors shadow-sm"
             >
               Añadir a la lista VLSM
             </button>
@@ -185,9 +178,12 @@ export default function CalculatorIPv4() {
                   <button
                     type="button"
                     onClick={() => handleRemove(req.id)}
-                    className="text-red-600 hover:text-red-800 text-xs font-bold px-2.5 py-1 bg-red-50 rounded cursor-pointer transition-colors"
+                    className="text-red-600 hover:text-red-800 p-2 bg-red-50 hover:bg-red-100 rounded-lg cursor-pointer transition-colors"
+                    title="Eliminar subred"
                   >
-                    Eliminar
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
                   </button>
                 </div>
               ))
@@ -206,7 +202,7 @@ export default function CalculatorIPv4() {
               <button
                 type="button"
                 onClick={handleExecuteCalculation}
-                className="w-2/3 bg-[#C59B27] hover:bg-[#b08922] text-neutral-900 font-bold py-3 rounded-xl text-sm cursor-pointer shadow-md transition-colors"
+                className="w-2/3 bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer shadow-md transition-colors"
               >
                 Calcular Distribución IPv4 VLSM
               </button>
@@ -223,44 +219,42 @@ export default function CalculatorIPv4() {
             <span className="text-xs font-semibold">{results.length} subredes generadas</span>
           </div>
 
-          {results.map((res, i) => (
-            <div key={i} className="bg-white border-2 border-slate-300 rounded-xl overflow-hidden shadow-sm">
-              <div className="bg-slate-100 px-4 py-2.5 border-b-2 border-slate-300 flex justify-between items-center">
-                <span className="font-bold text-sm text-neutral-900">Subred: {res.name}</span>
-                <button
-                  type="button"
-                  onClick={() => handleCopy(`${res.networkAddress}${res.cidr}`, i)}
-                  className="text-xs bg-white border border-slate-300 hover:bg-slate-50 text-neutral-800 font-semibold px-2.5 py-1 rounded cursor-pointer transition-colors"
-                >
-                  {copiedIndex === i ? '¡Copiado!' : 'Copiar CIDR'}
-                </button>
+          {results.map((res, i) => {
+            const cleanCidr = String(res.cidr).startsWith('/') ? String(res.cidr).slice(1) : String(res.cidr);
+            const currentCidr = `${res.networkAddress}/${cleanCidr}`;
+
+            return (
+              <div key={i} className="bg-white border-2 border-slate-300 rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-slate-100 px-4 py-2.5 border-b-2 border-slate-300">
+                  <span className="font-bold text-sm text-neutral-900">Subred: {res.name}</span>
+                </div>
+                <table className="w-full text-left border-collapse text-xs font-mono">
+                  <tbody>
+                    <tr className="border-b border-slate-300">
+                      <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300 w-1/3">Network CIDR:</td>
+                      <td className="p-3 text-neutral-900">{currentCidr}</td>
+                    </tr>
+                    <tr className="border-b border-slate-300">
+                      <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Subnet Mask:</td>
+                      <td className="p-3 text-neutral-900">{res.subnetMask}</td>
+                    </tr>
+                    <tr className="border-b border-slate-300">
+                      <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Usable Range:</td>
+                      <td className="p-3 text-neutral-900 break-all">{res.usableRange}</td>
+                    </tr>
+                    <tr className="border-b border-slate-300">
+                      <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Broadcast:</td>
+                      <td className="p-3 text-neutral-900">{res.broadcastAddress}</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Hosts (Req/Alloc):</td>
+                      <td className="p-3 text-neutral-900">{res.hostsRequested} / {res.hostsAllocated}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <table className="w-full text-left border-collapse text-xs font-mono">
-                <tbody>
-                  <tr className="border-b border-slate-300">
-                    <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300 w-1/3">Network CIDR:</td>
-                    <td className="p-3 text-neutral-900">{res.networkAddress}{res.cidr}</td>
-                  </tr>
-                  <tr className="border-b border-slate-300">
-                    <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Subnet Mask:</td>
-                    <td className="p-3 text-neutral-900">{res.subnetMask}</td>
-                  </tr>
-                  <tr className="border-b border-slate-300">
-                    <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Usable Range:</td>
-                    <td className="p-3 text-neutral-900 break-all">{res.usableRange}</td>
-                  </tr>
-                  <tr className="border-b border-slate-300">
-                    <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Broadcast:</td>
-                    <td className="p-3 text-neutral-900">{res.broadcastAddress}</td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Hosts (Req/Alloc):</td>
-                    <td className="p-3 text-neutral-900">{res.hostsRequested} / {res.hostsAllocated}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          ))}
+            );
+          })}
 
           <button
             type="button"
@@ -268,7 +262,7 @@ export default function CalculatorIPv4() {
               setStep(1);
               setRequirements([]);
             }}
-            className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors"
+            className="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors shadow-sm"
           >
             Reiniciar Asistente IPv4
           </button>
