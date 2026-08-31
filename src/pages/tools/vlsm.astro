@@ -1,0 +1,17 @@
+---
+// src/pages/tools/vlsm.astro
+import Layout from '../../layouts/Layout.astro';
+import VlsmCalculator from '../../components/VlsmCalculator';
+---
+
+<Layout title="Calculadora VLSM | SysArmorTech">
+  <main class="py-12 px-4 sm:px-6 bg-slate-100 min-h-[calc(100vh-76px)]">
+    <div class="max-w-4xl mx-auto mb-8">
+      <a href="/#contacto" class="text-sm text-blue-600 hover:underline mb-4 inline-block">&larr; Volver al inicio</a>
+      <h1 class="text-3xl font-display font-bold text-neutral-900 uppercase tracking-wide">Calculadora VLSM de Subredes</h1>
+      <p class="text-slate-700 font-medium text-base mt-2">Optimiza el direccionamiento IP de tu infraestructura de red corporativa sin desperdiciar direcciones.</p>
+    </div>
+    
+    <VlsmCalculator client:only="preact" />
+  </main>
+</Layout>
