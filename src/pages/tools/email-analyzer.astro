@@ -1,0 +1,215 @@
+---
+// src/pages/tools/email-analyzer.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Analizador de Cabeceras de Correo | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+      <!-- Encabezado -->
+      <div class="space-y-1.5">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-wide">
+          Analizador de Cabeceras de Correo
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Inspecciona los saltos de red detallados, latencias y validaciones SPF, DKIM y DMARC.
+        </p>
+      </div>
+      
+      <!-- Formulario principal con fondo contrastado -->
+      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
+        <form id="header-form" method="POST" class="space-y-4">
+          <div>
+            <label for="rawHeader" class="block text-sm font-bold text-slate-900 mb-2">
+              Cabecera completa del correo (Raw Headers):
+            </label>
+            <textarea 
+              id="rawHeader" 
+              name="rawHeader" 
+              rows="8" 
+              required
+              class="w-full bg-white border-2 border-slate-300 rounded-lg p-3 text-neutral-900 font-mono text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs"
+              placeholder="Pega aquí las cabeceras..."></textarea>
+          </div>
+          <button 
+            type="submit" 
+            id="submit-btn"
+            class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg transition-colors text-sm cursor-pointer shadow-sm">
+            Analizar Cabecera
+          </button>
+        </form>
+      </div>
+
+      <!-- Resultados con fondo contrastado y bordes definidos -->
+      <div id="result-container" class="hidden bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 space-y-6 shadow-xl">
+        <div class="flex justify-between items-center border-b-2 border-slate-400 pb-3">
+          <h2 class="text-xl font-bold text-neutral-900 flex items-center gap-2">
+            <span class="w-3 h-3 bg-blue-700 rounded-full inline-block"></span>
+            Resultados del Análisis
+          </h2>
+          <button 
+            type="button" 
+            id="btn-reset"
+            class="text-xs font-bold bg-slate-300 hover:bg-slate-400 text-slate-800 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shadow-xs"
+          >
+            🔄 Analizar otra cabecera
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-mono text-neutral-900 bg-white p-4 rounded-lg border-2 border-slate-300 shadow-xs">
+          <div class="space-y-2">
+            <p><strong class="text-blue-800">De:</strong> <span id="res-sender" class="font-bold">-</span></p>
+            <p><strong class="text-blue-800">Para:</strong> <span id="res-recipient" class="font-bold">-</span></p>
+          </div>
+          <div class="space-y-2">
+            <p><strong class="text-blue-800">Fecha:</strong> <span id="res-date" class="font-bold">-</span></p>
+            <p><strong class="text-blue-800">Saltos Totales:</strong> <span id="res-hops" class="font-bold">-</span></p>
+          </div>
+        </div>
+
+        <!-- 1. Trazabilidad de Saltos (Hops) arriba -->
+        <div class="border-t-2 border-slate-400 pt-4">
+          <h3 class="text-xs uppercase tracking-wider text-slate-900 font-extrabold mb-3">Trazabilidad de Saltos de Red (Hops & Delays)</h3>
+          <div id="hops-timeline" class="space-y-3 font-mono text-xs">
+            <!-- Se inyectará dinámicamente -->
+          </div>
+        </div>
+
+        <!-- 2. Seguridad abajo -->
+        <div class="border-t-2 border-slate-400 pt-4">
+          <h3 class="text-xs uppercase tracking-wider text-slate-900 font-extrabold mb-3">Autenticación de Correo</h3>
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+              <span class="block text-xs font-bold text-slate-700 mb-1">SPF</span>
+              <span id="res-spf" class="font-bold text-sm">-</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+              <span class="block text-xs font-bold text-slate-700 mb-1">DKIM</span>
+              <span id="res-dkim" class="font-bold text-sm">-</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+              <span class="block text-xs font-bold text-slate-700 mb-1">DMARC</span>
+              <span id="res-dmarc" class="font-bold text-sm">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const form = document.getElementById('header-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const resultContainer = document.getElementById('result-container');
+  const btnReset = document.getElementById('btn-reset');
+  const rawHeaderInput = document.getElementById('rawHeader') as HTMLTextAreaElement;
+
+  const resSender = document.getElementById('res-sender');
+  const resRecipient = document.getElementById('res-recipient');
+  const resDate = document.getElementById('res-date');
+  const resHops = document.getElementById('res-hops');
+  const resSpf = document.getElementById('res-spf');
+  const resDkim = document.getElementById('res-dkim');
+  const resDmarc = document.getElementById('res-dmarc');
+  const hopsTimeline = document.getElementById('hops-timeline');
+
+  // Función para recortar el cuerpo si el usuario pega todo el correo completo
+  function sanitizeRawHeader(input: string): string {
+    const headerEndIndex = input.indexOf('\r\n\r\n') !== -1 
+      ? input.indexOf('\r\n\r\n') 
+      : input.indexOf('\n\n');
+      
+    if (headerEndIndex !== -1 && input.toLowerCase().includes('received:')) {
+      return input.substring(0, headerEndIndex);
+    }
+    return input;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!rawHeaderInput) return;
+
+    // Limpiamos y saneamos automáticamente el contenido por si pegaron el cuerpo
+    rawHeaderInput.value = sanitizeRawHeader(rawHeaderInput.value);
+
+    submitBtn.textContent = 'Analizando...';
+    submitBtn.setAttribute('disabled', 'true');
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/api/analyze-header', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && resultContainer) {
+        resultContainer.classList.remove('hidden');
+        if (resSender) resSender.textContent = data.metadata.sender;
+        if (resRecipient) resRecipient.textContent = data.metadata.recipient;
+        if (resDate) resDate.textContent = data.metadata.date;
+        if (resHops) resHops.textContent = data.hopsCount;
+
+        const setBadgeStatus = (element: HTMLElement | null, status: string) => {
+          if (!element) return;
+          element.textContent = status;
+          if (status.includes('PASS')) {
+            element.className = 'font-bold text-sm text-emerald-700';
+          } else if (status.includes('FAIL')) {
+            element.className = 'font-bold text-sm text-red-700';
+          } else {
+            element.className = 'font-bold text-sm text-amber-700';
+          }
+        };
+
+        setBadgeStatus(resSpf, data.security.spf);
+        setBadgeStatus(resDkim, data.security.dkim);
+        setBadgeStatus(resDmarc, data.security.dmarc);
+
+        if (hopsTimeline) {
+          hopsTimeline.innerHTML = '';
+          data.hops.forEach((hop: any) => {
+            const hopDiv = document.createElement('div');
+            hopDiv.className = 'bg-white p-3.5 rounded-lg border-2 border-slate-300 space-y-1.5 shadow-xs';
+            hopDiv.innerHTML = `
+              <div class="flex justify-between text-blue-800 font-bold">
+                <span>Salto #${hop.step}</span>
+                <span class="text-slate-700 font-semibold">⏱ Retraso al salto: <span class="text-amber-800 font-extrabold">${hop.delay}s</span></span>
+              </div>
+              <p class="text-neutral-900 font-medium break-all">${hop.details}</p>
+              <p class="text-slate-500 text-[10px]">Timestamp: ${hop.timestamp}</p>
+            `;
+            hopsTimeline.appendChild(hopDiv);
+          });
+        }
+
+        // Desplazarse suavemente hacia los resultados
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+
+      } else {
+        alert(data.error || 'Ocurrió un error inesperado.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión con el servidor.');
+    } finally {
+      submitBtn.textContent = 'Analizar Cabecera';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+
+  // Lógica del botón de reset para analizar otra cabecera
+  btnReset?.addEventListener('click', () => {
+    if (resultContainer) resultContainer.classList.add('hidden');
+    if (rawHeaderInput) {
+      rawHeaderInput.value = '';
+      rawHeaderInput.focus();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
