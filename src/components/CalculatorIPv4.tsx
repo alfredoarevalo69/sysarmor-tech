@@ -124,7 +124,7 @@ export default function CalculatorIPv4() {
               Consulta el artículo completo en el blog técnico para repasar los fundamentos del cálculo de subredes IPv4.
             </p>
             <a
-              href="https://sysarmortech.com/blog/manual-subnetting-ipv4"
+              href="/blog/manual-subnetting-ipv4"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-100 text-neutral-900 font-semibold px-4 py-2 rounded-lg text-xs transition-colors shadow-sm"
