@@ -59,7 +59,32 @@ import Layout from '../../layouts/Layout.astro';
     const resultContent = document.getElementById('result-content') as HTMLDivElement;
     const btn = document.getElementById('submit-btn') as HTMLButtonElement;
 
-    const renderTable = (rows: [string, any][]) => {
+    const sanitizeValue = (val: any): string => {
+      if (val === null || val === undefined || val === '') return '';
+      
+      if (Array.isArray(val)) {
+        return val.map(item => sanitizeValue(item)).filter(Boolean).join('<br>');
+      }
+      
+      if (typeof val === 'object') {
+        return Object.entries(val)
+          .map(([k, v]) => `<strong>${k}:</strong> ${sanitizeValue(v)}`)
+          .filter(Boolean)
+          .join('<br>');
+      }
+      
+      let str = String(val).trim();
+      if (/^\d{4}-\d{2}-\d{2}T/.test(str)) {
+        try {
+          str = new Date(str).toUTCString();
+        } catch (e) {
+          // Mantiene el original si falla
+        }
+      }
+      return str.replace(/\n/g, '<br>');
+    };
+
+    const renderTable = (rows: [string, string][]) => {
       let tableHtml = `<table class="w-full text-left border-collapse bg-white rounded-lg overflow-hidden border-2 border-slate-300 text-xs sm:text-sm font-mono shadow-sm"><tbody>`;
       rows.forEach(([key, value], index) => {
         const bgClass = index % 2 === 0 ? 'bg-white' : 'bg-slate-50';
@@ -100,34 +125,19 @@ import Layout from '../../layouts/Layout.astro';
               </div>
             `;
           } else {
-            // Renderizado dinámico de todas las propiedades planas proporcionadas por el backend
-            const excludeKeys = ['handle', 'ldhName', 'unicodeName', 'links', 'notices', 'remarks', 'entities', 'events', 'nameservers', 'secureDNS', 'status', '_extractedContacts'];
+            const excludeKeys = ['handle', 'ldhName', 'unicodeName', 'links', 'notices', 'remarks', 'entities', '_extractedContacts'];
             const rows: [string, string][] = [];
 
             for (const [key, val] of Object.entries(data)) {
               if (excludeKeys.includes(key)) continue;
-              if (val === null || val === undefined || val === '') continue;
+              
+              const formattedVal = sanitizeValue(val);
+              if (!formattedVal) continue;
 
-              let formattedVal = '';
-              if (Array.isArray(val)) {
-                formattedVal = val.join('<br>');
-              } else {
-                formattedVal = String(val).trim();
-              }
-
-              if (/^\d{4}-\d{2}-\d{2}T/.test(formattedVal)) {
-                try {
-                  formattedVal = new Date(formattedVal).toUTCString();
-                } catch (e) {
-                  // Mantiene el valor original
-                }
-              }
-
-              formattedVal = formattedVal.replace(/\n/g, '<br>');
               rows.push([key, formattedVal]);
             }
 
-            resultContent.innerHTML = renderTable(rows);
+            resultContent.innerHTML = rows.length > 0 ? renderTable(rows) : `<p class="text-neutral-700 font-bold text-sm">No se encontraron datos públicos para mostrar.</p>`;
           }
         } else {
           resultContent.innerHTML = `<p class="text-red-700 font-bold text-sm">Error: ${result.error}</p>`;
