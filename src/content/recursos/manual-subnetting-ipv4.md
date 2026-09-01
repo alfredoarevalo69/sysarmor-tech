@@ -14,9 +14,15 @@ pdfUrl: "/blog/manual-subnetting-ipv4"
 
 ---
 
+## Introducción corporativa
+
+Este manual ofrece una guía práctica para comprender y aplicar el Subnetting IPv4. Explica la estructura de direcciones, máscaras y notación CIDR, introduce el método del número mágico y presenta ejemplos paso a paso con ejercicios de práctica. Ideal para estudiantes y profesionales de redes que buscan rapidez y precisión en cálculos de subredes.
+
+---
+
 ## 1. Estructura de una dirección IPv4
 
-Una dirección IPv4 consta de **32 bits**, divididos en **4 octetos** de 8 bits cada uno. Cada octeto opera en un rango decimal de `0` a `255` (2 a la 8 = 256 valores posibles).
+Una dirección IPv4 consta de **32 bits**, divididos en **4 octetos** de 8 bits cada uno. Cada octeto opera en un rango decimal de `0` a `255` ($2^8 = 256$ valores posibles).
 
 * **Ejemplo de representación:** `192.168.1.1` -> `11000000 10101000 00000001 00001010`
 
@@ -24,7 +30,7 @@ Una dirección IPv4 consta de **32 bits**, divididos en **4 octetos** de 8 bits 
 
 ## 2. Máscara de red y notación CIDR
 
-La máscara de red delimita qué porción de bits pertenecen a la **Red** (1s) y cuáles al **Host** (0s).
+La máscara de red delimita qué porción de bits pertenecen al segmento de **Red** (1s) y cuáles al **Host** (0s).
 
 | CIDR | Máscara Decimal | Bits Host | Hosts Totales | Hosts Útiles |
 | :--- | :--- | :---: | :---: | :---: |
@@ -53,8 +59,12 @@ Dado un bloque de direcciones asignado:
 
 Este método acelera drásticamente el cálculo manual de subredes basándose en el tamaño del bloque.
 
+![Subnetting IPv4 - Ejemplo de Subredes](/images/subnetting/subnetting1.png)
+
+> **Nota Técnica:** La infografía muestra ejemplos prácticos de cómo se dividen las subredes IPv4 aplicando el método del número mágico. Cada bloque indica la dirección de red, el rango de hosts útiles y la dirección de broadcast. Este recurso visual facilita comprender la relación entre la máscara CIDR y el tamaño del bloque.
+
 ### Paso 1: Calcular el tamaño del bloque
-* **Fórmula:** Tamaño del bloque = 256 - valor del último octeto de la máscara.
+* **Fórmula:** Tamaño del bloque = $256$ - valor del último octeto de la máscara.
 * También puedes usar potencias de 2 cuando trabajas en el último octeto (CIDR mayor o igual a 24).
 
 ### Paso 2: Encontrar la dirección de red
@@ -155,6 +165,20 @@ Pon a prueba tus habilidades calculando la **Red, Broadcast, Primer Host y Últi
 5. `10.10.10.10/30`
 6. `203.0.113.75/29`
 7. `198.51.100.150/27`
+
+---
+
+## Aplicaciones reales del Subnetting IPv4
+
+El Subnetting IPv4 es una herramienta esencial en la ingeniería de redes modernas. Su aplicación práctica permite optimizar el uso de direcciones IP, mejorar la seguridad y garantizar una administración eficiente de los recursos de red.
+
+* **Segmentación de redes corporativas:** Dividir una red grande en subredes más pequeñas facilita la gestión de tráfico, reduce colisiones y mejora el rendimiento general.
+* **Diseño de VLANs:** Cada VLAN puede asociarse a una subred específica, permitiendo separar departamentos o servicios dentro de una misma infraestructura física.
+* **Seguridad perimetral:** Al aislar segmentos críticos (como servidores, DMZ o estaciones administrativas), se limita el alcance de ataques y se refuerza el control de acceso.
+* **Optimización de direccionamiento:** Evita desperdicio de direcciones IP, especialmente en entornos con múltiples sedes o redes privadas.
+* **Enlaces punto a punto:** El uso de prefijos /30 o /31 permite conectar routers o dispositivos de borde con el mínimo consumo de direcciones.
+
+En resumen, el subnetting no solo es una técnica de cálculo, sino una estrategia de diseño que impacta directamente en la eficiencia, seguridad y escalabilidad de las redes empresariales.
 
 ---
 
