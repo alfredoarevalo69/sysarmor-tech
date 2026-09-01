@@ -32,7 +32,12 @@ export class WhoisEngine {
         endpoint = `https://rdap.arin.net/registry/ip/${cleanQuery}`;
       } else {
         const rdapBaseUrl = await this.resolveRdapServer(cleanQuery);
-        endpoint = `${rdapBaseUrl}domain/${encodeURIComponent(cleanQuery)}`;
+        // Si el servidor es registry.co, exige la ruta compuesta /co/domain/
+        if (rdapBaseUrl.includes('registry.co')) {
+          endpoint = `${rdapBaseUrl}co/domain/${encodeURIComponent(cleanQuery)}`;
+        } else {
+          endpoint = `${rdapBaseUrl}domain/${encodeURIComponent(cleanQuery)}`;
+        }
       }
 
       const response = await fetch(endpoint, {
@@ -56,7 +61,6 @@ export class WhoisEngine {
   }
 
   private async resolveRdapServer(domain: string): Promise<string> {
-    // Mapeo preciso para la infraestructura actual del ccTLD .CO y sus variantes comerciales
     if (domain.endsWith('.com.co') || domain.endsWith('.net.co') || domain.endsWith('.nom.co') || domain.endsWith('.co')) {
       return 'https://rdap.registry.co/';
     }
