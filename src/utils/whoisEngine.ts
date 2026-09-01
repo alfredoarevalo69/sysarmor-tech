@@ -10,20 +10,6 @@ export class WhoisEngine {
     }
 
     const isIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(cleanQuery);
-    const isGovOrEduCo = cleanQuery.endsWith('.gov.co') || cleanQuery.endsWith('.edu.co');
-
-    if (isGovOrEduCo) {
-      return {
-        success: true,
-        source: 'legacy',
-        data: {
-          "Domain Name": cleanQuery.toUpperCase(),
-          "Registrar": "MinTIC / Red Nacional Académica de Tecnología (RITEL)",
-          "Domain Status": "Protegido por políticas de Estado y Ciberseguridad Nacional.",
-          "Nota": "Los registros bajo extensiones .gov.co y .edu.co no exponen información de contacto ni datos administrativos en registros abiertos externos."
-        }
-      };
-    }
 
     try {
       let endpoint = '';
@@ -32,7 +18,6 @@ export class WhoisEngine {
         endpoint = `https://rdap.arin.net/registry/ip/${cleanQuery}`;
       } else {
         const rdapBaseUrl = await this.resolveRdapServer(cleanQuery);
-        // Si el servidor es registry.co, exige la ruta compuesta /co/domain/
         if (rdapBaseUrl.includes('registry.co')) {
           endpoint = `${rdapBaseUrl}co/domain/${encodeURIComponent(cleanQuery)}`;
         } else {
@@ -61,7 +46,15 @@ export class WhoisEngine {
   }
 
   private async resolveRdapServer(domain: string): Promise<string> {
-    if (domain.endsWith('.com.co') || domain.endsWith('.net.co') || domain.endsWith('.nom.co') || domain.endsWith('.co')) {
+    // Se unifican todas las extensiones de segundo y tercer nivel bajo la infraestructura .co oficial
+    if (
+      domain.endsWith('.com.co') || 
+      domain.endsWith('.net.co') || 
+      domain.endsWith('.nom.co') || 
+      domain.endsWith('.gov.co') || 
+      domain.endsWith('.edu.co') || 
+      domain.endsWith('.co')
+    ) {
       return 'https://rdap.registry.co/';
     }
 
@@ -117,7 +110,7 @@ export class WhoisEngine {
     return {
       services: [
         [['com'], ['https://rdap.verisign.com/com/v1/']],
-        [['co', 'com.co'], ['https://rdap.registry.co/']]
+        [['co', 'com.co', 'gov.co', 'edu.co'], ['https://rdap.registry.co/']]
       ]
     };
   }
