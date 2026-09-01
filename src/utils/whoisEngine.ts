@@ -38,61 +38,92 @@ export class WhoisEngine {
       }
 
       const rawData = await response.json();
-      const enrichedData = this.normalizeRdapResponse(rawData);
-      return { success: true, source: 'rdap', data: enrichedData };
+      const flattenedData = this.flattenRdapToWhoisFormat(rawData);
+      return { success: true, source: 'rdap', data: flattenedData };
 
     } catch (error: any) {
       return await this.fallbackLookup(cleanQuery);
     }
   }
 
-  private normalizeRdapResponse(data: any): any {
+  private flattenRdapToWhoisFormat(data: any): Record<string, any> {
     if (!data || typeof data !== 'object') return data;
 
-    // Extraer contactos y roles desde el arreglo entities de RDAP
-    const contacts: Record<string, any> = {};
+    const flat: Record<string, any> = {};
+
+    // 1. Datos básicos principales
+    if (data.ldhName || data.handle) {
+      flat['Domain Name'] = (data.ldhName || '').toUpperCase();
+      flat['Registry Domain ID'] = data.handle;
+    }
+
+    // 2. Fechas de eventos
+    if (Array.isArray(data.events)) {
+      for (const event of data.events) {
+        if (event.eventAction === 'registration') flat['Creation Date'] = event.eventDate;
+        if (event.eventAction === 'expiration') flat['Registry Expiry Date'] = event.eventDate;
+        if (event.eventAction === 'last changed' || event.eventAction === 'last update') flat['Updated Date'] = event.eventDate;
+      }
+    }
+
+    // 3. Estados del dominio
+    if (Array.isArray(data.status)) {
+      flat['Domain Status'] = data.status.join(', ');
+    }
+
+    // 4. Servidores DNS (Name Servers)
+    if (Array.isArray(data.nameservers)) {
+      flat['Name Server'] = data.nameservers.map((ns: any) => ns.ldhName).filter(Boolean);
+    }
+
+    // 5. Entidades, Registrar y Contactos de Abuso
     if (Array.isArray(data.entities)) {
       for (const entity of data.entities) {
-        if (Array.isArray(entity.roles) && entity.vcardArray) {
-          const parsedVCard = this.parseVCard(entity.vcardArray);
-          for (const role of entity.roles) {
-            contacts[role] = parsedVCard;
-          }
+        const roles = entity.roles || [];
+        const vcard = this.parseVCardToMap(entity.vcardArray);
+
+        if (roles.includes('registrar')) {
+          flat['Registrar'] = vcard['fn'] || entity.handle;
+          if (vcard['url']) flat['Registrar URL'] = vcard['url'];
+          if (vcard['email']) flat['Registrar Abuse Contact Email'] = vcard['email'];
+          if (vcard['tel']) flat['Registrar Abuse Contact Phone'] = vcard['tel'];
+        }
+
+        // Mapeo opcional de contactos adicionales si están presentes
+        if (roles.includes('registrant')) {
+          flat['Registrant Name'] = vcard['fn'];
+          flat['Registrant Organization'] = vcard['org'];
+          flat['Registrant Email'] = vcard['email'];
         }
       }
     }
 
-    // Inyectar propiedades planas enriquecidas si la UI las procesa
-    return {
-      ...data,
-      _extractedContacts: contacts,
-      // Si la UI busca campos específicos de contacto a nivel raíz:
-      ...(contacts['registrant'] ? { "Registrant Contact": contacts['registrant'] } : {}),
-      ...(contacts['administrative'] ? { "Administrative Contact": contacts['administrative'] } : {}),
-      ...(contacts['technical'] ? { "Technical Contact": contacts['technical'] } : {})
-    };
+    // 6. Enlaces e Información de ICANN estándar
+    flat['URL of the ICANN Whois Inaccuracy Complaint Form'] = 'https://www.icann.org/wicf/';
+    flat['Last update of WHOIS database'] = new Date().toISOString();
+
+    // Mantener también las propiedades originales por compatibilidad con cualquier otra vista
+    return { ...data, ...flat };
   }
 
-  private parseVCard(vcardArray: any[]): Record<string, string> {
-    const result: Record<string, string> = {};
-    if (!Array.isArray(vcardArray) || vcardArray.length < 2) return result;
+  private parseVCardToMap(vcardArray: any[]): Record<string, string> {
+    const map: Record<string, string> = {};
+    if (!Array.isArray(vcardArray) || vcardArray.length < 2) return map;
 
-    const vcardFields = vcardArray[1];
-    if (!Array.isArray(vcardFields)) return result;
+    const fields = vcardArray[1];
+    if (!Array.isArray(fields)) return map;
 
-    for (const field of vcardFields) {
+    for (const field of fields) {
       if (!Array.isArray(field) || field.length < 4) continue;
       const [key, , , value] = field;
-
       if (typeof value === 'string') {
-        if (key === 'fn') result['Name'] = value;
-        if (key === 'email') result['Email'] = value;
-        if (key === 'tel') result['Phone'] = value;
-        if (key === 'org') result['Organization'] = value;
+        map[key] = value;
+      } else if (Array.isArray(value) && value.length > 0) {
+        map[key] = value[value.length - 1]; // Tomar el valor interno más limpio
       }
     }
 
-    return result;
+    return map;
   }
 
   private async resolveRdapServer(domain: string): Promise<string> {
@@ -173,8 +204,8 @@ export class WhoisEngine {
 
       if (res.ok) {
         const data = await res.json();
-        const enrichedData = this.normalizeRdapResponse(data);
-        return { success: true, source: 'rdap', data: enrichedData };
+        const flattenedData = this.flattenRdapToWhoisFormat(data);
+        return { success: true, source: 'rdap', data: flattenedData };
       }
     } catch (e) {
       // Falla final
