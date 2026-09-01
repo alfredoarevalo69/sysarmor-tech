@@ -16,23 +16,25 @@ export const GET: APIRoute = async ({ url }) => {
     const records = await resolver.resolveMx(domain);
     records.sort((a, b) => a.priority - b.priority);
 
-    // Enriquecer cada registro MX con su resolución IP paralela
+    // Enriquecer cada registro MX recopilando TODAS sus IPs disponibles (IPv4 e IPv6 opcionalmente)
     const enrichedRecords = await Promise.all(
       records.map(async (record) => {
+        let ips: string[] = [];
         try {
-          const ips = await resolver.resolve4(record.exchange);
-          return {
-            priority: record.priority,
-            exchange: record.exchange,
-            ip: ips[0] || 'No disponible'
-          };
-        } catch {
-          return {
-            priority: record.priority,
-            exchange: record.exchange,
-            ip: 'No disponible'
-          };
-        }
+          const ipv4s = await resolver.resolve4(record.exchange);
+          ips.push(...ipv4s);
+        } catch {}
+
+        try {
+          const ipv6s = await resolver.resolve6(record.exchange);
+          ips.push(...ipv6s);
+        } catch {}
+
+        return {
+          priority: record.priority,
+          exchange: record.exchange,
+          ip: ips.length > 0 ? ips : ['No disponible']
+        };
       })
     );
 
@@ -47,7 +49,7 @@ export const GET: APIRoute = async ({ url }) => {
       if (addresses && addresses.length > 0) {
         return new Response(JSON.stringify({
           success: true,
-          data: [{ priority: 0, exchange: domain, ip: addresses[0] }]
+          data: [{ priority: 0, exchange: domain, ip: addresses }]
         }), { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
     } catch (e) {}
