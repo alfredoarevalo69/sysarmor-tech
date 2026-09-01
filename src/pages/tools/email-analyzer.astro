@@ -82,7 +82,7 @@ import Layout from '../../layouts/Layout.astro';
 
         <div class="border-t-2 border-slate-400 pt-4">
           <h3 class="text-xs uppercase tracking-wider text-slate-900 font-extrabold mb-3">Autenticación de Correo</h3>
-          <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center">
             <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
               <span class="block text-xs font-bold text-slate-700 mb-1">SPF</span>
               <span id="res-spf" class="font-bold text-sm">-</span>
@@ -90,6 +90,10 @@ import Layout from '../../layouts/Layout.astro';
             <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
               <span class="block text-xs font-bold text-slate-700 mb-1">DKIM</span>
               <span id="res-dkim" class="font-bold text-sm">-</span>
+            </div>
+            <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+              <span class="block text-xs font-bold text-slate-700 mb-1">Selector DKIM</span>
+              <span id="res-selector" class="font-bold text-xs text-blue-800 truncate block">-</span>
             </div>
             <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
               <span class="block text-xs font-bold text-slate-700 mb-1">DMARC</span>
@@ -116,6 +120,7 @@ import Layout from '../../layouts/Layout.astro';
   const resHops = document.getElementById('res-hops');
   const resSpf = document.getElementById('res-spf');
   const resDkim = document.getElementById('res-dkim');
+  const resSelector = document.getElementById('res-selector');
   const resDmarc = document.getElementById('res-dmarc');
   const hopsTimeline = document.getElementById('hops-timeline');
 
@@ -173,6 +178,10 @@ import Layout from '../../layouts/Layout.astro';
         setBadgeStatus(resSpf, data.security.spf);
         setBadgeStatus(resDkim, data.security.dkim);
         setBadgeStatus(resDmarc, data.security.dmarc);
+
+        if (resSelector) {
+          resSelector.textContent = data.security.dkimSelector || 'No detectado';
+        }
 
         if (hopsTimeline) {
           hopsTimeline.innerHTML = '';

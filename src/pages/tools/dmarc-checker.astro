@@ -1,0 +1,171 @@
+---
+// src/pages/tools/dmarc-checker.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Validador DMARC | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-3xl mx-auto space-y-8">
+      
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/85 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <div class="space-y-2 text-center max-w-xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          Validador DMARC
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Audita la política de autenticación, reporte y conformidad de correo electrónico de tu dominio.
+        </p>
+      </div>
+
+      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+        <form id="dmarc-form" class="flex flex-col sm:flex-row gap-4">
+          <div class="flex-1 space-y-1">
+            <label for="domain-input" class="block text-xs font-bold text-neutral-700 uppercase tracking-wide">Dominio o Subdominio</label>
+            <input 
+              type="text" 
+              id="domain-input" 
+              placeholder="Ej: co.bancofalabella.com" 
+              required
+              class="w-full bg-neutral-50 border-2 border-slate-300 rounded-lg px-4 py-3 text-neutral-900 font-medium text-sm focus:outline-none focus:border-blue-700 transition-colors"
+            />
+          </div>
+          <div class="flex items-end">
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-lg transition-colors text-sm shadow-sm cursor-pointer h-[46px]"
+            >
+              Verificar DMARC
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="results-container" class="hidden bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+        <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-200 pb-3">
+          Resultado de Validación
+        </h2>
+        <div id="results-content" class="space-y-4"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('dmarc-form') as HTMLFormElement;
+    const domainInput = document.getElementById('domain-input') as HTMLInputElement;
+    const container = document.getElementById('results-container') as HTMLDivElement;
+    const content = document.getElementById('results-content') as HTMLDivElement;
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+    const dmarcMeta: Record<string, { name: string; desc: string }> = {
+      v: { name: 'Version', desc: 'Identifica el registro como DMARC1.' },
+      p: { name: 'Policy', desc: 'Política para correos que fallan DMARC (none, quarantine, reject).' },
+      sp: { name: 'Subdomain Policy', desc: 'Política heredada para subdominios.' },
+      pct: { name: 'Percentage', desc: 'Porcentaje de mensajes sujetos a filtrado.' },
+      rua: { name: 'Receivers (Aggregate)', desc: 'URI para reportes de agregados estadísticos.' },
+      ruf: { name: 'Forensic Receivers', desc: 'URI para reportes de fallos específicos.' },
+      fo: { name: 'Forensic Reporting', desc: 'Opciones de generación de reportes de fallos.' },
+      aspf: { name: 'SPF Alignment', desc: 'Modo de alineación para SPF (r: relaxed, s: strict).' },
+      adkim: { name: 'DKIM Alignment', desc: 'Modo de alineación para DKIM (r: relaxed, s: strict).' }
+    };
+
+    function parseDmarcRecord(recordStr: string) {
+      return recordStr.split(';').map(part => {
+        const [rawKey, ...valParts] = part.trim().split('=');
+        if (!rawKey) return null;
+        const key = rawKey.trim().toLowerCase();
+        const value = valParts.join('=').trim();
+        const meta = dmarcMeta[key] || { name: key.toUpperCase(), desc: 'Parámetro personalizado o extendido.' };
+        return { tag: key, value, name: meta.name, desc: meta.desc };
+      }).filter(Boolean);
+    }
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const domain = domainInput.value.trim();
+      if (!domain) return;
+
+      if (btn) {
+        btn.textContent = 'Analizando...';
+        btn.setAttribute('disabled', 'true');
+      }
+      if (container) container.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/check-dmarc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ domain })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          const { status, record, qname } = result;
+          
+          if (status === 'PASS') {
+            const tags = parseDmarcRecord(record);
+            let rowsHtml = tags.map(t => `
+              <tr class="border-b border-slate-200 hover:bg-slate-50/50">
+                <td class="px-4 py-3 font-mono font-bold text-slate-900">${t?.tag}</td>
+                <td class="px-4 py-3 font-mono text-xs text-blue-700 break-all">${t?.value}</td>
+                <td class="px-4 py-3 font-semibold text-slate-800">${t?.name}</td>
+                <td class="px-4 py-3 text-slate-600 text-xs">${t?.desc}</td>
+              </tr>
+            `).join('');
+
+            content.innerHTML = `
+              <div class="p-4 bg-emerald-50 border-emerald-400 text-emerald-900 border-2 rounded-lg space-y-2">
+                <div class="font-bold text-sm uppercase tracking-wide">Registro DMARC Encontrado (${qname})</div>
+                <p class="text-xs font-mono break-all bg-white/80 p-3 rounded border border-emerald-200">${record}</p>
+              </div>
+
+              <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-xs">
+                <table class="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr class="bg-slate-100 border-b border-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider">
+                      <th class="px-4 py-3">Tag</th>
+                      <th class="px-4 py-3">TagValue</th>
+                      <th class="px-4 py-3">Name</th>
+                      <th class="px-4 py-3">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rowsHtml}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          } else {
+            content.innerHTML = `
+              <div class="p-4 bg-red-50 border-red-400 text-red-900 border-2 rounded-lg space-y-1">
+                <div class="font-bold text-sm uppercase tracking-wide">Registro DMARC (${qname})</div>
+                <p class="text-xs">No se encontró un registro DMARC válido configurado para este dominio ni en su dominio raíz.</p>
+              </div>
+            `;
+          }
+        } else {
+          content.innerHTML = `<p class="text-red-700 font-bold text-sm">Error: ${result.error || 'Error desconocido'}</p>`;
+        }
+
+        if (container) container.classList.remove('hidden');
+      } catch (err) {
+        if (content) content.innerHTML = `<p class="text-red-700 font-bold text-sm">Error al conectar con el servidor.</p>`;
+        if (container) container.classList.remove('hidden');
+      } finally {
+        if (btn) {
+          btn.textContent = 'Verificar DMARC';
+          btn.removeAttribute('disabled');
+        }
+      }
+    });
+  </script>
+</Layout>

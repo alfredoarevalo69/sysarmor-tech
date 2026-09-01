@@ -1,3 +1,4 @@
+// src/pages/api/analyze-header.ts
 import type { APIRoute } from 'astro';
 import { simpleParser } from 'mailparser';
 
@@ -22,6 +23,57 @@ export const POST: APIRoute = async ({ request }) => {
       const match = text.match(regex);
       return match ? match[1].toUpperCase() : 'NO ENCONTRADO';
     };
+
+    // Búsqueda ultraselectiva enfocada únicamente en cabeceras de tipo DKIM-Signature real
+    let extractedSelector = 'No detectado';
+    
+    const dkimHeaders = parsed.headers.get('dkim-signature');
+    if (dkimHeaders) {
+      const dkimArray = Array.isArray(dkimHeaders) ? dkimHeaders : [dkimHeaders];
+      for (const dkimText of dkimArray) {
+        const textStr = String(dkimText);
+        const selectorMatch = textStr.match(/(?:^|[\s;])s=([a-zA-Z0-9_-]+)/i);
+
+        if (selectorMatch && selectorMatch[1]) {
+          const selectorVal = selectorMatch[1];
+          // Descartar explícitamente cualquier selector ligado a ARC o infraestructura de intermediarios
+          if (selectorVal.toLowerCase().includes('arc')) continue;
+
+          extractedSelector = selectorVal;
+          break;
+        }
+      }
+    }
+
+    // Fallback estricto línea por línea que ignora cabeceras ARC y sellos de reenvío
+    if (extractedSelector === 'No detectado') {
+      const lines = rawHeader.split(/\r?\n/);
+      let insideDkimBlock = false;
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+
+        // Detectar si entramos a una línea de cabecera DKIM-Signature real
+        if (/^dkim-signature:/i.test(trimmed)) {
+          insideDkimBlock = true;
+        } else if (/^[a-z-]+:/i.test(trimmed)) {
+          // Si empieza otra cabecera distinta, cerramos el bloque DKIM
+          insideDkimBlock = false;
+        }
+
+        // Solo evaluamos el selector si estamos dentro de una firma DKIM legítima o si la línea no es ARC
+        if (insideDkimBlock || (!/^(arc-|x-google-dkim-|received-|return-path)/i.test(trimmed))) {
+          const match = trimmed.match(/(?:^|[;\s])s=([a-zA-Z0-9_-]{2,50})(?=[\s;]|$)/i);
+          if (match && match[1]) {
+            const val = match[1];
+            if (!['http', 'https', 'max', 'min'].includes(val.toLowerCase()) && !val.toLowerCase().includes('arc')) {
+              extractedSelector = val;
+              break;
+            }
+          }
+        }
+      }
+    }
 
     // Procesar los saltos (Received headers) asegurando el tipo string[]
     const receivedHeaders = parsed.headers.get('received');
@@ -81,6 +133,7 @@ export const POST: APIRoute = async ({ request }) => {
         spf: extractStatus(authResults, 'spf'),
         dkim: extractStatus(authResults, 'dkim'),
         dmarc: extractStatus(authResults, 'dmarc'),
+        dkimSelector: extractedSelector,
       },
       hopsCount: receivedArray.length,
       hops: hopsWithDelay
