@@ -30,7 +30,6 @@ export class WhoisEngine {
       });
 
       if (!response.ok) {
-        // Fallback secundario a rdap.org si el registro oficial rechaza la petición directa
         return await this.fallbackLookup(cleanQuery);
       }
 
@@ -43,10 +42,14 @@ export class WhoisEngine {
   }
 
   private async resolveRdapServer(domain: string): Promise<string> {
+    // Hardcode preventivo para la infraestructura actual de dominios .co / .com.co / .gov.co
+    if (domain.endsWith('.co') || domain.endsWith('.com.co') || domain.endsWith('.gov.co') || domain.endsWith('.edu.co')) {
+      return 'https://rdap.centralnic.com/co/';
+    }
+
     const bootstrap = await this.getIanaBootstrap();
     const parts = domain.split('.');
     
-    // Intenta buscar extensiones compuestas (ej. com.co) primero, luego el TLD simple
     let tld = parts.length > 2 ? parts.slice(-2).join('.') : '';
     let selectedServers: string[] = [];
 
@@ -90,13 +93,13 @@ export class WhoisEngine {
         return data;
       }
     } catch (e) {
-      // Silencioso en caso de fallo de red hacia IANA
+      // Silencioso
     }
 
     return {
       services: [
         [['com'], ['https://rdap.verisign.com/com/v1/']],
-        [['co', 'com.co', 'net.co', 'nom.co'], ['https://rdap.nic.co/']]
+        [['co'], ['https://rdap.centralnic.com/co/']]
       ]
     };
   }
@@ -113,12 +116,12 @@ export class WhoisEngine {
         return { success: true, source: 'rdap', data };
       }
     } catch (e) {
-      // Falla final si el proxy externo tampoco responde
+      // Falla final
     }
 
     return {
       success: false,
-      error: `El dominio '${query}' no pudo ser consultado debido a restricciones del registro oficial o tiempo de espera agotado.`
+      error: `El dominio '${query}' no pudo ser consultado. El registro oficial no devolvió datos públicos.`
     };
   }
 
