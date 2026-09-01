@@ -10,16 +10,27 @@ export class WhoisEngine {
     }
 
     const isIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(cleanQuery);
-    const isColombianCcTLD = cleanQuery.endsWith('.co') || cleanQuery.endsWith('.com.co') || cleanQuery.endsWith('.gov.co') || cleanQuery.endsWith('.edu.co');
+    const isGovOrEduCo = cleanQuery.endsWith('.gov.co') || cleanQuery.endsWith('.edu.co');
+
+    // Los dominios estatales y educativos .gov.co / .edu.co restringen el acceso público por seguridad nacional.
+    if (isGovOrEduCo) {
+      return {
+        success: true,
+        source: 'legacy',
+        data: {
+          "Domain Name": cleanQuery.toUpperCase(),
+          "Registrar": "MinTIC / Red Nacional Académica de Tecnología (RITEL)",
+          "Domain Status": "Protegido por políticas de Estado y Ciberseguridad Nacional.",
+          "Nota": "Los registros bajo extensiones .gov.co y .edu.co no exponen información de contacto ni datos administrativos en registros abiertos externos."
+        }
+      };
+    }
 
     try {
       let endpoint = '';
 
       if (isIp) {
         endpoint = `https://rdap.arin.net/registry/ip/${cleanQuery}`;
-      } else if (isColombianCcTLD) {
-        // Los dominios .co se consultan mediante el agregador HTTP que evita el bloqueo de puerto 43 en Vercel
-        endpoint = `https://rdap.org/domain/${encodeURIComponent(cleanQuery)}`;
       } else {
         const rdapBaseUrl = await this.resolveRdapServer(cleanQuery);
         endpoint = `${rdapBaseUrl}domain/${encodeURIComponent(cleanQuery)}`;
