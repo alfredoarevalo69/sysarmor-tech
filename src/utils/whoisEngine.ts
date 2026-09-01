@@ -12,12 +12,13 @@ export class WhoisEngine {
     const isIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(cleanQuery);
 
     try {
+      let rdapBaseUrl = '';
       let endpoint = '';
 
       if (isIp) {
         endpoint = `https://rdap.arin.net/registry/ip/${cleanQuery}`;
       } else {
-        const rdapBaseUrl = await this.resolveRdapServer(cleanQuery);
+        rdapBaseUrl = await this.resolveRdapServer(cleanQuery);
         if (rdapBaseUrl.includes('registry.co')) {
           endpoint = `${rdapBaseUrl}co/domain/${encodeURIComponent(cleanQuery)}`;
         } else {
@@ -38,7 +39,7 @@ export class WhoisEngine {
       }
 
       const rawData = await response.json();
-      const flattenedData = this.flattenRdapToWhoisFormat(rawData);
+      const flattenedData = this.flattenRdapToWhoisFormat(rawData, rdapBaseUrl);
       return { success: true, source: 'rdap', data: flattenedData };
 
     } catch (error: any) {
@@ -46,7 +47,7 @@ export class WhoisEngine {
     }
   }
 
-  private flattenRdapToWhoisFormat(data: any): Record<string, any> {
+  private flattenRdapToWhoisFormat(data: any, serverUrl: string): Record<string, any> {
     if (!data || typeof data !== 'object') return data;
 
     const flat: Record<string, any> = {};
@@ -55,6 +56,8 @@ export class WhoisEngine {
       flat['Domain Name'] = (data.ldhName || '').toUpperCase();
       flat['Registry Domain ID'] = data.handle;
     }
+
+    flat['Registrar WHOIS Server'] = serverUrl ? serverUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : '';
 
     if (Array.isArray(data.events)) {
       for (const event of data.events) {
@@ -67,18 +70,18 @@ export class WhoisEngine {
     }
 
     if (Array.isArray(data.status)) {
-      flat['Domain Status'] = data.status.join(', ');
+      // Mapeo detallado de estados con URLs de ICANN
+      flat['Domain Status'] = data.status.map((st: string) => `${st} https://icann.org/epp#${st}`).join('\n');
     }
 
     if (Array.isArray(data.nameservers)) {
-      flat['Name Server'] = data.nameservers.map((ns: any) => ns.ldhName || ns.unicodeName).filter(Boolean);
+      flat['Name Server'] = data.nameservers.map((ns: any) => (ns.ldhName || ns.unicodeName || '').toLowerCase()).filter(Boolean);
     }
 
     if (data.secureDNS && typeof data.secureDNS === 'object') {
       flat['DNSSEC'] = data.secureDNS.delegationSigned ? 'signedDelegation' : 'unsigned';
     }
 
-    // Extracción profunda de entidades, registrar y contactos de abuso anidados
     if (Array.isArray(data.entities)) {
       for (const entity of data.entities) {
         const roles = entity.roles || [];
@@ -87,6 +90,7 @@ export class WhoisEngine {
         if (roles.includes('registrar')) {
           flat['Registrar'] = vcard['fn'] || entity.handle;
           if (vcard['url']) flat['Registrar URL'] = vcard['url'];
+          if (entity.handle) flat['Registrar IANA ID'] = entity.handle;
           if (vcard['email']) flat['Registrar Abuse Contact Email'] = vcard['email'];
           if (vcard['tel']) flat['Registrar Abuse Contact Phone'] = vcard['tel'];
         }
@@ -96,7 +100,6 @@ export class WhoisEngine {
           if (vcard['tel']) flat['Registrar Abuse Contact Phone'] = vcard['tel'];
         }
 
-        // Sub-entidades (común en registros modernos para aislar contactos de abuso)
         if (Array.isArray(entity.entities)) {
           for (const subEntity of entity.entities) {
             const subRoles = subEntity.roles || [];
@@ -214,7 +217,7 @@ export class WhoisEngine {
 
       if (res.ok) {
         const data = await res.json();
-        const flattenedData = this.flattenRdapToWhoisFormat(data);
+        const flattenedData = this.flattenRdapToWhoisFormat(data, 'rdap.org');
         return { success: true, source: 'rdap', data: flattenedData };
       }
     } catch (e) {
