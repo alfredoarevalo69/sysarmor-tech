@@ -87,11 +87,11 @@ import Layout from '../../layouts/Layout.astro';
           return;
         }
 
-        if (result.data.length === 0) {
+        if (!result.data || result.data.length === 0) {
           content.innerHTML = `
             <div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-lg text-left">
               <p class="font-bold text-amber-900">Aviso de Configuración</p>
-              <p class="text-amber-800 text-sm mt-1">${result.message}</p>
+              <p class="text-amber-800 text-sm mt-1">${result.message || 'No se encontraron registros MX para este dominio.'}</p>
             </div>
           `;
           return;
@@ -110,14 +110,19 @@ import Layout from '../../layouts/Layout.astro';
               <tbody class="divide-y divide-slate-200 text-slate-700">
         `;
 
+        // Si el backend devuelve un array de objetos agrupados o múltiples IPs por registro MX,
+        // aplanamos o iteramos de forma segura para listar absolutamente todas las combinaciones.
         result.data.forEach((mx: any) => {
-          html += `
-            <tr class="hover:bg-slate-50 transition-colors">
-              <td class="py-3 px-4 font-semibold text-slate-900">${mx.priority}</td>
-              <td class="py-3 px-4 text-blue-600 font-medium">${mx.exchange}</td>
-              <td class="py-3 px-4 font-mono text-xs text-slate-600">${mx.ip}</td>
-            </tr>
-          `;
+          const ips = Array.isArray(mx.ip) ? mx.ip : [mx.ip || 'No disponible'];
+          ips.forEach((ipAddr: string) => {
+            html += `
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="py-3 px-4 font-semibold text-slate-900">${mx.priority}</td>
+                <td class="py-3 px-4 text-blue-600 font-medium">${mx.exchange}</td>
+                <td class="py-3 px-4 font-mono text-xs text-slate-600">${ipAddr}</td>
+              </tr>
+            `;
+          });
         });
 
         html += `
