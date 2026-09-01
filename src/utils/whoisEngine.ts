@@ -16,24 +16,22 @@ export class WhoisEngine {
         endpoint = `https://rdap.arin.net/registry/ip/${cleanQuery}`;
       } else {
         const tld = cleanQuery.split('.').pop()?.toLowerCase();
-        const bootstrapRes = await fetch('https://data.iana.org/rdap/dns.json', {
-          signal: AbortSignal.timeout(4000)
-        });
         
-        if (!bootstrapRes.ok) throw new Error('No se pudo cargar el bootstrap de ICANN');
-        
-        const bootstrapData = await bootstrapRes.json();
-        let selectedServer = 'https://rdap.verisign.com/com/v1/'; // Fallback por defecto
+        // Mapeo directo optimizado para evitar latencia de red en Serverless
+        const rdapRegistryMap: Record<string, string> = {
+          'com': 'https://rdap.verisign.com/com/v1/',
+          'net': 'https://rdap.verisign.com/net/v1/',
+          'org': 'https://rdap.publicinterestregistry.org/rdap/',
+          'co': 'https://rdap.nic.co/',
+          'edu.co': 'https://rdap.nic.co/',
+          'gov.co': 'https://rdap.nic.co/',
+          'io': 'https://rdap.nic.io/',
+          'info': 'https://rdap.afilias.info/rdap/',
+          'me': 'https://rdap.nic.me/',
+          'cc': 'https://rdap.verisign.com/cc/v1/'
+        };
 
-        for (const service of bootstrapData.services || []) {
-          const tlds = service[0];
-          const servers = service[1];
-          if (tlds.includes(tld)) {
-            selectedServer = servers[0];
-            break;
-          }
-        }
-
+        const selectedServer = rdapRegistryMap[tld] || 'https://rdap.verisign.com/com/v1/';
         endpoint = `${selectedServer}domain/${encodeURIComponent(cleanQuery)}`;
       }
 
@@ -42,14 +40,13 @@ export class WhoisEngine {
           'Accept': 'application/json',
           'User-Agent': 'SysArmorTech-WhoisClient/1.0'
         },
-        signal: AbortSignal.timeout(6000) // Timeout estricto de 6 segundos
+        signal: AbortSignal.timeout(5000) // Timeout de 5s adaptado para Vercel
       });
 
       if (!response.ok) {
         return {
           success: false,
-          status: "NOT_FOUND_OR_PROTECTED",
-          message: `El dominio '${cleanQuery}' no devolvió registros públicos o cuenta con restricciones estrictas de privacidad.`
+          error: `El dominio '${cleanQuery}' no se encuentra registrado o el registro oficial no devolvió datos públicos.`
         };
       }
 
@@ -59,8 +56,7 @@ export class WhoisEngine {
     } catch (error: any) {
       return {
         success: false,
-        status: "LOOKUP_NOTICE",
-        message: `Tiempo de espera agotado o error al consultar el registro oficial para '${cleanQuery}'.`
+        error: `Tiempo de espera agotado al consultar el servidor RDAP para '${cleanQuery}'.`
       };
     }
   }
