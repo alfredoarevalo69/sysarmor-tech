@@ -51,32 +51,34 @@ export class WhoisEngine {
 
     const flat: Record<string, any> = {};
 
-    // 1. Datos básicos principales
     if (data.ldhName || data.handle) {
       flat['Domain Name'] = (data.ldhName || '').toUpperCase();
       flat['Registry Domain ID'] = data.handle;
     }
 
-    // 2. Fechas de eventos
     if (Array.isArray(data.events)) {
       for (const event of data.events) {
         if (event.eventAction === 'registration') flat['Creation Date'] = event.eventDate;
         if (event.eventAction === 'expiration') flat['Registry Expiry Date'] = event.eventDate;
-        if (event.eventAction === 'last changed' || event.eventAction === 'last update') flat['Updated Date'] = event.eventDate;
+        if (['last changed', 'last update', 'last modified'].includes(event.eventAction)) {
+          flat['Updated Date'] = event.eventDate;
+        }
       }
     }
 
-    // 3. Estados del dominio
     if (Array.isArray(data.status)) {
       flat['Domain Status'] = data.status.join(', ');
     }
 
-    // 4. Servidores DNS (Name Servers)
     if (Array.isArray(data.nameservers)) {
-      flat['Name Server'] = data.nameservers.map((ns: any) => ns.ldhName).filter(Boolean);
+      flat['Name Server'] = data.nameservers.map((ns: any) => ns.ldhName || ns.unicodeName).filter(Boolean);
     }
 
-    // 5. Entidades, Registrar y Contactos de Abuso
+    if (data.secureDNS && typeof data.secureDNS === 'object') {
+      flat['DNSSEC'] = data.secureDNS.delegationSigned ? 'signedDelegation' : 'unsigned';
+    }
+
+    // Extracción profunda de entidades, registrar y contactos de abuso anidados
     if (Array.isArray(data.entities)) {
       for (const entity of data.entities) {
         const roles = entity.roles || [];
@@ -89,20 +91,28 @@ export class WhoisEngine {
           if (vcard['tel']) flat['Registrar Abuse Contact Phone'] = vcard['tel'];
         }
 
-        // Mapeo opcional de contactos adicionales si están presentes
-        if (roles.includes('registrant')) {
-          flat['Registrant Name'] = vcard['fn'];
-          flat['Registrant Organization'] = vcard['org'];
-          flat['Registrant Email'] = vcard['email'];
+        if (roles.includes('abuse') || roles.includes('registrar-abuse')) {
+          if (vcard['email']) flat['Registrar Abuse Contact Email'] = vcard['email'];
+          if (vcard['tel']) flat['Registrar Abuse Contact Phone'] = vcard['tel'];
+        }
+
+        // Sub-entidades (común en registros modernos para aislar contactos de abuso)
+        if (Array.isArray(entity.entities)) {
+          for (const subEntity of entity.entities) {
+            const subRoles = subEntity.roles || [];
+            const subVcard = this.parseVCardToMap(subEntity.vcardArray);
+            if (subRoles.includes('abuse') || subRoles.includes('registrar-abuse')) {
+              if (subVcard['email']) flat['Registrar Abuse Contact Email'] = subVcard['email'];
+              if (subVcard['tel']) flat['Registrar Abuse Contact Phone'] = subVcard['tel'];
+            }
+          }
         }
       }
     }
 
-    // 6. Enlaces e Información de ICANN estándar
     flat['URL of the ICANN Whois Inaccuracy Complaint Form'] = 'https://www.icann.org/wicf/';
     flat['Last update of WHOIS database'] = new Date().toISOString();
 
-    // Mantener también las propiedades originales por compatibilidad con cualquier otra vista
     return { ...data, ...flat };
   }
 
@@ -119,7 +129,7 @@ export class WhoisEngine {
       if (typeof value === 'string') {
         map[key] = value;
       } else if (Array.isArray(value) && value.length > 0) {
-        map[key] = value[value.length - 1]; // Tomar el valor interno más limpio
+        map[key] = value[value.length - 1];
       }
     }
 
