@@ -37,16 +37,65 @@ export class WhoisEngine {
         return await this.fallbackLookup(cleanQuery);
       }
 
-      const data = await response.json();
-      return { success: true, source: 'rdap', data };
+      const rawData = await response.json();
+      const enrichedData = this.normalizeRdapResponse(rawData);
+      return { success: true, source: 'rdap', data: enrichedData };
 
     } catch (error: any) {
       return await this.fallbackLookup(cleanQuery);
     }
   }
 
+  private normalizeRdapResponse(data: any): any {
+    if (!data || typeof data !== 'object') return data;
+
+    // Extraer contactos y roles desde el arreglo entities de RDAP
+    const contacts: Record<string, any> = {};
+    if (Array.isArray(data.entities)) {
+      for (const entity of data.entities) {
+        if (Array.isArray(entity.roles) && entity.vcardArray) {
+          const parsedVCard = this.parseVCard(entity.vcardArray);
+          for (const role of entity.roles) {
+            contacts[role] = parsedVCard;
+          }
+        }
+      }
+    }
+
+    // Inyectar propiedades planas enriquecidas si la UI las procesa
+    return {
+      ...data,
+      _extractedContacts: contacts,
+      // Si la UI busca campos específicos de contacto a nivel raíz:
+      ...(contacts['registrant'] ? { "Registrant Contact": contacts['registrant'] } : {}),
+      ...(contacts['administrative'] ? { "Administrative Contact": contacts['administrative'] } : {}),
+      ...(contacts['technical'] ? { "Technical Contact": contacts['technical'] } : {})
+    };
+  }
+
+  private parseVCard(vcardArray: any[]): Record<string, string> {
+    const result: Record<string, string> = {};
+    if (!Array.isArray(vcardArray) || vcardArray.length < 2) return result;
+
+    const vcardFields = vcardArray[1];
+    if (!Array.isArray(vcardFields)) return result;
+
+    for (const field of vcardFields) {
+      if (!Array.isArray(field) || field.length < 4) continue;
+      const [key, , , value] = field;
+
+      if (typeof value === 'string') {
+        if (key === 'fn') result['Name'] = value;
+        if (key === 'email') result['Email'] = value;
+        if (key === 'tel') result['Phone'] = value;
+        if (key === 'org') result['Organization'] = value;
+      }
+    }
+
+    return result;
+  }
+
   private async resolveRdapServer(domain: string): Promise<string> {
-    // Se unifican todas las extensiones de segundo y tercer nivel bajo la infraestructura .co oficial
     if (
       domain.endsWith('.com.co') || 
       domain.endsWith('.net.co') || 
@@ -124,7 +173,8 @@ export class WhoisEngine {
 
       if (res.ok) {
         const data = await res.json();
-        return { success: true, source: 'rdap', data };
+        const enrichedData = this.normalizeRdapResponse(data);
+        return { success: true, source: 'rdap', data: enrichedData };
       }
     } catch (e) {
       // Falla final
