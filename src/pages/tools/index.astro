@@ -99,7 +99,6 @@ const tools = [
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
     <div class="max-w-5xl mx-auto space-y-8">
       
-      <!-- Encabezado de la Sección -->
       <div class="space-y-2 text-center max-w-2xl mx-auto">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
           Herramientas de SysArmor Tech
@@ -109,13 +108,11 @@ const tools = [
         </p>
       </div>
 
-      <!-- Grid de Herramientas -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
         {tools.map((tool) => (
           <article class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1 duration-200">
             
             <div class="space-y-4">
-              <!-- Cabecera de la tarjeta con Icono SVG y Badges -->
               <div class="flex items-center justify-between">
                 <span class="p-3 bg-white rounded-lg border-2 border-slate-300 shadow-xs flex items-center justify-center" set:html={tool.svgIcon} />
                 <div class="flex items-center gap-2">
@@ -128,7 +125,6 @@ const tools = [
                 </div>
               </div>
 
-              <!-- Título y Descripción -->
               <div class="space-y-2">
                 <h2 class="text-xl font-bold text-neutral-900">
                   {tool.title}
@@ -139,7 +135,6 @@ const tools = [
               </div>
             </div>
 
-            <!-- Botón de Acceso -->
             <div class="pt-6 mt-6 border-t-2 border-slate-300">
               <a 
                 href={tool.href}
