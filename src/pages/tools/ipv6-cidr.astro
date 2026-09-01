@@ -38,7 +38,6 @@ import Layout from '../../layouts/Layout.astro';
               type="text" 
               id="ipv6Input" 
               placeholder="Ej: 2001:db8::/32 o fe80::1/64" 
-              value="2001:db8::/32"
               class="flex-1 bg-neutral-50 border-2 border-slate-300 rounded-lg px-4 py-3 text-neutral-900 font-mono text-base focus:outline-none focus:border-blue-700 transition-colors"
             />
             <button 
@@ -52,8 +51,8 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Resultados -->
-      <div id="resultsContainer" class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+      <!-- Resultados (Ocultos al iniciar) -->
+      <div id="resultsContainer" class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6 hidden">
         <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-200 pb-3">
           Detalles del Bloque IPv6
         </h2>
@@ -107,9 +106,10 @@ import Layout from '../../layouts/Layout.astro';
   </main>
 
   <script>
-    // Lógica robusta para manejo de BigInt en IPv6
     function parseIPv6(ipStr) {
       ipStr = ipStr.trim();
+      if (!ipStr) throw new Error("Por favor, ingresa un prefijo IPv6 o dirección CIDR.");
+      
       let parts = ipStr.split('/');
       let addrPart = parts[0];
       let prefixLen = parts.length > 1 ? parseInt(parts[1], 10) : 128;
@@ -118,7 +118,6 @@ import Layout from '../../layouts/Layout.astro';
         throw new Error("Longitud de prefijo inválida (debe estar entre 0 y 128).");
       }
 
-      // Manejar compresión ::
       let dualColons = addrPart.split('::');
       if (dualColons.length > 2) throw new Error("Formato IPv6 inválido: múltiples '::'.");
 
@@ -165,7 +164,6 @@ import Layout from '../../layouts/Layout.astro';
     function compressIPv6(hextets) {
       let hexStrs = hextets.map(h => h.toString(16));
       
-      // Encontrar la secuencia más larga de ceros consecutivos para comprimir con ::
       let maxZeroStart = -1;
       let maxZeroLen = 0;
       let currentZeroStart = -1;
@@ -185,7 +183,6 @@ import Layout from '../../layouts/Layout.astro';
         }
       }
 
-      // Solo comprimir si la secuencia de ceros es mayor a 1
       if (maxZeroLen > 1) {
         let left = hexStrs.slice(0, maxZeroStart);
         let right = hexStrs.slice(maxZeroStart + maxZeroLen);
@@ -219,6 +216,7 @@ import Layout from '../../layouts/Layout.astro';
     function calculate() {
       const inputVal = (document.getElementById('ipv6Input') as HTMLInputElement).value;
       const errorMsg = document.getElementById('errorMsg') as HTMLElement;
+      const resultsContainer = document.getElementById('resultsContainer') as HTMLElement;
       
       try {
         errorMsg.classList.add('hidden');
@@ -226,7 +224,6 @@ import Layout from '../../layouts/Layout.astro';
 
         let ipBigInt = hextetsToBigInt(hextets);
         
-        // Calcular máscara de red
         let maskBigInt = prefixLen === 0 ? 0n : ((1n << 128n) - 1n) ^ ((1n << (128n - BigInt(prefixLen))) - 1n);
         
         let netBigInt = ipBigInt & maskBigInt;
@@ -239,7 +236,6 @@ import Layout from '../../layouts/Layout.astro';
 
         let totalIPs = prefixLen === 128 ? 1n : 1n << (128n - BigInt(prefixLen));
 
-        // Actualizar UI
         document.getElementById('resPrefix')!.innerText = inputVal;
         document.getElementById('resPrefixLen')!.innerText = `/${prefixLen}`;
         document.getElementById('resCompressed')!.innerText = compressIPv6(netHextets) + `/${prefixLen}`;
@@ -249,9 +245,12 @@ import Layout from '../../layouts/Layout.astro';
         document.getElementById('resTotalIPs')!.innerText = totalIPs.toLocaleString('es-ES');
         document.getElementById('resAddressType')!.innerText = getAddressType(netHextets);
 
+        resultsContainer.classList.remove('hidden');
+
       } catch (err: any) {
         errorMsg.innerText = err.message;
         errorMsg.classList.remove('hidden');
+        resultsContainer.classList.add('hidden');
       }
     }
 
@@ -259,8 +258,5 @@ import Layout from '../../layouts/Layout.astro';
     document.getElementById('ipv6Input')?.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') calculate();
     });
-
-    // Calcular por defecto al cargar
-    calculate();
   </script>
 </Layout>
