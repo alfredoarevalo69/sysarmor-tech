@@ -99,58 +99,33 @@ import Layout from '../../layouts/Layout.astro';
                 <p>${data.message}</p>
               </div>
             `;
-          } else if (result.source === 'legacy') {
-            const rows = Object.entries(data)
-              .filter(([key, val]) => typeof val === 'string' && val.trim() !== '')
-              .map(([key, val]) => {
-                let value = (val as string).trim();
+          } else {
+            // Renderizado dinámico de todas las propiedades planas proporcionadas por el backend
+            const excludeKeys = ['handle', 'ldhName', 'unicodeName', 'links', 'notices', 'remarks', 'entities', 'events', 'nameservers', 'secureDNS', 'status', '_extractedContacts'];
+            const rows: [string, string][] = [];
 
-                if (/^\d{4}-\d{2}-\d{2}T/.test(value)) {
-                  try {
-                    value = new Date(value).toLocaleString();
-                  } catch (e) {
-                    // Mantiene el valor original si falla la conversión
-                  }
+            for (const [key, val] of Object.entries(data)) {
+              if (excludeKeys.includes(key)) continue;
+              if (val === null || val === undefined || val === '') continue;
+
+              let formattedVal = '';
+              if (Array.isArray(val)) {
+                formattedVal = val.join('<br>');
+              } else {
+                formattedVal = String(val).trim();
+              }
+
+              if (/^\d{4}-\d{2}-\d{2}T/.test(formattedVal)) {
+                try {
+                  formattedVal = new Date(formattedVal).toUTCString();
+                } catch (e) {
+                  // Mantiene el valor original
                 }
+              }
 
-                value = value.replace(/\n/g, '<br>');
-                return [key, value];
-              }) as [string, string][];
-
-            resultContent.innerHTML = renderTable(rows);
-            
-          } else if (result.source === 'rdap') {
-            const domainName = data.ldhName || domain;
-            const handle = data.handle || 'No disponible';
-            const events = data.events || [];
-            const getEventDate = (action: string) => {
-              const ev = events.find((e: any) => e.eventAction === action);
-              return ev ? ev.eventDate : 'No disponible';
-            };
-            
-            const statuses = data.status ? data.status.join('<br>') : 'No especificado';
-            const nsList = data.nameservers ? data.nameservers.map((ns: any) => ns.ldhName).join('<br>') : 'No disponibles';
-            
-            let registrarName = 'No disponible';
-            const entities = data.entities || [];
-            const registrarEntity = entities.find((e: any) => e.roles?.includes('registrar'));
-            if (registrarEntity) {
-              registrarName = registrarEntity.handle || 'Desconocido';
-              const vcard = registrarEntity.vcardArray?.[1] || [];
-              const fn = vcard.find((p: any) => p[0] === 'fn');
-              if (fn && fn[3]) registrarName = fn[3];
+              formattedVal = formattedVal.replace(/\n/g, '<br>');
+              rows.push([key, formattedVal]);
             }
-
-            const rows: [string, string][] = [
-              ['Domain Name', domainName],
-              ['Registry Domain ID', handle],
-              ['Registrar', registrarName],
-              ['Creation Date', getEventDate('registration')],
-              ['Registry Expiry Date', getEventDate('expiration')],
-              ['Updated Date', getEventDate('last changed')],
-              ['Domain Status', statuses],
-              ['Name Server', nsList]
-            ];
 
             resultContent.innerHTML = renderTable(rows);
           }
