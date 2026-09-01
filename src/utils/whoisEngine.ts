@@ -12,7 +12,6 @@ export class WhoisEngine {
     const isIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(cleanQuery);
     const isGovOrEduCo = cleanQuery.endsWith('.gov.co') || cleanQuery.endsWith('.edu.co');
 
-    // Los dominios estatales y educativos .gov.co / .edu.co restringen el acceso público por seguridad nacional.
     if (isGovOrEduCo) {
       return {
         success: true,
@@ -57,6 +56,11 @@ export class WhoisEngine {
   }
 
   private async resolveRdapServer(domain: string): Promise<string> {
+    // Mapeo preciso para la infraestructura actual del ccTLD .CO y sus variantes comerciales
+    if (domain.endsWith('.com.co') || domain.endsWith('.net.co') || domain.endsWith('.nom.co') || domain.endsWith('.co')) {
+      return 'https://rdap.registry.co/';
+    }
+
     const bootstrap = await this.getIanaBootstrap();
     const parts = domain.split('.');
     
@@ -109,7 +113,7 @@ export class WhoisEngine {
     return {
       services: [
         [['com'], ['https://rdap.verisign.com/com/v1/']],
-        [['net'], ['https://rdap.verisign.com/net/v1/']]
+        [['co', 'com.co'], ['https://rdap.registry.co/']]
       ]
     };
   }
