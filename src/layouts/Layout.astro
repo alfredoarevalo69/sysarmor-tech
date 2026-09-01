@@ -3,6 +3,7 @@
 import Navbar from '../components/Navbar.astro';
 import LegalNavbar from '../components/LegalNavbar.astro';
 import Footer from '../components/Footer.astro';
+import Feedback from '../components/Feedback.astro';
 import Analytics from '@vercel/analytics/astro';
 import '../styles/global.css';
 
@@ -139,6 +140,8 @@ const schemaOrgData = {
     <main class="flex-grow w-full">
       <slot />
     </main>
+    
+    <Feedback />
     
     <Footer />
     

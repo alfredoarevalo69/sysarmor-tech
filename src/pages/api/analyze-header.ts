@@ -14,7 +14,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const parsed = await simpleParser(rawHeader);
-    const authResults = parsed.headers.get('authentication-results') || '';
+    const authResultsVal = parsed.headers.get('authentication-results');
+    const authResults = typeof authResultsVal === 'string' ? authResultsVal : '';
     
     const extractStatus = (text: string, protocol: string) => {
       const regex = new RegExp(`${protocol}=(\\w+)`, 'i');
@@ -22,19 +23,18 @@ export const POST: APIRoute = async ({ request }) => {
       return match ? match[1].toUpperCase() : 'NO ENCONTRADO';
     };
 
-    // Procesar los saltos (Received headers)
+    // Procesar los saltos (Received headers) asegurando el tipo string[]
     const receivedHeaders = parsed.headers.get('received');
     let receivedArray: string[] = [];
     if (Array.isArray(receivedHeaders)) {
-      receivedArray = receivedHeaders;
+      receivedArray = receivedHeaders.map(h => String(h));
     } else if (typeof receivedHeaders === 'string') {
       receivedArray = [receivedHeaders];
+    } else if (receivedHeaders) {
+      receivedArray = [String(receivedHeaders)];
     }
 
-    // mailparser suele ordenarlos del más reciente al más antiguo, 
-    // pero para ver la ruta lógica solemos ordenarlos cronológicamente o analizarlos por orden de llegada.
     const hops = receivedArray.map((hopText, index) => {
-      // Extraer fecha si existe en el salto (suele estar despues del punto y coma ;)
       let timestamp = 'N/A';
       const parts = hopText.split(';');
       if (parts.length > 1) {
@@ -45,9 +45,8 @@ export const POST: APIRoute = async ({ request }) => {
         details: hopText.replace(/\r?\n|\r/g, ' ').trim(),
         timestamp: timestamp
       };
-    }).reverse(); // Invertir para ver el flujo desde el origen hasta el destino final
+    }).reverse();
 
-    // Calcular tiempos entre saltos si es posible
     let hopsWithDelay = hops.map((hop, i, arr) => {
       let delaySeconds = 0;
       if (i > 0) {
@@ -63,10 +62,18 @@ export const POST: APIRoute = async ({ request }) => {
       };
     });
 
+    const recipientText = Array.isArray(parsed.to) 
+      ? parsed.to.map(item => item.text).join(', ') 
+      : (parsed.to ? (parsed.to as any).text || String(parsed.to) : 'N/A');
+
+    const senderText = Array.isArray(parsed.from) 
+      ? parsed.from.map(item => item.text).join(', ') 
+      : (parsed.from ? (parsed.from as any).text || String(parsed.from) : 'N/A');
+
     const analysisResult = {
       metadata: {
-        sender: parsed.from?.text || 'N/A',
-        recipient: parsed.to?.text || 'N/A',
+        sender: senderText,
+        recipient: recipientText,
         subject: parsed.subject || 'N/A',
         date: parsed.date ? parsed.date.toUTCString() : 'N/A',
       },

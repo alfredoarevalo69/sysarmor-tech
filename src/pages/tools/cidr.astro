@@ -1,0 +1,130 @@
+---
+// src/pages/tools/cidr.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Calculadora CIDR | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-8">
+      
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <div class="space-y-2 text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          Calculadora de Bloques CIDR
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Analiza prefijos de red, rangos de direcciones utilizables, máscaras de subred y capacidad de hosts de forma inmediata.
+        </p>
+      </div>
+
+      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 shadow-md">
+        <form id="cidr-form" class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="text" 
+            id="cidr-input" 
+            placeholder="Ej. 192.168.1.0/24" 
+            required
+            class="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-600 font-medium text-neutral-900"
+          />
+          <button 
+            type="submit"
+            class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-sm cursor-pointer"
+          >
+            Calcular CIDR
+          </button>
+        </form>
+      </div>
+
+      <div id="results-container" class="space-y-4">
+        <h2 class="text-xl font-bold text-neutral-900">Detalles del Bloque de Red</h2>
+        
+        <div id="results-content" class="bg-white border-2 border-slate-300 rounded-xl p-6 text-center text-neutral-500 font-medium shadow-md">
+          Ingresa un bloque CIDR válido para ver su desglose técnico.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('cidr-form') as HTMLFormElement;
+    const input = document.getElementById('cidr-input') as HTMLInputElement;
+    const content = document.getElementById('results-content') as HTMLDivElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const cidr = input.value.trim();
+      if (!cidr) return;
+
+      content.innerHTML = `
+        <div class="py-8 flex justify-center items-center gap-3">
+          <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="font-semibold text-neutral-700">Calculando parámetros de red...</span>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`/api/cidr?cidr=${encodeURIComponent(cidr)}`);
+        const result = await response.json();
+
+        if (!result.success) {
+          content.innerHTML = `<p class="text-red-600 font-semibold py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
+          return;
+        }
+
+        const d = result.data;
+
+        content.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Bloque CIDR</span>
+              <p class="text-lg font-mono font-bold text-slate-900 mt-1">${d.cidr}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Máscara de Subred</span>
+              <p class="text-lg font-mono font-bold text-slate-900 mt-1">${d.netmask}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Dirección de Red</span>
+              <p class="text-base font-mono font-semibold text-blue-700 mt-1">${d.networkIp}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Dirección de Broadcast</span>
+              <p class="text-base font-mono font-semibold text-purple-700 mt-1">${d.broadcastIp}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Primera IP Utilizable</span>
+              <p class="text-base font-mono font-semibold text-emerald-700 mt-1">${d.firstIp}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Última IP Utilizable</span>
+              <p class="text-base font-mono font-semibold text-emerald-700 mt-1">${d.lastIp}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total de IPs en el Bloque</span>
+              <p class="text-base font-mono font-semibold text-slate-900 mt-1">${d.totalIps.toLocaleString()}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hosts Útiles</span>
+              <p class="text-base font-mono font-semibold text-slate-900 mt-1">${d.usableHosts.toLocaleString()}</p>
+            </div>
+          </div>
+        `;
+
+      } catch (error) {
+        content.innerHTML = `<p class="text-red-600 font-semibold py-4">Error de red al conectar con el servidor.</p>`;
+      }
+    });
+  </script>
+</Layout>

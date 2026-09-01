@@ -1,0 +1,136 @@
+---
+// src/pages/tools/mx.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Validador de Registros MX | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-8">
+      
+      <!-- Navegación de retorno -->
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="space-y-2 text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          Validador de Registros MX
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Verifica los servidores de correo electrónico configurados y su jerarquía de prioridad para cualquier dominio.
+        </p>
+      </div>
+
+      <!-- Buscador -->
+      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 shadow-md">
+        <form id="mx-form" class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="text" 
+            id="domain-input" 
+            placeholder="Ej. midominio.com" 
+            required
+            class="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-600 font-medium text-neutral-900"
+          />
+          <button 
+            type="submit"
+            class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-sm cursor-pointer"
+          >
+            Consultar MX
+          </button>
+        </form>
+      </div>
+
+      <!-- Contenedor de Resultados -->
+      <div id="results-container" class="space-y-4">
+        <h2 class="text-xl font-bold text-neutral-900">Servidores de Correo Encontrados</h2>
+        
+        <div id="results-content" class="bg-white border-2 border-slate-300 rounded-xl p-6 text-center text-neutral-500 font-medium shadow-md">
+          Ingresa un dominio para consultar sus registros de correo.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('mx-form') as HTMLFormElement;
+    const input = document.getElementById('domain-input') as HTMLInputElement;
+    const content = document.getElementById('results-content') as HTMLDivElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const domain = input.value.trim();
+      if (!domain) return;
+
+      content.innerHTML = `
+        <div class="py-8 flex justify-center items-center gap-3">
+          <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="font-semibold text-neutral-700">Consultando registros DNS...</span>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`/api/mx?domain=${encodeURIComponent(domain)}`);
+        const result = await response.json();
+
+        if (!result.success) {
+          content.innerHTML = `<p class="text-red-600 font-semibold py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
+          return;
+        }
+
+        if (result.data.length === 0) {
+          content.innerHTML = `
+            <div class="p-4 bg-amber-50 border-2 border-amber-300 rounded-lg text-left">
+              <p class="font-bold text-amber-900">Aviso de Configuración</p>
+              <p class="text-amber-800 text-sm mt-1">${result.message}</p>
+            </div>
+          `;
+          return;
+        }
+
+        let html = `
+          <div class="overflow-x-auto rounded-lg border border-slate-300 bg-white shadow-sm text-left">
+            <table class="w-full border-collapse text-sm">
+              <thead class="bg-slate-200 text-slate-800 font-bold border-b border-slate-300">
+                <tr>
+                  <th class="py-3 px-4 w-20">Pref</th>
+                  <th class="py-3 px-4">Hostname</th>
+                  <th class="py-3 px-4">IP Address</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-slate-700">
+        `;
+
+        result.data.forEach((mx: any) => {
+          html += `
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="py-3 px-4 font-semibold text-slate-900">${mx.priority}</td>
+              <td class="py-3 px-4 text-blue-600 font-medium">${mx.exchange}</td>
+              <td class="py-3 px-4 font-mono text-xs text-slate-600">${mx.ip}</td>
+            </tr>
+          `;
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        content.innerHTML = html;
+
+      } catch (error) {
+        content.innerHTML = `<p class="text-red-600 font-semibold py-4">Error de red al conectar con el servidor.</p>`;
+      }
+    });
+  </script>
+</Layout>
