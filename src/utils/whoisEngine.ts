@@ -12,7 +12,7 @@ export class WhoisEngine {
     const isIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(cleanQuery);
     const isCcTLDCo = cleanQuery.endsWith('.co') || cleanQuery.endsWith('.com.co') || cleanQuery.endsWith('.edu.co') || cleanQuery.endsWith('.gov.co');
 
-    // 1. Si no es un ccTLD restringido ni IP, intenta primero por RDAP (más limpio para .com / .org)
+    // 1. Intento principal por RDAP para dominios globales (.com, .org, etc.)
     if (!isIp && !isCcTLDCo) {
       try {
         const endpoint = `https://rdap.verisign.com/com/v1/domain/${encodeURIComponent(cleanQuery)}`;
@@ -25,26 +25,41 @@ export class WhoisEngine {
           return { success: true, source: 'rdap', data };
         }
       } catch (e) {
-        // Si falla RDAP, continúa hacia el fallback de puerto 43
+        // Continúa al siguiente método si falla
       }
     }
 
-    // 2. Fallback a puerto 43 TCP (Esencial para .co, .com.co y dominios donde RDAP falla)
+    // 2. Intento secundario por Sockets TCP (Puerto 43)
     try {
       const whoisServer = this.getWhoisServer(cleanQuery);
       const rawText = await this.queryTcpWhois(whoisServer, cleanQuery);
       
-      if (rawText && rawText.trim().length > 0) {
+      if (rawText && rawText.trim().length > 50 && !rawText.includes('ERROR:') && !rawText.includes('Limit Exceeded')) {
         const parsedData = this.parseWhoisText(rawText);
         return { success: true, source: 'legacy', data: parsedData };
       }
     } catch (err: any) {
-      // Manejo de error de socket
+      // Si el socket falla (ej. bloqueado en Vercel), pasa al fallback HTTP
+    }
+
+    // 3. Fallback de Nivel 3: Consulta mediante API HTTP pública segura (Resuelve restricciones de puertos en Serverless)
+    try {
+      const proxyRes = await fetch(`https://rdap.org/domain/${encodeURIComponent(cleanQuery)}`, {
+        headers: { 'Accept': 'application/json', 'User-Agent': 'SysArmorTech-WhoisClient/1.0' },
+        signal: AbortSignal.timeout(5000)
+      });
+
+      if (proxyRes.ok) {
+        const proxyData = await proxyRes.json();
+        return { success: true, source: 'rdap', data: proxyData };
+      }
+    } catch (e) {
+      // Falla si el proxy también agota el tiempo
     }
 
     return {
       success: false,
-      error: `El servidor oficial WHOIS para '${cleanQuery}' no respondió a la consulta.`
+      error: `El servidor oficial WHOIS y los servicios de respaldo no respondieron a la consulta para '${cleanQuery}'.`
     };
   }
 
@@ -66,7 +81,7 @@ export class WhoisEngine {
       const client = new net.Socket();
       let data = '';
 
-      client.setTimeout(6000); // Timeout estricto de 6 segundos
+      client.setTimeout(5000);
 
       client.connect(43, server, () => {
         client.write(`${query}\r\n`);
@@ -97,7 +112,6 @@ export class WhoisEngine {
 
     for (const line of lines) {
       const trimmed = line.trim();
-      // Ignora comentarios o líneas vacías del servidor WHOIS
       if (!trimmed || trimmed.startsWith('%') || trimmed.startsWith('#') || trimmed.startsWith('>>>')) continue;
       
       const parts = trimmed.split(':');
