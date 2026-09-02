@@ -1,7 +1,6 @@
 ---
 // src/layouts/Layout.astro
 import Navbar from '../components/Navbar.astro';
-import LegalNavbar from '../components/LegalNavbar.astro';
 import Footer from '../components/Footer.astro';
 import Feedback from '../components/Feedback.astro';
 import Analytics from '@vercel/analytics/astro';
@@ -18,7 +17,6 @@ interface Props {
 const { 
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
-  variant = 'home',
   ogImage = '/images/og-image.png',
   bgColor = '#020617'
 } = Astro.props;
@@ -135,7 +133,7 @@ const schemaOrgData = {
     class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
     style={`background-color: ${bgColor} !important;`}
   >
-    {variant === 'home' ? <Navbar /> : <LegalNavbar />}
+    <Navbar />
     
     <main class="flex-grow w-full">
       <slot />
