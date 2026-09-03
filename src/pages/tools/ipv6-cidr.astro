@@ -1,0 +1,262 @@
+---
+// src/pages/tools/ipv6-cidr.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Calculadora CIDR IPv6 | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-8">
+      
+      <!-- Navegación de retorno -->
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="space-y-2 text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          Calculadora CIDR IPv6
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Analiza prefijos IPv6, calcula la compresión de direcciones, rangos globales y capacidad de subredes.
+        </p>
+      </div>
+
+      <!-- Tarjeta de Entrada -->
+      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div class="space-y-2">
+          <label for="ipv6Input" class="block text-sm font-bold text-neutral-900 uppercase tracking-wide">
+            Prefijo IPv6 o Dirección con CIDR
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input 
+              type="text" 
+              id="ipv6Input" 
+              placeholder="Ej: 2001:db8::/32 o fe80::1/64" 
+              class="flex-1 bg-neutral-50 border-2 border-slate-300 rounded-lg px-4 py-3 text-neutral-900 font-mono text-base focus:outline-none focus:border-blue-700 transition-colors"
+            />
+            <button 
+              id="calculateBtn"
+              class="bg-blue-800 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-sm cursor-pointer"
+            >
+              Calcular Prefijo
+            </button>
+          </div>
+          <p id="errorMsg" class="text-red-600 text-xs font-bold hidden"></p>
+        </div>
+      </div>
+
+      <!-- Resultados (Ocultos al iniciar) -->
+      <div id="resultsContainer" class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6 hidden">
+        <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-200 pb-3">
+          Detalles del Bloque IPv6
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Prefijo Ingresado</span>
+            <p id="resPrefix" class="font-mono font-bold text-neutral-900 text-base break-all">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Longitud de Prefijo (Prefix Length)</span>
+            <p id="resPrefixLen" class="font-mono font-bold text-blue-800 text-base">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Dirección de Red (Comprimida)</span>
+            <p id="resCompressed" class="font-mono font-bold text-blue-800 text-base break-all">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Dirección de Red (Expandida)</span>
+            <p id="resExpanded" class="font-mono font-bold text-neutral-800 text-xs break-all">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Primera Dirección IP</span>
+            <p id="resFirstIP" class="font-mono font-bold text-emerald-700 text-base break-all">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Última Dirección IP</span>
+            <p id="resLastIP" class="font-mono font-bold text-emerald-700 text-base break-all">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Total de Direcciones IP</span>
+            <p id="resTotalIPs" class="font-mono font-bold text-neutral-900 text-base">-</p>
+          </div>
+
+          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Tipo de Dirección</span>
+            <p id="resAddressType" class="font-mono font-bold text-purple-700 text-base">-</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function parseIPv6(ipStr) {
+      ipStr = ipStr.trim();
+      if (!ipStr) throw new Error("Por favor, ingresa un prefijo IPv6 o dirección CIDR.");
+      
+      let parts = ipStr.split('/');
+      let addrPart = parts[0];
+      let prefixLen = parts.length > 1 ? parseInt(parts[1], 10) : 128;
+
+      if (isNaN(prefixLen) || prefixLen < 0 || prefixLen > 128) {
+        throw new Error("Longitud de prefijo inválida (debe estar entre 0 y 128).");
+      }
+
+      let dualColons = addrPart.split('::');
+      if (dualColons.length > 2) throw new Error("Formato IPv6 inválido: múltiples '::'.");
+
+      let hextets = [];
+      if (dualColons.length === 2) {
+        let left = dualColons[0] ? dualColons[0].split(':') : [];
+        let right = dualColons[1] ? dualColons[1].split(':') : [];
+        let missing = 8 - (left.length + right.length);
+        
+        let middle = new Array(missing).fill('0');
+        let fullArr = [...left, ...middle, ...right];
+        if (fullArr.length !== 8) throw new Error("Formato IPv6 comprimido inválido.");
+        hextets = fullArr.map(h => h === '' ? 0 : parseInt(h || '0', 16));
+      } else {
+        let splitted = addrPart.split(':');
+        if (splitted.length !== 8) throw new Error("Una dirección IPv6 completa debe tener 8 bloques (hextetos).");
+        hextets = splitted.map(h => parseInt(h || '0', 16));
+      }
+
+      for (let h of hextets) {
+        if (isNaN(h) || h < 0 || h > 0xFFFF) throw new Error("Hexteto IPv6 fuera de rango (0x0 - 0xFFFF).");
+      }
+
+      return { hextets, prefixLen };
+    }
+
+    function hextetsToBigInt(hextets) {
+      let res = 0n;
+      for (let h of hextets) {
+        res = (res << 16n) + BigInt(h);
+      }
+      return res;
+    }
+
+    function bigIntToHextets(bigIntVal) {
+      let hexStr = bigIntVal.toString(16).padStart(32, '0');
+      let hextets = [];
+      for (let i = 0; i < 32; i += 4) {
+        hextets.push(parseInt(hexStr.substring(i, i + 4), 16));
+      }
+      return hextets;
+    }
+
+    function compressIPv6(hextets) {
+      let hexStrs = hextets.map(h => h.toString(16));
+      
+      let maxZeroStart = -1;
+      let maxZeroLen = 0;
+      let currentZeroStart = -1;
+      let currentZeroLen = 0;
+
+      for (let i = 0; i < 8; i++) {
+        if (hextets[i] === 0) {
+          if (currentZeroStart === -1) currentZeroStart = i;
+          currentZeroLen++;
+          if (currentZeroLen > maxZeroLen) {
+            maxZeroLen = currentZeroLen;
+            maxZeroStart = currentZeroStart;
+          }
+        } else {
+          currentZeroStart = -1;
+          currentZeroLen = 0;
+        }
+      }
+
+      if (maxZeroLen > 1) {
+        let left = hexStrs.slice(0, maxZeroStart);
+        let right = hexStrs.slice(maxZeroStart + maxZeroLen);
+        let res = "";
+        if (left.length > 0) res += left.join(':');
+        res += '::';
+        if (right.length > 0) res += right.join(':');
+        return res === '::' ? '::' : res.replace(/:::+/g, '::');
+      }
+
+      return hexStrs.join(':');
+    }
+
+    function expandIPv6(hextets) {
+      return hextets.map(h => h.toString(16).padStart(4, '0')).join(':');
+    }
+
+    function getAddressType(hextets) {
+      let firstHextet = hextets[0];
+      if ((firstHextet & 0xFE00) === 0xFC00) return "ULA (Unique Local Address)";
+      if ((firstHextet & 0xFFC0) === 0xFE80) return "Link-Local";
+      if (firstHextet === 0 && hextets.slice(1, 7).every(h => h === 0)) {
+        if (hextets[7] === 1) return "Loopback (::1)";
+        if (hextets[7] === 0) return "Unspecified (::)";
+      }
+      if ((firstHextet & 0xFF00) === 0xFF00) return "Multicast";
+      if ((firstHextet & 0xE000) === 0x2000 || (firstHextet & 0xE000) === 0x3000) return "Global Unicast";
+      return "Especial / Reservada";
+    }
+
+    function calculate() {
+      const inputVal = (document.getElementById('ipv6Input') as HTMLInputElement).value;
+      const errorMsg = document.getElementById('errorMsg') as HTMLElement;
+      const resultsContainer = document.getElementById('resultsContainer') as HTMLElement;
+      
+      try {
+        errorMsg.classList.add('hidden');
+        let { hextets, prefixLen } = parseIPv6(inputVal);
+
+        let ipBigInt = hextetsToBigInt(hextets);
+        
+        let maskBigInt = prefixLen === 0 ? 0n : ((1n << 128n) - 1n) ^ ((1n << (128n - BigInt(prefixLen))) - 1n);
+        
+        let netBigInt = ipBigInt & maskBigInt;
+        let wildBigInt = (1n << (128n - BigInt(prefixLen))) - 1n;
+        let broadcastBigInt = netBigInt | wildBigInt;
+
+        let netHextets = bigIntToHextets(netBigInt);
+        let firstHextets = bigIntToHextets(netBigInt);
+        let lastHextets = bigIntToHextets(broadcastBigInt);
+
+        let totalIPs = prefixLen === 128 ? 1n : 1n << (128n - BigInt(prefixLen));
+
+        document.getElementById('resPrefix')!.innerText = inputVal;
+        document.getElementById('resPrefixLen')!.innerText = `/${prefixLen}`;
+        document.getElementById('resCompressed')!.innerText = compressIPv6(netHextets) + `/${prefixLen}`;
+        document.getElementById('resExpanded')!.innerText = expandIPv6(netHextets);
+        document.getElementById('resFirstIP')!.innerText = compressIPv6(firstHextets);
+        document.getElementById('resLastIP')!.innerText = compressIPv6(lastHextets);
+        document.getElementById('resTotalIPs')!.innerText = totalIPs.toLocaleString('es-ES');
+        document.getElementById('resAddressType')!.innerText = getAddressType(netHextets);
+
+        resultsContainer.classList.remove('hidden');
+
+      } catch (err: any) {
+        errorMsg.innerText = err.message;
+        errorMsg.classList.remove('hidden');
+        resultsContainer.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('calculateBtn')?.addEventListener('click', calculate);
+    document.getElementById('ipv6Input')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') calculate();
+    });
+  </script>
+</Layout>

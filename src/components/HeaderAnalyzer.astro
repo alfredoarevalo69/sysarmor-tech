@@ -1,0 +1,141 @@
+---
+// Componente de Analizador de Cabeceras HTTP
+---
+
+<div class="max-w-4xl mx-auto p-6 bg-slate-900 text-slate-100 rounded-xl shadow-lg border border-slate-800">
+  <h2 class="text-2xl font-bold mb-4 text-emerald-400">Analizador de Cabeceras HTTP y Seguridad</h2>
+  <p class="text-slate-400 mb-6">Audita las cabeceras de respuesta HTTP de cualquier sitio web para evaluar su nivel de endurecimiento (Hardening) y cumplimiento de seguridad.</p>
+
+  <div class="flex gap-3 mb-6">
+    <input 
+      type="url" 
+      id="target-url" 
+      placeholder="https://sysarmortech.com" 
+      class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-100"
+      value="https://sysarmortech.com"
+    />
+    <button 
+      id="analyze-btn" 
+      class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-lg transition-colors text-white"
+    >
+      Analizar
+    </button>
+  </div>
+
+  <div id="loading" class="hidden text-center py-8 text-emerald-400 animate-pulse">
+    Analizando cabeceras del servidor...
+  </div>
+
+  <div id="error-box" class="hidden p-4 mb-4 bg-red-900/50 border border-red-700 text-red-200 rounded-lg"></div>
+
+  <div id="results" class="hidden space-y-6">
+    <!-- Resumen de Calificación -->
+    <div class="flex items-center justify-between p-4 bg-slate-800 rounded-lg border border-slate-700">
+      <div>
+        <span class="text-sm text-slate-400">Sitio Evaluado:</span>
+        <p id="res-url" class="font-mono text-emerald-300 text-sm break-all"></p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-right">
+          <span class="text-xs text-slate-400 block">Puntaje</span>
+          <span id="res-score" class="text-xl font-bold"></span>
+        </div>
+        <div id="res-grade" class="w-14 h-14 flex items-center justify-center text-2xl font-black rounded-lg shadow-inner"></div>
+      </div>
+    </div>
+
+    <!-- Cabeceras Encontradas vs Faltantes -->
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="p-4 bg-slate-800/60 rounded-lg border border-slate-700">
+        <h3 class="font-semibold text-emerald-400 mb-3">Cabeceras de Seguridad Presentes</h3>
+        <ul id="present-list" class="space-y-2 text-sm"></ul>
+      </div>
+      <div class="p-4 bg-slate-800/60 rounded-lg border border-slate-700">
+        <h3 class="font-semibold text-red-400 mb-3">Cabeceras Críticas Ausentes</h3>
+        <ul id="missing-list" class="space-y-2 text-sm"></ul>
+      </div>
+    </div>
+
+    <!-- Listado Completo de Cabeceras HTTP -->
+    <div class="p-4 bg-slate-800 rounded-lg border border-slate-700">
+      <h3 class="font-semibold text-slate-200 mb-3">Todas las Cabeceras de Respuesta (Response Headers)</h3>
+      <div class="overflow-x-auto max-h-60 overflow-y-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <tbody id="raw-headers-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('analyze-btn');
+  const input = document.getElementById('target-url') as HTMLInputElement;
+  const loading = document.getElementById('loading');
+  const errorBox = document.getElementById('error-box');
+  const results = document.getElementById('results');
+
+  btn?.addEventListener('click', async () => {
+    const url = input.value.trim();
+    if (!url) return;
+
+    // Reset states
+    loading?.classList.remove('hidden');
+    errorBox?.classList.add('hidden');
+    results?.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/analyze-headers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Error al procesar la solicitud');
+
+      // Render URL & Score
+      document.getElementById('res-url')!.textContent = data.url;
+      document.getElementById('res-score')!.textContent = `${data.audit.score}%`;
+      
+      const gradeEl = document.getElementById('res-grade')!;
+      const grade = data.audit.grade;
+      gradeEl.textContent = grade;
+      gradeEl.className = `w-14 h-14 flex items-center justify-center text-2xl font-black rounded-lg shadow-inner ${
+        grade === 'A' ? 'bg-emerald-600 text-white' :
+        grade === 'B' ? 'bg-blue-600 text-white' :
+        grade === 'C' ? 'bg-yellow-600 text-slate-950' :
+        grade === 'D' ? 'bg-orange-600 text-white' : 'bg-red-600 text-white'
+      }`;
+
+      // Render Present Headers
+      const presentList = document.getElementById('present-list')!;
+      presentList.innerHTML = data.audit.presentHeaders.length > 0 
+        ? data.audit.presentHeaders.map((h: string) => `<li class="text-emerald-300 flex items-center gap-2">✓ ${h}</li>`).join('')
+        : '<li class="text-slate-500 italic">Ninguna cabecera de seguridad clave detectada</li>';
+
+      // Render Missing Headers
+      const missingList = document.getElementById('missing-list')!;
+      missingList.innerHTML = data.audit.missingHeaders.length > 0 
+        ? data.audit.missingHeaders.map((h: string) => `<li class="text-red-400 flex items-center gap-2">✗ ${h}</li>`).join('')
+        : '<li class="text-emerald-400 italic">¡Excelente! No faltan cabeceras clave.</li>';
+
+      // Render Raw Headers Table
+      const rawBody = document.getElementById('raw-headers-body')!;
+      rawBody.innerHTML = Object.entries(data.headers).map(([key, val]) => `
+        <tr class="border-b border-slate-700/50">
+          <td class="py-1.5 pr-4 text-emerald-400 font-semibold">${key}</td>
+          <td class="py-1.5 text-slate-300 break-all">${val}</td>
+        </tr>
+      `).join('');
+
+      results?.classList.remove('hidden');
+    } catch (err: any) {
+      errorBox!.textContent = err.message;
+      errorBox?.classList.remove('hidden');
+    } finally {
+      loading?.classList.add('hidden');
+    }
+  });
+</script>

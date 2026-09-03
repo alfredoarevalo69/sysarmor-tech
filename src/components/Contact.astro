@@ -1,0 +1,78 @@
+---
+// src/components/Contact.astro
+// Configuración del número de WhatsApp para Bogotá, Colombia (+57)
+const whatsappNumber = "573126030958"; 
+const whatsappMessage = encodeURIComponent("Hola, me gustaría solicitar una Evaluación Técnica Inicial de 30 minutos para mi infraestructura.");
+---
+<section id="contacto" class="scroll-mt-20 w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 flex flex-col justify-center items-center">
+  <!-- Contenedor principal con borde fuerte y sombra profunda para recortar sobre el fondo -->
+  <div class="max-w-2xl mx-auto bg-white border-2 border-slate-300 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-slate-300/80 space-y-5 sm:space-y-6 w-full my-auto">
+    
+    <!-- Encabezado -->
+    <div class="text-center space-y-1.5 sm:space-y-2">
+      <span class="inline-block bg-amber-500/10 border border-amber-500/40 text-amber-700 text-[11px] sm:text-xs font-bold px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-wider">
+        Sin costo ni compromiso
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Evaluación Técnica Inicial</h2>
+      <p class="text-slate-700 text-xs sm:text-sm max-w-lg mx-auto font-medium">Sesión de trabajo focalizada para analizar el entorno, identificar necesidades y orientar los próximos pasos.</p>
+    </div>
+
+    <!-- Caja interna con borde y contraste mejorado -->
+    <div class="bg-slate-100 border border-slate-300 rounded-xl p-4 sm:p-5 space-y-3">
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-800 font-medium">
+        <li class="flex items-start gap-2">
+          <span class="text-amber-600 font-bold mt-0.5">✓</span> <span class="leading-snug">Riesgos visibles de infraestructura</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-amber-600 font-bold mt-0.5">✓</span> <span class="leading-snug">Posibles brechas y riesgos de seguridad</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-amber-600 font-bold mt-0.5">✓</span> <span class="leading-snug">Oportunidades de automatización</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-amber-600 font-bold mt-0.5">✓</span> <span class="leading-snug">Riesgos de sistemas legados</span>
+        </li>
+        <li class="flex items-start gap-2 md:col-span-2">
+          <span class="text-amber-600 font-bold mt-0.5">✓</span> <span class="leading-snug">Posibles mejoras de Azure / M365</span>
+        </li>
+      </ul>
+
+      <p class="text-[11px] sm:text-xs text-amber-700 font-semibold pt-2 border-t border-slate-300 text-center">
+        Al finalizar, recibirás recomendaciones técnicas priorizadas según el escenario analizado.
+      </p>
+    </div>
+
+    <!-- CTA Principal -->
+    <div class="space-y-2 sm:space-y-3">
+      <a href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`} 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="flex items-center justify-center gap-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 text-center w-full uppercase tracking-wide text-xs sm:text-sm shadow-md shadow-[#2563eb]/25">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 fill-current text-white" viewBox="0 0 24 24">
+          <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.764.459 3.483 1.333 5.001L2 22l5.127-1.34c1.464.798 3.113 1.218 4.882 1.218h.004c5.503 0 9.987-4.478 9.988-9.985 0-2.667-1.037-5.175-2.923-7.062C17.19 2.946 14.68 2 12.012 2zM12.013 20.165h-.003c-1.503 0-2.977-.404-4.263-1.168l-.305-.181-3.167.828.844-3.088-.198-.316c-.84-1.336-1.284-2.883-1.284-4.473.001-4.502 3.666-8.163 8.172-8.163 2.181 0 4.232.85 5.773 2.392 1.542 1.542 2.39 3.593 2.389 5.774-.002 4.503-3.667 8.165-8.17 8.175z"/>
+        </svg>
+        Solicitar Evaluación Técnica
+      </a>
+      
+      <p class="text-xs sm:text-sm text-center text-slate-700 font-semibold">
+        ⏱️ Atendemos cada solicitud con la mayor celeridad posible.
+      </p>
+    </div>
+
+    <!-- Opción secundaria de correo -->
+    <div class="pt-3 sm:pt-4 border-t border-slate-300 text-center space-y-2">
+      <p class="text-xs sm:text-sm text-slate-700 font-medium">¿Prefieres contactarnos por correo?</p>
+      
+      <div class="flex items-center justify-center gap-2 text-xs sm:text-base font-semibold">
+        <a href="mailto:contacto@sysarmortech.com?subject=Solicitud%20de%20Evaluaci%C3%B3n%20T%C3%A9cnica" 
+           class="text-slate-900 hover:text-amber-600 transition-colors flex items-center gap-2 truncate">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2.22 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <span class="truncate">contacto@sysarmortech.com</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>

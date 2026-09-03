@@ -1,0 +1,179 @@
+---
+export const prerender = true;
+
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ReactionButtons from '../../components/ReactionButtons.astro';
+
+// 1. Definir rutas estáticas para la colección
+export async function getStaticPaths() {
+  const posts = await getCollection('recursos');
+  return posts.map((post) => {
+    const slug = post.slug || post.id;
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+// 2. Extraer datos de la entrada actual
+const { post } = Astro.props;
+const data = post?.data || {};
+const title = data.title || "Artículo del Blog";
+const description = data.description || "Caso práctico de infraestructura TI.";
+const category = data.category || "Infraestructura TI";
+const pubDate = data.pubDate || null;
+
+// 3. Renderizar el Markdown con la API de Astro 5
+const { Content } = await render(post);
+
+// 4. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
+const formattedDate = pubDate 
+  ? new Date(pubDate).toLocaleDateString('es-ES', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' })
+  : null;
+
+// 5. Construcción de URL canónica para posicionamiento e indexación en Google
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout 
+  title={`${title} | SysArmor Tech`} 
+  description={description} 
+  canonical={canonicalUrl}
+  bgColor="#ffffff"
+>
+  
+  <main class="bg-white min-h-screen py-8 text-slate-800" style="background-color: #ffffff !important;">
+    <article class="container mx-auto max-w-4xl px-4">
+      
+      {/* --- BARRA SUPERIOR DE NAVEGACIÓN --- */}
+      <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl shadow-lg mb-8 border border-slate-800">
+        <a 
+          href="/blog" 
+          class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-semibold text-xs md:text-sm transition-colors cursor-pointer"
+        >
+          &larr; Volver al Blog
+        </a>
+
+        {category && (
+          <span class="text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
+            {category}
+          </span>
+        )}
+      </div>
+
+      {/* --- ENCABEZADO PRINCIPAL (SEO H1) --- */}
+      <header class="mb-8 border-b border-slate-200 pb-6">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
+          {title}
+        </h1>
+        <p class="text-slate-600 text-base md:text-lg leading-relaxed mb-4">
+          {description}
+        </p>
+        
+        {formattedDate && (
+          <div class="text-xs text-slate-400 font-medium">
+            Publicado el {formattedDate}
+          </div>
+        )}
+      </header>
+
+      {/* --- CONTENIDO MARKDOWN RENDERIZADO --- */}
+      <div class="blog-content text-slate-800 space-y-6">
+        <Content />
+      </div>
+
+      {/* --- COMPONENTE DE REACCIONES (TELEGRAM) --- */}
+      <ReactionButtons articleTitle={title} />
+
+    </article>
+  </main>
+
+</Layout>
+
+<!-- BLOQUEO DE CLIC DERECHO EN EL ARTÍCULO -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const article = document.querySelector('article');
+    if (article) {
+      article.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+  });
+</script>
+
+<!-- ESTILOS GLOBALES Y PROTECCIÓN CONTRA COPIA DE TEXTO -->
+<style is:global>
+  /* Inhabilitar selección de texto en todo el cuerpo del artículo */
+  article, .blog-content {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Excepción: Permitir la selección e interacción en bloques de código PowerShell */
+  .blog-content pre, 
+  .blog-content code {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+  }
+
+  /* Estilos de renderizado Markdown */
+  .blog-content h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+  .blog-content h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .blog-content p {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #334155;
+    margin-bottom: 1.25rem;
+  }
+  .blog-content img {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin: 1.5rem auto;
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  .blog-content pre {
+    background-color: #0f172a;
+    color: #f8fafc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .blog-content code {
+    background-color: #f1f5f9;
+    color: #d97706;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  .blog-content pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  .blog-content hr {
+    border-color: #e2e8f0;
+    margin: 2rem 0;
+  }
+</style>

@@ -1,0 +1,184 @@
+---
+// src/pages/tools/index.astro
+import Layout from '../../layouts/Layout.astro';
+
+const tools = [
+  {
+    title: "Calculadora VLSM (IPv4)",
+    description: "Diseña subredes IP de tamaño variable de forma eficiente y optimiza el direccionamiento IPv4 de tu infraestructura de red.",
+    href: "/tools/vlsm",
+    badge: "Redes IPv4",
+    status: "Disponible",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+  },
+  {
+    title: "Calculadora de Subredes (IPv6)",
+    description: "Distribuye y planifica bloques jerárquicos de red IPv6 por requerimientos de subred o dispositivos con precisión extendida.",
+    href: "/tools/ipv6-subnetting",
+    badge: "Redes IPv6",
+    status: "Disponible",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+  },
+  {
+    title: "Calculadora CIDR (IPv4)",
+    description: "Desglosa bloques de red en notación CIDR para obtener máscaras, rangos de hosts útiles y direcciones de broadcast.",
+    href: "/tools/cidr",
+    badge: "Redes IPv4",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+  },
+  {
+    title: "Calculadora CIDR IPv6",
+    description: "Analiza prefijos y bloques jerárquicos de red IPv6 con soporte para desglose de prefijos y expansión de ceros.",
+    href: "/tools/ipv6-cidr",
+    badge: "Redes IPv6",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+  },
+  {
+    title: "Analizador de Cabeceras HTTP",
+    description: "Inspecciona y audita las cabeceras de respuesta HTTP de cualquier servidor para evaluar el nivel de seguridad y políticas de hardening.",
+    href: "/tools/http-headers",
+    badge: "Seguridad Web",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>'
+  },
+  {
+    title: "Analizador de Cabeceras de Correo",
+    description: "Inspecciona los saltos de red detallados, latencias (delays) y validaciones de seguridad SPF, DKIM y DMARC.",
+    href: "/tools/email-analyzer",
+    badge: "Seguridad & M365",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+  },
+  {
+    title: "Buscador WHOIS de Dominios",
+    description: "Consulta información de registro, fechas de creación/expiración y servidores de nombres (NS) de cualquier dominio en tiempo real.",
+    href: "/tools/whois",
+    badge: "Redes & DNS",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>'
+  },
+  {
+    title: "Validador de Registros MX",
+    description: "Verifica los servidores de correo electrónico configurados y su jerarquía de prioridad para cualquier dominio.",
+    href: "/tools/mx",
+    badge: "DNS & Correo",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+  },
+  {
+    title: "Validador de Registro SPF",
+    description: "Inspecciona los registros TXT y valida la sintaxis de las políticas SPF para proteger la reputación del dominio.",
+    href: "/tools/spf",
+    badge: "Seguridad & DNS",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>'
+  },
+  {
+    title: "Validador de Registro DKIM",
+    description: "Comprueba la clave pública y la integridad de los registros DKIM bajo selectores personalizados para asegurar el correo saliente.",
+    href: "/tools/dkim-checker",
+    badge: "Seguridad & DNS",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>'
+  },
+  {
+    title: "Comprobador de Puertos TCP",
+    description: "Verifica la disponibilidad y el estado de puertos específicos mediante un intento de conexión TCP (Three-way Handshake).",
+    href: "/tools/port-checker",
+    badge: "Redes & Sockets",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>'
+  },
+  {
+    title: "Validador DMARC",
+    description: "Audita la política de autenticación, reporte y conformidad de correo electrónico de tus dominios.",
+    href: "/tools/dmarc-checker",
+    badge: "Seguridad & DNS",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+  },
+  {
+    title: "¿Cuál es mi IP?",
+    description: "Visualiza tu dirección IP pública actual, navegador y detalles de red de forma rápida y directa.",
+    href: "/tools/what-is-my-ip",
+    badge: "Redes",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>'
+  },
+  {
+    title: "Validador de Certificados X.509",
+    description: "Analiza la validez, vigencia, emisor y propiedades criptográficas de certificados SSL/TLS en formato PEM de forma local y segura.",
+    href: "/tools/certificate-validator",
+    badge: "Seguridad & SSL",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>'
+  },
+  {
+    title: "Generador de Claves y Contraseñas",
+    description: "Crea claves robustas y contraseñas seguras utilizando la API de entropía nativa del navegador de forma totalmente local.",
+    href: "/tools/key-generator",
+    badge: "Seguridad & Criptografía",
+    status: "Nuevo",
+    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>'
+  }
+];
+---
+
+<Layout title="Herramientas de Infraestructura y Redes | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-5xl mx-auto space-y-8">
+      
+      <div class="space-y-2 text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          Herramientas de SysArmor Tech
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Utilidades especializadas diseñadas para ingenieros de sistemas y administradores de infraestructura IT.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        {tools.map((tool) => (
+          <article class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1 duration-200">
+            
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="p-3 bg-white rounded-lg border-2 border-slate-300 shadow-xs flex items-center justify-center" set:html={tool.svgIcon} />
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold uppercase tracking-wider bg-blue-800 text-white px-2.5 py-1 rounded-md">
+                    {tool.badge}
+                  </span>
+                  <span class="text-xs font-extrabold uppercase tracking-wider bg-emerald-700 text-white px-2.5 py-1 rounded-md">
+                    {tool.status}
+                  </span>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <h2 class="text-xl font-bold text-neutral-900">
+                  {tool.title}
+                </h2>
+                <p class="text-neutral-700 text-sm font-medium leading-relaxed">
+                  {tool.description}
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-6 mt-6 border-t-2 border-slate-300">
+              <a 
+                href={tool.href}
+                class="block w-full bg-slate-900 hover:bg-slate-800 text-white text-center font-bold py-2.5 rounded-lg transition-colors text-sm shadow-sm"
+              >
+                Acceder a la Herramienta →
+              </a>
+            </div>
+
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </main>
+</Layout>

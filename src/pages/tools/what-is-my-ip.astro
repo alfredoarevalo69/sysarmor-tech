@@ -1,0 +1,95 @@
+---
+// src/pages/tools/what-is-my-ip.astro
+import Layout from '../../layouts/Layout.astro';
+
+const clientIp = Astro.clientAddress || 'No disponible';
+---
+
+<Layout title="¿Cuál es mi IP? | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-3xl mx-auto space-y-8">
+      
+      <!-- Navegación de retorno -->
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="space-y-2 text-center">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+          ¿Cuál es mi IP?
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Visualiza tu dirección IP pública actual y detalles básicos de red.
+        </p>
+      </div>
+
+      <!-- Tarjeta de Resultado -->
+      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-8 shadow-xl text-center space-y-6">
+        <div class="space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider bg-blue-800 text-white px-3 py-1 rounded-md">
+            Tu Dirección IP Pública
+          </span>
+          <div class="pt-4">
+            <span id="ip-display" class="font-mono text-3xl sm:text-4xl font-extrabold text-neutral-900 bg-white px-6 py-3 rounded-lg border-2 border-slate-300 inline-block shadow-inner">
+              {clientIp !== 'No disponible' ? clientIp : 'Cargando...'}
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left pt-4 border-t-2 border-slate-300">
+          <div class="bg-white/80 p-4 rounded-lg border border-slate-300">
+            <span class="block text-xs font-bold text-slate-500 uppercase">Navegador / User-Agent</span>
+            <span id="user-agent" class="text-xs font-mono text-neutral-800 break-all">Detectando...</span>
+          </div>
+          <div class="bg-white/80 p-4 rounded-lg border border-slate-300">
+            <span class="block text-xs font-bold text-slate-500 uppercase">Protocolo</span>
+            <span id="connection-protocol" class="text-xs font-mono text-neutral-800">-</span>
+          </div>
+        </div>
+
+        <button 
+          id="btn-refresh"
+          class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg transition-colors text-sm shadow-sm inline-flex items-center gap-2 cursor-pointer"
+        >
+          🔄 Actualizar Información
+        </button>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  async function fetchIpDetails() {
+    const ipElement = document.getElementById('ip-display');
+    const uaElement = document.getElementById('user-agent');
+    const protoElement = document.getElementById('connection-protocol');
+
+    if (uaElement) uaElement.textContent = navigator.userAgent;
+    if (protoElement) {
+      protoElement.textContent = window.location.protocol.replace(':', '').toUpperCase();
+    }
+
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      if (ipElement) {
+        ipElement.textContent = data.ip;
+      }
+    } catch (error) {
+      if (ipElement) {
+        ipElement.textContent = 'Error al obtener IP';
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchIpDetails);
+  document.addEventListener('astro:page-load', fetchIpDetails);
+  document.getElementById('btn-refresh')?.addEventListener('click', fetchIpDetails);
+</script>

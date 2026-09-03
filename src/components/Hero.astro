@@ -1,0 +1,290 @@
+---
+// src/components/Hero.astro
+import { Image } from 'astro:assets';
+import heroBgImg from '../assets/images/hero-datacenter.webp';
+---
+
+<section class="hero-container">
+  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel (solo desktop) -->
+  <Image 
+    src={heroBgImg} 
+    alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
+    width={1920}
+    height={1080}
+    format="webp"
+    quality={75}
+    loading="eager" 
+    fetchpriority="high"
+    decoding="sync"
+    class="hero-bg"
+  />
+
+  <!-- Capa overlay optimizada para escritorio -->
+  <div class="hero-overlay"></div>
+
+  <!-- Contenedor general -->
+  <div class="hero-inner">
+    <!-- Bloque de contenido principal desplazado hacia la izquierda -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Infraestructura Crítica, <br />
+        Servidores y <br />
+        <span class="highlight">Alta Disponibilidad</span>
+      </h1>
+
+      <p class="hero-description">
+        En <strong class="highlight-yellow">SysArmor Tech</strong> ofrecemos soluciones de continuidad de negocio, modernización a <strong class="highlight-yellow">Windows Server 2025</strong> y blindaje de plataformas corporativas, respaldadas por más de dos décadas de experiencia técnica.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#contacto" class="btn-primary">Solicitar Evaluación Técnica</a>
+      </div>
+
+      <ul class="hero-features">
+        <li>
+          <span class="feature-icon" aria-hidden="true">🛡️</span>
+          <span>Arquitectura de directorios corporativos y sincronización de identidades</span>
+        </li>
+        <li>
+          <span class="feature-icon" aria-hidden="true">☁️</span>
+          <span>Modernización de sistemas legados e integración con Microsoft 365</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --- CONTENEDOR PRINCIPAL --- */
+  .hero-container {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: #050a14;
+    padding: 4rem 0;
+  }
+
+  /* --- CONTENEDOR INTERNO --- */
+  .hero-inner {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+  }
+
+  /* --- IMAGEN DE FONDO --- */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+  }
+
+  /* --- OVERLAY DESKTOP (Ajustado para despejar el escudo a la derecha) --- */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    background-image: linear-gradient(
+      90deg, 
+      #050a14 0%,      
+      #050a14 20%,     
+      rgba(5, 10, 20, 0.85) 45%, 
+      rgba(5, 10, 20, 0.15) 58%, 
+      transparent 68%  
+    );
+    z-index: 2;
+  }
+
+  /* --- CONTENIDO PRINCIPAL --- */
+  .hero-content {
+    width: 100%;
+    max-width: 840px; 
+    padding-left: 1rem;
+    margin-left: 0;
+    text-align: left;
+    z-index: 3;
+  }
+
+  @media (min-width: 640px) {
+    .hero-content {
+      padding-left: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-content {
+      padding-left: 3rem;
+    }
+  }
+
+  /* --- TIPOGRAFÍA --- */
+  .hero-title {
+    font-size: clamp(2.2rem, 4.2vw, 3.5rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    white-space: nowrap; 
+  }
+
+  .highlight {
+    color: #eab308;
+  }
+
+  .hero-description {
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    color: #e2e8f0;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 700px;
+  }
+
+  .highlight-yellow {
+    color: #eab308;
+    font-weight: 700;
+  }
+
+  /* --- BOTÓN Y LISTA --- */
+  .hero-cta {
+    margin-bottom: 2rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    width: 100%;
+    max-width: 380px;
+    padding: 1rem 1.5rem;
+    background-color: #d97706;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #b45309;
+    transform: translateY(-2px);
+  }
+
+  .hero-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hero-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .feature-icon {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+  }
+
+  /* --- AJUSTES RESPONSIVE MÓVIL --- */
+  @media (max-width: 968px) {
+    .hero-container {
+      padding: 2.5rem 1.25rem 4rem 1.25rem;
+      min-height: auto;
+      background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.15);
+    }
+
+    .hero-container::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 260px;
+      background: rgba(245, 158, 11, 0.12);
+      filter: blur(45px);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      z-index: 2;
+    }
+
+    .hero-content {
+      padding-left: 0;
+      margin-left: 0;
+    }
+
+    .hero-bg {
+      display: none;
+    }
+
+    .hero-overlay {
+      background-image: none;
+    }
+
+    .hero-title {
+      font-size: 1.85rem;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      white-space: normal; 
+    }
+
+    .hero-description {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      color: #cbd5e1;
+    }
+
+    .hero-cta {
+      margin-bottom: 1.75rem;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1.05rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px -4px rgba(217, 119, 6, 0.35);
+      text-align: center;
+    }
+
+    .hero-features {
+      gap: 0.6rem;
+    }
+
+    .hero-features li {
+      font-size: 0.9rem;
+    }
+  }
+</style>

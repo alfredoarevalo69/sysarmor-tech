@@ -1,0 +1,148 @@
+---
+// src/layouts/Layout.astro
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Feedback from '../components/Feedback.astro';
+import Analytics from '@vercel/analytics/astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  variant?: 'home' | 'legal';
+  ogImage?: string;
+  bgColor?: string;
+}
+
+const { 
+  title, 
+  description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
+  ogImage = '/images/og-image.png',
+  bgColor = '#020617'
+} = Astro.props;
+
+const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
+const canonicalURL = new URL(Astro.url.pathname, siteURL);
+const fullOgImageUrl = new URL(ogImage, siteURL).href;
+
+const pageTitle = title.includes('SysArmor Tech') ? title : `${title} | SysArmor Tech`;
+
+const schemaOrgData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteURL}/#organization`,
+      "name": "SysArmor Tech",
+      "alternateName": ["SysArmor Tech Colombia", "SysArmorTech"],
+      "url": siteURL,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteURL}/favicon.png?v=5`
+      },
+      "description": "Firma de consultoría e ingeniería especializada en infraestructura crítica, ecosistema Microsoft, Nivel 3 y SecOps.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Engativá, Bogotá",
+        "addressRegion": "Cundinamarca",
+        "addressCountry": "CO"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/sysarmortech"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteURL}/#website`,
+      "url": siteURL,
+      "name": "SysArmor Tech",
+      "description": description,
+      "publisher": {
+        "@id": `${siteURL}/#organization`
+      },
+      "inLanguage": "es-CO"
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteURL}/#service`,
+      "name": "SysArmor Tech",
+      "url": siteURL,
+      "image": fullOgImageUrl,
+      "description": description,
+      "priceRange": "$$$",
+      "parentOrganization": {
+        "@id": `${siteURL}/#organization`
+      },
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "Engativá, Bogotá"
+        },
+        {
+          "@type": "Country",
+          "name": "Colombia"
+        }
+      ],
+      "serviceType": [
+        "Ingeniería de Infraestructura IT",
+        "SecOps y Hardening",
+        "Active Directory & Windows Server",
+        "Soporte Nivel 3",
+        "Migraciones Corporativas"
+      ]
+    }
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=5" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=5" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=5" />
+    
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
+  </head>
+  
+  <body 
+    class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
+    style={`background-color: ${bgColor} !important;`}
+  >
+    <Navbar />
+    
+    <main class="flex-grow w-full">
+      <slot />
+    </main>
+    
+    <Feedback />
+    
+    <Footer />
+    
+    <Analytics />
+  </body>
+</html>

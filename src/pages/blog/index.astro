@@ -1,0 +1,281 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArticleCard from '../../components/blog/ArticleCard.astro';
+
+// Obtener todos los artículos de la colección 'recursos'
+const posts = await getCollection('recursos');
+
+// Ordenar por fecha (los más recientes primero)
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate || 0).getTime();
+  const dateB = new Date(b.data.pubDate || 0).getTime();
+  return dateB - dateA;
+});
+
+// Extraer categorías únicas para los botones de filtro
+const categories = ['Todos', ...new Set(posts.map((post) => post.data.category).filter(Boolean))];
+
+// URL canónica para posicionamiento e indexación SEO
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout 
+  title="Blog de Ingeniería y Operaciones | SysArmor Tech"
+  description="Artículos técnicos sobre Active Directory, Azure, Intune y hardening de infraestructura TI."
+  canonical={canonicalUrl}
+>
+  
+  {/* --- 1. HERO BANNER PRINCIPAL (OPTIMIZADO PARA LCP Y MOBILE RENDERING) --- */}
+  <section class="w-full bg-[#050a14] text-white pt-8 pb-6 border-b border-slate-800 relative overflow-hidden">
+    {/* Resplandor decorativo deshabilitado en mobile para evitar GPU Bottleneck */}
+    <div class="hidden md:block absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="hidden md:block absolute bottom-0 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="container mx-auto max-w-6xl px-4 relative z-10">
+      
+      {/* Bloque Superior: Título + Badges */}
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
+        
+        {/* Contenido principal */}
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            Blog de Ingeniería & Operaciones
+          </div>
+          
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            Soluciones de TI que <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">protegen, optimizan</span> y hacen crecer tu negocio
+          </h1>
+          
+          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+            Experiencia, seguridad y automatización al servicio de tu infraestructura y productividad.
+          </p>
+        </div>
+
+        {/* Badges de Especialidades (Sin backdrop-blur para CPU mobile optimization) */}
+        <div class="flex flex-wrap md:flex-col gap-2 shrink-0 w-full md:w-auto">
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            <span class="font-medium">Windows Server & Active Directory</span>
+          </div>
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="font-medium">Microsoft 365 & Intune</span>
+          </div>
+          <div class="flex items-center gap-2.5 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span class="font-medium">Azure & Cloud Security</span>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Bloque Inferior: Franja Comercial con Títulos Amarillos */}
+      <div class="pt-5 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        {/* Pilar 1 */}
+        <div class="flex items-center gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <div>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Seguridad</span>
+            <span class="text-xs text-slate-300">Nivel empresarial</span>
+          </div>
+        </div>
+
+        {/* Pilar 2 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <div>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Infraestructura</span>
+            <span class="text-xs text-slate-300">Resiliente y eficiente</span>
+          </div>
+        </div>
+
+        {/* Pilar 3 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <div>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Expertos Certificados</span>
+            <span class="text-xs text-slate-300">Soporte Nivel 2 y 3</span>
+          </div>
+        </div>
+
+        {/* Pilar 4 */}
+        <div class="flex items-center gap-3 md:border-l md:border-slate-800/80 md:pl-5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <div>
+            <span class="font-bold text-amber-400 text-sm block leading-snug">Automatización</span>
+            <span class="text-xs text-slate-300">E innovación constante</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  {/* --- 2. FRANJA CON BOTONES DE FILTRO Y BÚSQUEDA --- */}
+  <section class="bg-white py-4 border-b border-slate-200 shadow-sm sticky top-0 z-30">
+    <div class="container mx-auto max-w-6xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      {/* Botones de Categoría (Chips) */}
+      <div class="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <button
+            class={`category-filter px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+              category === 'Todos'
+                ? 'bg-slate-900 text-white active-filter'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+            }`}
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Buscador de documentos por título/palabra clave */}
+      <div class="w-full md:w-72 relative">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar documentos..."
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent focus:bg-white transition-all shadow-sm"
+        />
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {/* --- 3. SECCIÓN DE ARTÍCULOS --- */}
+  <main class="bg-slate-100 min-h-screen py-10 text-slate-800">
+    <div class="container mx-auto max-w-6xl px-4">
+      
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">Últimos Artículos</h2>
+
+      {/* Grid de Tarjetas */}
+      {sortedPosts.length > 0 ? (
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedPosts.map((post) => (
+            <div 
+              class="article-item" 
+              data-category={post.data.category?.toLowerCase() || ''}
+              data-title={post.data.title?.toLowerCase() || ''}
+              data-description={post.data.description?.toLowerCase() || ''}
+            >
+              <ArticleCard 
+                title={post.data.title}
+                description={post.data.description}
+                category={post.data.category}
+                pubDate={post.data.pubDate}
+                slug={post.id}
+                image={post.data.image}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <p class="text-slate-500">No hay artículos disponibles en este momento.</p>
+        </div>
+      )}
+
+      {/* Mensaje sin resultados */}
+      <div id="no-results" class="hidden text-center py-12 bg-white rounded-xl border border-slate-200 shadow-sm">
+        <p class="text-slate-500">No se encontraron documentos que coincidan con la búsqueda.</p>
+      </div>
+
+    </div>
+  </main>
+
+</Layout>
+
+{/* --- SCRIPT OPTIMIZADO CON DEBOUNCE PARA EVITAR RE-PAINTS EN BÚSQUEDA --- */}
+<script>
+  const setupBlogFilters = () => {
+    const filterButtons = document.querySelectorAll('.category-filter');
+    const articles = document.querySelectorAll('.article-item');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const noResults = document.getElementById('no-results');
+
+    let currentCategory = 'todos';
+    let currentQuery = '';
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
+    function filterArticles() {
+      let visibleCount = 0;
+
+      articles.forEach((article) => {
+        const cat = article.getAttribute('data-category') || '';
+        const title = article.getAttribute('data-title') || '';
+        const desc = article.getAttribute('data-description') || '';
+
+        const matchesCategory = currentCategory === 'todos' || cat === currentCategory;
+        const matchesQuery = !currentQuery || title.includes(currentQuery) || desc.includes(currentQuery);
+
+        if (matchesCategory && matchesQuery) {
+          (article as HTMLElement).style.display = 'block';
+          visibleCount++;
+        } else {
+          (article as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      }
+    }
+
+    // Evento de clic en Categorías
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentCategory = btn.getAttribute('data-category') || 'todos';
+
+        filterButtons.forEach((b) => {
+          b.classList.remove('bg-slate-900', 'text-white', 'active-filter');
+          b.classList.add('bg-slate-100', 'text-slate-700');
+        });
+
+        btn.classList.remove('bg-slate-100', 'text-slate-700');
+        btn.classList.add('bg-slate-900', 'text-white', 'active-filter');
+
+        filterArticles();
+      });
+    });
+
+    // Búsqueda con debounce para liberar la CPU del móvil mientras el usuario escribe
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          currentQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+          filterArticles();
+        }, 150);
+      });
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', setupBlogFilters);
+  document.addEventListener('astro:page-load', setupBlogFilters);
+</script>

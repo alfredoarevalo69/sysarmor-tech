@@ -1,0 +1,172 @@
+---
+// src/pages/tools/key-generator.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Generador de Claves y Contraseñas | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-6">
+
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/85 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <div class="space-y-1.5">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-wide">
+          Generador de Claves y Contraseñas
+        </h1>
+        <p class="text-neutral-700 font-medium text-base">
+          Crea cadenas criptográficamente seguras, contraseñas robustas o secretos alfanuméricos usando la API de entropía del navegador.
+        </p>
+      </div>
+
+      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-6">
+        
+        <!-- Output Box -->
+        <div class="space-y-2">
+          <label for="output-password" class="block text-sm font-bold text-slate-900">
+            Resultado Generado:
+          </label>
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="output-password" 
+              readonly 
+              class="w-full bg-white border-2 border-slate-300 rounded-lg px-3 py-2.5 text-neutral-900 font-mono text-sm focus:outline-none shadow-xs"
+              placeholder="Haz clic en generar..."
+            />
+            <button 
+              type="button"
+              id="copy-btn"
+              class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-lg transition-colors text-sm cursor-pointer shadow-sm flex items-center gap-1.5 shrink-0"
+            >
+              <span>📋</span> Copiar
+            </button>
+          </div>
+        </div>
+
+        <!-- Controls / Options -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t-2 border-slate-300">
+          
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <label for="length-range" class="text-sm font-bold text-slate-900">
+                Longitud: <span id="length-value" class="text-blue-800">16</span> caracteres
+              </label>
+            </div>
+            <input 
+              type="range" 
+              id="length-range" 
+              min="8" 
+              max="128" 
+              value="16" 
+              class="w-full accent-slate-900 cursor-pointer"
+            />
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-bold text-slate-900">Conjunto de Caracteres:</span>
+            <div class="grid grid-cols-2 gap-2 text-sm font-medium text-neutral-800">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk-upper" checked class="w-4 h-4 accent-slate-900 rounded" /> Mayúsculas (A-Z)
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk-lower" checked class="w-4 h-4 accent-slate-900 rounded" /> Minúsculas (a-z)
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk-numbers" checked class="w-4 h-4 accent-slate-900 rounded" /> Números (0-9)
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chk-symbols" checked class="w-4 h-4 accent-slate-900 rounded" /> Símbolos (!@#$)
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="pt-4">
+          <button 
+            type="button"
+            id="generate-btn"
+            class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition-colors text-sm cursor-pointer shadow-sm"
+          >
+            Generar Nueva Clave
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const LOWER = 'abcdefghijklmnopqrstuvwxyz';
+  const NUMBERS = '0123456789';
+  const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+  const outputInput = document.getElementById('output-password') as HTMLInputElement;
+  const lengthRange = document.getElementById('length-range') as HTMLInputElement;
+  const lengthValue = document.getElementById('length-value');
+  const generateBtn = document.getElementById('generate-btn');
+  const copyBtn = document.getElementById('copy-btn');
+
+  const chkUpper = document.getElementById('chk-upper') as HTMLInputElement;
+  const chkLower = document.getElementById('chk-lower') as HTMLInputElement;
+  const chkNumbers = document.getElementById('chk-numbers') as HTMLInputElement;
+  const chkSymbols = document.getElementById('chk-symbols') as HTMLInputElement;
+
+  function generatePassword() {
+    let chars = '';
+    if (chkUpper?.checked) chars += UPPER;
+    if (chkLower?.checked) chars += LOWER;
+    if (chkNumbers?.checked) chars += NUMBERS;
+    if (chkSymbols?.checked) chars += SYMBOLS;
+
+    if (!chars) {
+      if (outputInput) outputInput.value = 'Selecciona al menos una opción.';
+      return;
+    }
+
+    const length = parseInt(lengthRange?.value || '16', 10);
+    const array = new Uint32Array(length);
+    window.crypto.getRandomValues(array);
+
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars[array[i] % chars.length];
+    }
+
+    if (outputInput) outputInput.value = result;
+  }
+
+  lengthRange?.addEventListener('input', () => {
+    if (lengthValue) lengthValue.textContent = lengthRange.value;
+    generatePassword();
+  });
+
+  [chkUpper, chkLower, chkNumbers, chkSymbols].forEach(chk => {
+    chk?.addEventListener('change', generatePassword);
+  });
+
+  generateBtn?.addEventListener('click', generatePassword);
+
+  copyBtn?.addEventListener('click', () => {
+    if (!outputInput?.value || outputInput.value.startsWith('Selecciona')) return;
+    navigator.clipboard.writeText(outputInput.value);
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = '¡Copiado!';
+    setTimeout(() => {
+      copyBtn.textContent = originalText;
+    }, 2000);
+  });
+
+  // Generar al cargar
+  generatePassword();
+</script>

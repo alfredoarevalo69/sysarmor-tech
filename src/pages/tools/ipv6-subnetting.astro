@@ -1,0 +1,36 @@
+---
+// src/pages/tools/ipv6-subnetting.astro
+import Layout from '../../layouts/Layout.astro';
+import CalculatorIPv6 from '../../components/CalculatorIPv6';
+---
+
+<Layout title="Calculadora de Subredes (IPv6) | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+    <div class="max-w-4xl mx-auto space-y-6">
+      
+      <div class="space-y-4">
+        <div class="mb-2">
+          <a 
+            href="/tools" 
+            class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          >
+            <span>←</span> Volver a Herramientas
+          </a>
+        </div>
+        <div class="space-y-2">
+          <h1 class="text-3xl font-display font-bold text-neutral-950 tracking-wide uppercase">
+            Calculadora de Subredes (IPv6)
+          </h1>
+          <p class="text-neutral-700 font-medium text-base">
+            Distribuye y planifica bloques jerárquicos de red IPv6 con soporte para manuales integrados y desglose de prefijos.
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white border-2 border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <CalculatorIPv6 client:only="preact" />
+      </div>
+
+    </div>
+  </main>
+</Layout>
