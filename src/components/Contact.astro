@@ -1,10 +1,10 @@
----
 // src/components/Contact.astro
+---
 // Configuración del número de WhatsApp para Bogotá, Colombia (+57)
 const whatsappNumber = "573126030958"; 
 const whatsappMessage = encodeURIComponent("Hola, me gustaría solicitar una Evaluación Técnica Inicial de 30 minutos para mi infraestructura.");
 ---
-<section id="contacto" class="scroll-mt-20 w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 flex flex-col justify-center items-center">
+<section id="contacto" class="scroll-mt-20 w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-50 border-t border-neutral-200 flex flex-col justify-center items-center">
   <!-- Contenedor principal con borde fuerte y sombra profunda para recortar sobre el fondo -->
   <div class="max-w-2xl mx-auto bg-white border-2 border-slate-300 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-slate-300/80 space-y-5 sm:space-y-6 w-full my-auto">
     
@@ -67,7 +67,7 @@ const whatsappMessage = encodeURIComponent("Hola, me gustaría solicitar una Eva
         <a href="mailto:contacto@sysarmortech.com?subject=Solicitud%20de%20Evaluaci%C3%B3n%20T%C3%A9cnica" 
            class="text-slate-900 hover:text-amber-600 transition-colors flex items-center gap-2 truncate">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2.22 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2.22 2.22 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
           <span class="truncate">contacto@sysarmortech.com</span>
         </a>
