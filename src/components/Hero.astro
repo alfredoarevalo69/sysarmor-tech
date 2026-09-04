@@ -18,7 +18,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Overlay corregido: Oscuro sólido a la izquierda, transparente hacia la derecha -->
+  <!-- Overlay confinado estrictamente a la mitad izquierda -->
   <div class="hero-overlay"></div>
 
   <div class="hero-inner">
@@ -54,8 +54,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-container {
     position: relative;
     width: 100%;
-    /* Padding superior cero para que el bloque despegue arriba de inmediato */
-    padding: 1rem 0 2.5rem 0;
+    padding: 1.5rem 0 2.5rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
@@ -84,19 +83,22 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY CORREGIDO: Bloque sólido a la izquierda, limpia la derecha --- */
+  /* --- OVERLAY CONFINADO A LA IZQUIERDA --- */
   .hero-overlay {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 55%; 
+    height: 100%;
     background-color: transparent;
     background-image: linear-gradient(
       90deg, 
       #050a14 0%,      
-      #050a14 45%,     
-      rgba(5, 10, 20, 0.85) 60%, 
-      transparent 80%  
+      #050a14 75%,     
+      transparent 100%  
     );
     z-index: 2;
+    pointer-events: none;
   }
 
   .hero-content {
@@ -104,8 +106,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     max-width: 680px; 
     text-align: left;
     z-index: 3;
-    /* Subimos el contenido de forma absoluta respecto a su contenedor */
-    margin-top: -1rem;
   }
 
   .hero-title {
@@ -178,7 +178,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (max-width: 968px) {
     .hero-container {
-      padding: 1.5rem 1.25rem 3rem 1.25rem;
+      padding: 2rem 1.25rem 3rem 1.25rem;
       min-height: auto;
       background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
       border-bottom: 1px solid rgba(217, 119, 6, 0.15);
@@ -193,7 +193,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
     .hero-content {
       max-width: 100%;
-      margin-top: 0;
     }
 
     .hero-bg {
@@ -201,7 +200,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-overlay {
-      background-image: none;
+      display: none;
     }
 
     .hero-title {
