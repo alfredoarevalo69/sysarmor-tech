@@ -1,4 +1,3 @@
----
 // src/layouts/Layout.astro
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
@@ -18,7 +17,7 @@ const {
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
-  bgColor = '#020617'
+  bgColor = '#f8fafc' // Cambiado por defecto al tono slate-50 elegante
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
@@ -130,7 +129,7 @@ const schemaOrgData = {
   </head>
   
   <body 
-    class="text-white selection:bg-blue-500/30 min-h-screen flex flex-col antialiased" 
+    class="text-neutral-900 selection:bg-[#D4AF37]/30 min-h-screen flex flex-col antialiased" 
     style={`background-color: ${bgColor} !important;`}
   >
     <Navbar />
