@@ -1,3 +1,4 @@
+---
 // src/layouts/Layout.astro
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
@@ -17,7 +18,7 @@ const {
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
-  bgColor = '#f8fafc' // Cambiado por defecto al tono slate-50 elegante
+  bgColor = '#f8fafc'
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
