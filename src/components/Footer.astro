@@ -1,15 +1,15 @@
----
 // src/components/Footer.astro
+---
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-[#020617] border-t border-[#1e293b] py-8 px-6 w-full">
+<footer class="bg-[#020617] border-t border-slate-800 py-8 px-6 w-full">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
     
     <!-- Lado Izquierdo: Marca y Copyright -->
     <div class="flex items-center gap-2">
-      <span class="font-bold text-white font-display">
-        SYSARMOR <span class="text-blue-500">TECH</span>
+      <span class="font-bold text-white tracking-wider">
+        SYSARMOR <span class="text-[#D4AF37]">TECH</span>
       </span>
       <span class="text-slate-500">— &copy; {currentYear} Todos los derechos reservados.</span>
     </div>
