@@ -1,16 +1,18 @@
+---
 // src/components/Navbar.astro
 ---
----
 
-<header class="sticky top-0 z-50 h-[76px] w-full bg-[#020617]/95 backdrop-blur-md border-b border-slate-700/50">
+<header class="sticky top-0 z-50 h-[76px] w-full bg-[#0d1527] border-b border-slate-800">
   <nav class="w-full h-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
-    <!-- LOGO CORPORATIVO CON ESCUDO Y TEXTO -->
+    <!-- LOGO CORPORATIVO CON ESCUDO CIRCULAR Y TEXTO -->
     <a href="/" class="flex items-center gap-3 py-1 group">
-      <img 
-        src="/images/logo-navbar.webp" 
-        alt="SysArmor Tech Logo" 
-        class="h-10 sm:h-12 w-auto object-contain flex-shrink-0 opacity-95"
-      />
+      <div class="relative h-11 w-11 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-[#D4AF37]/50 shadow-[0_0_10px_rgba(212,175,55,0.2)] flex-shrink-0 bg-[#0d1527]">
+        <img 
+          src="/images/logo-navbar.webp" 
+          alt="SysArmor Tech Logo" 
+          class="h-full w-full object-cover scale-105"
+        />
+      </div>
       <span class="font-extrabold tracking-wider text-base sm:text-xl uppercase inline-flex items-center">
         <span class="text-white">SYSARMOR</span>
         <span class="text-[#D4AF37] ml-1.5">TECH</span>
@@ -41,6 +43,7 @@
       </a>
       <a href="/#contacto" class="group relative hover:text-white transition-colors duration-300">
         Contacto
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
       </a>
       
       <a href="/#contacto" class="px-6 py-2.5 rounded-md bg-[#D4AF37] hover:bg-white text-[#020617] font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)]">
@@ -57,7 +60,7 @@
   </nav>
 
   <!-- Menú Desplegable Móvil Sólido -->
-  <div id="sys-mobile-dropdown" class="hidden md:hidden absolute top-[76px] inset-x-0 bg-[#020617] min-h-[calc(100vh-76px)] border-b border-slate-800 px-6 py-8 flex-col gap-4 text-lg text-center z-50 shadow-2xl">
+  <div id="sys-mobile-dropdown" class="hidden md:hidden absolute top-[76px] inset-x-0 bg-[#0d1527] min-h-[calc(100vh-76px)] border-b border-slate-800 px-6 py-8 flex-col gap-4 text-lg text-center z-50 shadow-2xl">
     <a href="/#servicios" class="sys-link text-slate-200 hover:text-[#D4AF37] hover:bg-slate-800/40 py-3 rounded-lg transition-all">Servicios</a>
     <a href="/#enfoque-tecnico" class="sys-link text-slate-200 hover:text-[#D4AF37] hover:bg-slate-800/40 py-3 rounded-lg transition-all">Enfoque Técnico</a>
     <a href="/#casos-de-exito" class="sys-link text-slate-200 hover:text-[#D4AF37] hover:bg-slate-800/40 py-3 rounded-lg transition-all">Casos de Éxito</a>

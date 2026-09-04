@@ -3,31 +3,33 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-[#020617] border-t border-slate-800 py-8 px-6 w-full">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+<footer class="bg-[#0d1527] border-t border-slate-700 py-8 px-4 sm:px-8 lg:px-12 w-full">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-100">
     
-    <!-- Lado Izquierdo: Marca y Copyright -->
-    <div class="flex items-center gap-2">
-      <span class="font-bold text-white tracking-wider">
-        SYSARMOR <span class="text-[#D4AF37]">TECH</span>
-      </span>
-      <span class="text-slate-500">— &copy; {currentYear} Todos los derechos reservados.</span>
+    <!-- Lado Izquierdo: Marca, Copyright y Enlaces (alineado hacia la izquierda) -->
+    <div class="flex flex-col sm:flex-row items-center gap-4 md:gap-6">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white tracking-wider">
+          SYSARMOR <span class="text-[#D4AF37]">TECH</span>
+        </span>
+        <span class="text-slate-300">— &copy; {currentYear} Todos los derechos reservados.</span>
+      </div>
+
+      <!-- Enlaces Legales -->
+      <div class="flex items-center gap-4 text-xs md:text-sm font-medium">
+        <a href="/privacidad" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
+          Política de Privacidad
+        </a>
+        <span class="text-slate-500" aria-hidden="true">|</span>
+        <a href="/terminos" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
+          Términos de Servicio
+        </a>
+      </div>
     </div>
 
-    <!-- Centro: Enlaces Legales -->
-    <div class="flex items-center gap-4 text-xs md:text-sm">
-      <a href="/privacidad" class="text-slate-400 hover:text-white transition-colors duration-200">
-        Política de Privacidad
-      </a>
-      <span class="text-slate-700" aria-hidden="true">|</span>
-      <a href="/terminos" class="text-slate-400 hover:text-white transition-colors duration-200">
-        Términos de Servicio
-      </a>
-    </div>
-
-    <!-- Lado Derecho: Slogan -->
-    <div class="text-slate-500 text-xs md:text-sm text-center md:text-right font-sans">
-      SecOps, Hardening e Infraestructura Híbrida de Nivel 3.
+    <!-- Lado Derecho: Slogan final -->
+    <div class="text-slate-200 text-xs md:text-sm text-center md:text-right font-sans font-medium">
+      Optimización y Gestión de Infraestructura Híbrida y Cloud.
     </div>
 
   </div>

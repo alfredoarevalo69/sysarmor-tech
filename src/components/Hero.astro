@@ -5,7 +5,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo optimizada con el motor de Astro/Vercel (solo desktop) -->
   <Image 
     src={heroBgImg} 
     alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
@@ -19,12 +18,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Capa overlay optimizada: Oscurece fuerte a la izquierda (texto) y limpia el escudo a la derecha -->
+  <!-- Overlay corregido: Oscuro sólido a la izquierda, transparente a la derecha -->
   <div class="hero-overlay"></div>
 
-  <!-- Contenedor general -->
   <div class="hero-inner">
-    <!-- Bloque de contenido principal -->
     <div class="hero-content">
       <h1 class="hero-title">
         Especialistas en infraestructura crítica y <br />
@@ -54,7 +51,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 </section>
 
 <style>
-  /* --- CONTENEDOR PRINCIPAL --- */
   .hero-container {
     position: relative;
     width: 100%;
@@ -66,7 +62,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     padding: 4rem 0;
   }
 
-  /* --- CONTENEDOR INTERNO --- */
   .hero-inner {
     width: 100%;
     max-width: 1280px;
@@ -78,7 +73,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
   }
 
-  /* --- IMAGEN DE FONDO --- */
   .hero-bg {
     position: absolute;
     inset: 0;
@@ -89,7 +83,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY DESKTOP (Oscurece la zona izquierda del texto y libera el escudo a la derecha) --- */
+  /* --- OVERLAY CORREGIDO --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
@@ -97,15 +91,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-image: linear-gradient(
       90deg, 
       #050a14 0%,      
-      #050a14 35%,     
-      rgba(5, 10, 20, 0.85) 55%, 
-      rgba(5, 10, 20, 0.2) 70%, 
-      transparent 85%  
+      #050a14 42%,     
+      rgba(5, 10, 20, 0.8) 65%, 
+      rgba(5, 10, 20, 0.25) 80%, 
+      transparent 95%  
     );
     z-index: 2;
   }
 
-  /* --- CONTENIDO PRINCIPAL --- */
   .hero-content {
     width: 100%;
     max-width: 680px; 
@@ -113,14 +106,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 3;
   }
 
-  /* --- TIPOGRAFÍA --- */
   .hero-title {
     font-size: clamp(2rem, 3.5vw, 3.2rem);
     font-weight: 800;
     color: #ffffff;
     line-height: 1.1;
     margin-bottom: 1.5rem;
-    white-space: normal; 
   }
 
   .highlight {
@@ -134,7 +125,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     margin-bottom: 2rem;
   }
 
-  /* --- BOTÓN Y LISTA --- */
   .hero-cta {
     margin-bottom: 2rem;
   }
@@ -184,28 +174,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     text-align: center;
   }
 
-  /* --- AJUSTES RESPONSIVE MÓVIL --- */
   @media (max-width: 968px) {
     .hero-container {
       padding: 2.5rem 1.25rem 4rem 1.25rem;
       min-height: auto;
       background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
       border-bottom: 1px solid rgba(217, 119, 6, 0.15);
-    }
-
-    .hero-container::before {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 260px;
-      height: 260px;
-      background: rgba(245, 158, 11, 0.12);
-      filter: blur(45px);
-      border-radius: 50%;
-      z-index: 1;
-      pointer-events: none;
     }
 
     .hero-inner {
@@ -251,7 +225,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       padding: 1rem 1.25rem;
       font-size: 1.05rem;
       border-radius: 10px;
-      box-shadow: 0 8px 20px -4px rgba(217, 119, 6, 0.35);
       text-align: center;
     }
 
