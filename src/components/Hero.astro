@@ -18,7 +18,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Overlay corregido: Oscuro sólido a la izquierda, transparente a la derecha -->
+  <!-- Overlay corregido: Oscuro sólido a la izquierda, transparente hacia la derecha -->
   <div class="hero-overlay"></div>
 
   <div class="hero-inner">
@@ -54,12 +54,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-container {
     position: relative;
     width: 100%;
+    /* Padding superior cero para que el bloque despegue arriba de inmediato */
+    padding: 1rem 0 2.5rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
     overflow: hidden;
     background-color: #050a14;
-    padding: 4rem 0;
   }
 
   .hero-inner {
@@ -83,7 +84,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
-  /* --- OVERLAY CORREGIDO --- */
+  /* --- OVERLAY CORREGIDO: Bloque sólido a la izquierda, limpia la derecha --- */
   .hero-overlay {
     position: absolute;
     inset: 0;
@@ -91,10 +92,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-image: linear-gradient(
       90deg, 
       #050a14 0%,      
-      #050a14 42%,     
-      rgba(5, 10, 20, 0.8) 65%, 
-      rgba(5, 10, 20, 0.25) 80%, 
-      transparent 95%  
+      #050a14 45%,     
+      rgba(5, 10, 20, 0.85) 60%, 
+      transparent 80%  
     );
     z-index: 2;
   }
@@ -104,14 +104,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     max-width: 680px; 
     text-align: left;
     z-index: 3;
+    /* Subimos el contenido de forma absoluta respecto a su contenedor */
+    margin-top: -1rem;
   }
 
   .hero-title {
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-size: clamp(2rem, 3.2vw, 3.1rem);
     font-weight: 800;
     color: #ffffff;
     line-height: 1.1;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .highlight {
@@ -119,21 +121,21 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   .hero-description {
-    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
     color: #e2e8f0;
-    line-height: 1.6;
-    margin-bottom: 2rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
   }
 
   .hero-cta {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .btn-primary {
     display: inline-block;
     width: 100%;
     max-width: 360px;
-    padding: 1rem 1.5rem;
+    padding: 0.9rem 1.5rem;
     background-color: #d97706;
     color: #0f172a;
     font-weight: 700;
@@ -155,7 +157,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .hero-features li {
@@ -163,7 +165,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     gap: 0.75rem;
     color: #f8fafc;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     font-weight: 600;
   }
 
@@ -176,7 +178,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (max-width: 968px) {
     .hero-container {
-      padding: 2.5rem 1.25rem 4rem 1.25rem;
+      padding: 1.5rem 1.25rem 3rem 1.25rem;
       min-height: auto;
       background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
       border-bottom: 1px solid rgba(217, 119, 6, 0.15);
@@ -191,6 +193,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
     .hero-content {
       max-width: 100%;
+      margin-top: 0;
     }
 
     .hero-bg {
@@ -215,7 +218,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
 
     .hero-cta {
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
     }
 
     .btn-primary {
