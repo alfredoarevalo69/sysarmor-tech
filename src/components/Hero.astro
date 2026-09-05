@@ -50,9 +50,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 <style>
   .hero-container {
     position: relative;
-    width: 100vw; /* Forzamos ancho completo de pantalla viewport */
-    margin-left: calc(-50vw + 50%); /* Rompe cualquier contenedor padre centrado */
-    margin-right: calc(-50vw + 50%);
+    width: 100%;
     padding: 3rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
@@ -73,13 +71,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   .hero-inner {
     width: 100%;
-    max-width: 1440px;
+    max-width: 1280px; /* Sincronizado con el contenedor estándar del Navbar y el sitio */
     margin: 0 auto;
-    padding: 0 4rem; /* Margen lateral simétrico para monitores grandes */
+    padding: 0 2rem;    /* Padding lateral exacto para alinear con el logo */
     position: relative;
     z-index: 3;
     display: grid;
-    grid-template-columns: 620px 1fr; /* Columna izquierda fija para texto, derecha fluida para imagen */
+    grid-template-columns: minmax(300px, 600px) 1fr;
     align-items: center;
   }
 
@@ -160,9 +158,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (max-width: 968px) {
     .hero-container {
-      width: 100%;
-      margin-left: 0;
-      margin-right: 0;
       padding: 2rem 1.25rem 3rem 1.25rem;
       min-height: auto;
       background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
