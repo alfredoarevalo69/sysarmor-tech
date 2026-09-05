@@ -50,8 +50,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 <style>
   .hero-container {
     position: relative;
-    width: 100%;
-    padding: 2.5rem 0 3.5rem 0;
+    width: 100vw; /* Forzamos ancho completo de pantalla viewport */
+    margin-left: calc(-50vw + 50%); /* Rompe cualquier contenedor padre centrado */
+    margin-right: calc(-50vw + 50%);
+    padding: 3rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
@@ -59,7 +61,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-color: #050a14;
   }
 
-  /* La imagen de fondo cubre toda la sección pero queda por debajo */
   .hero-bg {
     position: absolute;
     inset: 0;
@@ -72,22 +73,21 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   .hero-inner {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 4rem; /* Margen lateral simétrico para monitores grandes */
     position: relative;
     z-index: 3;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 50% izquierdo para texto, 50% derecho para la imagen */
+    grid-template-columns: 620px 1fr; /* Columna izquierda fija para texto, derecha fluida para imagen */
     align-items: center;
   }
 
   .hero-content {
     width: 100%;
-    max-width: 600px;
     text-align: left;
     z-index: 3;
-    justify-self: start; /* Fuerza el anclaje absoluto a la izquierda de su columna */
+    justify-self: start;
   }
 
   .hero-title {
@@ -160,6 +160,9 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (max-width: 968px) {
     .hero-container {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
       padding: 2rem 1.25rem 3rem 1.25rem;
       min-height: auto;
       background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
