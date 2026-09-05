@@ -18,7 +18,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Overlay confinado estrictamente a la mitad izquierda -->
   <div class="hero-overlay"></div>
 
   <div class="hero-inner">
@@ -54,7 +53,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-container {
     position: relative;
     width: 100%;
-    padding: 1.5rem 0 2.5rem 0;
+    padding: 2.5rem 0 3.5rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
@@ -66,11 +65,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     position: relative;
     z-index: 3;
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* Forzamos alineación estrictamente a la izquierda */
   }
 
   .hero-bg {
@@ -79,7 +79,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: right center; 
     z-index: 1;
   }
 
@@ -103,9 +103,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   .hero-content {
     width: 100%;
-    max-width: 680px; 
+    max-width: 620px; /* Acotamos el ancho para que no se desplace al centro */
     text-align: left;
     z-index: 3;
+    margin-left: 0;   /* Garantiza cero margen izquierdo sobrante */
   }
 
   .hero-title {
