@@ -18,7 +18,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     class="hero-bg"
   />
 
-  <!-- Contenedor con idénticos paddings responsivos que el Navbar para forzar la plomada exacta -->
+  <!-- Contenedor idéntico al <nav> del Navbar, sin restricciones de max-width para evitar el centrado en pantallas ultra-wide -->
   <div class="hero-inner">
     <div class="hero-content">
       <h1 class="hero-title">
@@ -72,9 +72,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   .hero-inner {
     width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-    /* Paddings calcados milimétricamente del <nav> del Navbar.astro */
+    /* Eliminado el max-width y el margin: 0 auto para replicar 100% la estructura del <nav> */
     padding-left: 1rem;
     padding-right: 1rem;
     position: relative;
@@ -92,7 +90,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (min-width: 1024px) {
     .hero-inner {
-      padding-left: 3rem;
+      padding-left: 3rem; /* Equivalente exacto a lg:px-12 del Navbar */
       padding-right: 3rem;
     }
   }
@@ -102,7 +100,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     max-width: 620px;
     text-align: left;
     z-index: 3;
-    margin-right: auto; /* Ancla de forma absoluta el bloque hacia la izquierda */
+    margin-right: auto;
   }
 
   .hero-title {
