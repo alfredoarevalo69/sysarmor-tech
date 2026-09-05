@@ -59,18 +59,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-color: #050a14;
   }
 
-  .hero-inner {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Anclaje absoluto a la izquierda */
-  }
-
+  /* La imagen de fondo cubre toda la sección pero queda por debajo */
   .hero-bg {
     position: absolute;
     inset: 0;
@@ -81,13 +70,24 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     z-index: 1;
   }
 
+  .hero-inner {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 50% izquierdo para texto, 50% derecho para la imagen */
+    align-items: center;
+  }
+
   .hero-content {
     width: 100%;
-    max-width: 600px; /* Ancho máximo controlado para evitar que invada el centro */
+    max-width: 600px;
     text-align: left;
     z-index: 3;
-    margin-left: 0;
-    margin-right: auto;
+    justify-self: start; /* Fuerza el anclaje absoluto a la izquierda de su columna */
   }
 
   .hero-title {
