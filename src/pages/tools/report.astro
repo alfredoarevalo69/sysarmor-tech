@@ -7,12 +7,8 @@ import Layout from '../../layouts/Layout.astro';
   <main class="w-full min-h-[calc(100vh-76px)] py-8 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900 print:bg-white print:py-0">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <!-- ========================================== -->
-      <!-- ENCABEZADO INSTITUCIONAL ÚNICO             -->
-      <!-- ========================================== -->
       <header class="report-header flex items-center justify-between pb-4 border-b-2 border-neutral-300 print:mb-6">
         <div class="flex items-center gap-3">
-          <img src="/images/logo-navbar.webp" alt="SysArmor Tech Shield" class="w-12 h-12 object-contain" />
           <div class="flex flex-col">
             <span class="font-black text-xl tracking-wider text-neutral-900">SYSARMOR <span class="text-blue-700">TECH</span></span>
             <span class="text-xs font-bold text-neutral-600 uppercase tracking-widest">Infraestructura & Ciberseguridad</span>
@@ -23,7 +19,15 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </header>
 
-      <!-- Encabezado con enfoque de alto impacto para LinkedIn / Técnico -->
+      <div class="print:hidden">
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm rounded-xl transition-colors shadow-sm cursor-pointer"
+        >
+          <span>←</span> VOLVER A HERRAMIENTAS
+        </a>
+      </div>
+
       <div class="space-y-2 text-center max-w-3xl mx-auto print:mb-6">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
           Auditoría de Hardening y Conformidad de Infraestructura
@@ -33,7 +37,6 @@ import Layout from '../../layouts/Layout.astro';
         </p>
       </div>
 
-      <!-- Controles (Inicia completamente limpio sin valor por defecto) -->
       <div class="bg-white p-6 rounded-xl border-2 border-slate-300 shadow-md space-y-4 print:hidden">
         <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div class="w-full sm:w-2/3">
@@ -57,10 +60,8 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Contenedor de Resultados -->
       <div id="reportContainer" class="hidden space-y-6">
         
-        <!-- Tarjeta Global -->
         <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl flex items-center justify-between">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-neutral-600 block">Evaluación General de Infraestructura</span>
@@ -75,15 +76,11 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <!-- Tabla Ejecutiva y Desglose -->
         <div class="space-y-4">
           <h3 class="text-xl font-bold text-neutral-900">Resumen de Hallazgos y Evaluaciones</h3>
-          <div id="modulesList" class="space-y-6">
-            <!-- Renderizado dinámico limpio -->
-          </div>
+          <div id="modulesList" class="space-y-6"></div>
         </div>
 
-        <!-- Botón de Impresión -->
         <div class="flex justify-end pt-4 print:hidden">
           <button 
             onclick="window.print()" 
@@ -95,7 +92,6 @@ import Layout from '../../layouts/Layout.astro';
 
       </div>
 
-      <!-- Estado de Carga -->
       <div id="loadingState" class="hidden text-center py-12 space-y-3">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-900 border-t-transparent"></div>
         <p class="text-neutral-700 font-medium text-sm">Ejecutando pruebas concurrentes de infraestructura...</p>
@@ -111,16 +107,12 @@ import Layout from '../../layouts/Layout.astro';
       size: letter;
       margin: 1.2cm;
     }
-
     .print\:hidden {
       display: none !important;
     }
-
     .report-header {
       display: flex !important;
     }
-
-    /* Evitar cortes extraños en los bloques al imprimir */
     #modulesList > div {
       break-inside: avoid;
       page-break-inside: avoid;
@@ -138,7 +130,6 @@ import Layout from '../../layouts/Layout.astro';
   const reportTimestamp = document.getElementById('reportTimestamp');
   const modulesList = document.getElementById('modulesList');
 
-  // Limpiar explícitamente el input al cargar la vista para evitar autocompletados o caché del navegador
   if (targetInput) {
     targetInput.value = '';
   }
