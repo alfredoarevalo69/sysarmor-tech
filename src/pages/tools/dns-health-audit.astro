@@ -91,7 +91,6 @@ import Layout from '../../layouts/Layout.astro';
 
     function renderResults(data: any) {
       const hasNs = data.nameservers && data.nameservers.length > 0;
-      // Compatibilidad con la estructura devuelta (puede venir en data.mxRecords o data.mx)
       const mxRecords = data.mxRecords || data.mx || [];
       const hasMx = mxRecords.length > 0;
       const hasSpf = data.security && data.security.spf !== null;
@@ -106,11 +105,9 @@ import Layout from '../../layouts/Layout.astro';
       if (hasMx) {
         let mxRows = '';
         mxRecords.forEach((mx: any) => {
-          // Extraemos el hostname (compatible con 'exchange' o 'host')
           const hostname = mx.exchange || mx.host || 'Desconocido';
           const priority = mx.priority !== undefined ? mx.priority : '-';
           
-          // Soportamos tanto propiedades 'ip' como 'address' o arreglos de las mismas
           const rawIps = mx.ip || mx.address || 'No disponible';
           const ips = Array.isArray(rawIps) ? rawIps : [rawIps];
 
@@ -196,7 +193,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <code class="block bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-xs break-all">${data.security.spf}</code>
 
-(` + `${spfRecommendationHtml})` + `
+            ${spfRecommendationHtml}
           </div>
         `;
       }
