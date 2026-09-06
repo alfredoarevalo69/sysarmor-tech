@@ -1,0 +1,296 @@
+---
+// src/pages/tools/dmarc-generator.astro
+import Layout from '../../layouts/Layout.astro';
+
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.json();
+    const domain = data.domain?.trim().toLowerCase();
+    
+    if (!domain) {
+      return new Response(JSON.stringify({ error: 'Dominio no válido' }), { status: 400 });
+    }
+
+    const dmarcHost = `_dmarc.${domain}`;
+    const response = await fetch(`https://cloudflare-dns.com/dns-query?name=${dmarcHost}&type=TXT`, {
+      headers: { 'Accept': 'application/dns-json' }
+    });
+    
+    const result = await response.json();
+    let currentRecord = null;
+
+    if (result.Answer) {
+      const txtRecord = result.Answer.find((ans: any) => ans.type === 16);
+      if (txtRecord) {
+        currentRecord = txtRecord.data.replace(/^"|"$/g, '').replace(/"/g, '');
+      }
+    }
+
+    return new Response(JSON.stringify({ currentRecord }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ currentRecord: null }), { status: 200 });
+  }
+}
+---
+
+<Layout title="Generador de Registros DMARC | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-10 px-4 sm:px-6 bg-slate-100 text-slate-900 border-t border-slate-200">
+    <div class="max-w-6xl mx-auto space-y-8">
+      
+      <!-- Cabecera de la Herramienta -->
+      <div class="space-y-2">
+        <h1 class="text-3xl font-display font-bold text-slate-900 tracking-wide">
+          Generador de Registros DMARC
+        </h1>
+        <p class="text-slate-700 font-medium text-base">
+          Construye la política de autenticación, reportes y alineación de correo electrónico en formato DNS TXT estándar.
+        </p>
+      </div>
+
+      <!-- Grid Principal -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Columna Izquierda: Formulario de Configuración -->
+        <div class="lg:col-span-7 bg-white border-2 border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xl shadow-slate-300/50 space-y-6">
+          <h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3">
+            Configuración de la Política DMARC
+          </h2>
+
+          <!-- Campo 0: Dominio Objetivo -->
+          <div class="space-y-2 bg-blue-50/60 p-4 rounded-xl border border-blue-200">
+            <label for="domain" class="block text-sm font-bold text-slate-900">
+              Nombre de Dominio u Host:
+            </label>
+            <p class="text-xs text-slate-600">
+              Introduce el dominio para consultar su registro actual y generar nuevas pautas.
+            </p>
+            <div class="flex gap-2">
+              <input 
+                type="text" 
+                id="domain" 
+                value="" 
+                placeholder="tudominio.com" 
+                autocomplete="off"
+                class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              />
+              <button 
+                id="fetch-dns-btn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm transition-colors shrink-0"
+              >
+                Consultar DNS
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo 1: Política (p) -->
+          <div class="space-y-2">
+            <label for="policy" class="block text-sm font-bold text-slate-900">
+              1. ¿Cómo deseas que el correo que falla DMARC sea tratado por el receptor?
+            </label>
+            <select id="policy" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="none">None (Monitoreo / Sin acción)</option>
+              <option value="quarantine">Quarantine (Enviar a Spam/Cuarentena)</option>
+              <option value="reject">Reject (Rechazar mensaje por completo)</option>
+            </select>
+          </div>
+
+          <!-- Campo 2: Correos Agregados (rua) -->
+          <div class="space-y-2">
+            <label for="rua" class="block text-sm font-bold text-slate-900">
+              2. ¿A qué dirección(es) de correo se deben enviar los reportes agregados (rua)?
+            </label>
+            <input 
+              type="text" 
+              id="rua" 
+              value="" 
+              placeholder="mailto:dmarc-reports@tudominio.com" 
+              autocomplete="off"
+              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+            />
+          </div>
+
+          <!-- Campo 3: Correos Forenses (ruf) -->
+          <div class="space-y-2">
+            <label for="ruf" class="block text-sm font-bold text-slate-900">
+              3. ¿A qué dirección(es) deseas recibir reportes forenses de fallos (ruf)?
+            </label>
+            <input 
+              type="text" 
+              id="ruf" 
+              value="" 
+              placeholder="mailto:dmarc-reports@tudominio.com" 
+              autocomplete="off"
+              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+            />
+          </div>
+
+          <!-- Campo 4: Porcentaje (pct) -->
+          <div class="space-y-2">
+            <label for="pct" class="block text-sm font-bold text-slate-900">
+              4. Porcentaje de mensajes sujetos a filtrado (pct):
+            </label>
+            <input 
+              type="number" 
+              id="pct" 
+              min="1" 
+              max="100" 
+              value="100" 
+              autocomplete="off"
+              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+            />
+            <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              💡 <strong>Recomendación:</strong> Se aconseja mantenerlo siempre en <strong>100</strong> en producción. Reducir este valor (ej. 10 o 50) solo es útil para despliegues graduales de políticas restrictivas y evitar bloqueos masivos iniciales.
+            </p>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Salida y Registro Actual -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="bg-emerald-50 border-2 border-emerald-500/50 rounded-2xl p-6 sm:p-8 shadow-xl shadow-emerald-500/10 space-y-5">
+            <div class="space-y-1">
+              <h2 class="text-lg font-bold text-emerald-900">
+                Resultado del Registro Creado:
+              </h2>
+              <p class="text-xs text-emerald-800">
+                El registro inferior se actualiza automáticamente a medida que modificas los campos de la izquierda.
+              </p>
+            </div>
+
+            <!-- Bloque de Registro Estructurado -->
+            <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs space-y-2 border border-slate-800 shadow-inner">
+              <div class="text-slate-400">
+                <span class="text-blue-400 font-bold">Tipo:</span> TXT
+              </div>
+              <div class="text-slate-400 break-all">
+                <span class="text-blue-400 font-bold">Host/Nombre:</span> <span id="dns-host" class="text-emerald-400">_dmarc.tudominio.com</span>
+              </div>
+              <div class="text-slate-400 break-all">
+                <span class="text-blue-400 font-bold">Valor:</span> <span id="dns-value" class="text-emerald-300">v=DMARC1; p=none;</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-emerald-900 font-medium bg-emerald-100/70 p-3 rounded-lg border border-emerald-200">
+              💡 <strong>Nota Importante:</strong> En la mayoría de proveedores DNS (como Cloudflare o cPanel), solo debes introducir <code class="bg-white px-1 py-0.5 rounded font-bold text-emerald-800 border border-emerald-300">_dmarc</code> en el campo de Nombre/Host. La plataforma añadirá tu dominio automáticamente al guardarlo.
+            </p>
+
+            <button 
+              id="copy-btn" 
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+            >
+              Copiar Registro al Portapapeles
+            </button>
+          </div>
+
+          <!-- Bloque: Current Record -->
+          <div class="bg-white border-2 border-slate-300 rounded-2xl p-6 shadow-lg space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              Registro Actual en DNS: <span id="current-status-icon" class="text-slate-400">⚡</span>
+            </h3>
+            <div id="current-record-box" class="bg-slate-200 text-slate-700 p-3 rounded-xl font-mono text-xs break-all border border-slate-300 min-h-[48px] flex items-center">
+              Sin consultar / No encontrado
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const domainInput = document.getElementById('domain') as HTMLInputElement;
+    const fetchDnsBtn = document.getElementById('fetch-dns-btn');
+    const policySelect = document.getElementById('policy') as HTMLSelectElement;
+    const ruaInput = document.getElementById('rua') as HTMLInputElement;
+    const rufInput = document.getElementById('ruf') as HTMLInputElement;
+    const pctInput = document.getElementById('pct') as HTMLInputElement;
+    
+    const dnsHostSpan = document.getElementById('dns-host');
+    const dnsValueSpan = document.getElementById('dns-value');
+    const copyBtn = document.getElementById('copy-btn');
+    const currentRecordBox = document.getElementById('current-record-box');
+    const currentStatusIcon = document.getElementById('current-status-icon');
+
+    // Limpiar caché al iniciar
+    if (domainInput) domainInput.value = '';
+    if (ruaInput) ruaInput.value = '';
+    if (rufInput) rufInput.value = '';
+    if (policySelect) policySelect.value = 'none';
+    if (pctInput) pctInput.value = '100';
+
+    function updateDmarcRecord() {
+      const domain = domainInput.value.trim() || 'tudominio.com';
+      const policy = policySelect.value;
+      const rua = ruaInput.value.trim();
+      const ruf = rufInput.value.trim();
+      const pct = pctInput.value.trim();
+
+      if (dnsHostSpan) {
+        dnsHostSpan.textContent = `_dmarc.${domain}`;
+      }
+
+      const parts: string[] = ['v=DMARC1', `p=${policy}`];
+      if (rua) parts.push(`rua=${rua}`);
+      if (ruf) parts.push(`ruf=${ruf}`);
+      if (pct && pct !== '100' && Number(pct) > 0 && Number(pct) <= 100) {
+        parts.push(`pct=${pct}`);
+      }
+
+      if (dnsValueSpan) {
+        dnsValueSpan.textContent = parts.join('; ') + ';';
+      }
+    }
+
+    async function fetchCurrentDnsRecord() {
+      const domain = domainInput.value.trim();
+      if (!domain) return;
+
+      if (currentRecordBox) {
+        currentRecordBox.textContent = 'Consultando servidores DNS...';
+      }
+
+      try {
+        const response = await fetch(window.location.href, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ domain })
+        });
+        const data = await response.json();
+
+        if (data.currentRecord) {
+          if (currentRecordBox) currentRecordBox.textContent = data.currentRecord;
+          if (currentStatusIcon) currentStatusIcon.textContent = '✔';
+        } else {
+          if (currentRecordBox) currentRecordBox.textContent = 'No se encontró registro TXT DMARC para este dominio.';
+          if (currentStatusIcon) currentStatusIcon.textContent = '❌';
+        }
+      } catch (e) {
+        if (currentRecordBox) currentRecordBox.textContent = 'Error al realizar la consulta DNS.';
+      }
+    }
+
+    domainInput?.addEventListener('input', updateDmarcRecord);
+    policySelect?.addEventListener('change', updateDmarcRecord);
+    ruaInput?.addEventListener('input', updateDmarcRecord);
+    rufInput?.addEventListener('input', updateDmarcRecord);
+    pctInput?.addEventListener('input', updateDmarcRecord);
+
+    fetchDnsBtn?.addEventListener('click', fetchCurrentDnsRecord);
+    domainInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') fetchCurrentDnsRecord();
+    });
+
+    copyBtn?.addEventListener('click', () => {
+      const textToCopy = dnsValueSpan?.textContent || '';
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = '¡Registro Copiado con Éxito!';
+        setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+      });
+    });
+
+    updateDmarcRecord();
+  </script>
+</Layout>
