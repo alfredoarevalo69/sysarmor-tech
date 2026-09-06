@@ -2,8 +2,8 @@ import https from 'https';
 import http from 'http';
 
 const HOST = 'sysarmortech.com';
-const KEY = '5c47cea4709f444c926a5cd1a7758f11'; // Tu clave API de Bing
-const SITEMAP_URL = `https://${HOST}/sitemap-0.xml`; // Ajusta si tu sitemap usa otra ruta (ej. /sitemap.xml)
+const KEY = '288ab56fe97c4744b8ea5552bcda57f0';
+const SITEMAP_URL = `https://${HOST}/sitemap-0.xml`;
 
 function fetchSitemap() {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,6 @@ async function notifyIndexNow() {
     console.log(`🔍 Consultando sitemap en vivo: ${SITEMAP_URL}`);
     const xmlContent = await fetchSitemap();
 
-    // Extraer todas las URLs entre las etiquetas <loc>...</loc>
     const locRegex = /<loc>(.*?)<\/loc>/g;
     const urlList = [];
     let match;
@@ -63,11 +62,21 @@ async function notifyIndexNow() {
     };
 
     const req = https.request(options, (res) => {
-      console.log(`✅ IndexNow Notificación Exitosa - Status: ${res.statusCode}`);
+      let responseBody = '';
+      res.on('data', (chunk) => { responseBody += chunk; });
+      res.on('end', () => {
+        if (res.statusCode === 200 || res.statusCode === 202) {
+          console.log(`✅ IndexNow Notificación Exitosa - Status: ${res.statusCode}`);
+        } else {
+          console.warn(`⚠️ IndexNow respondió con código inesperado: ${res.statusCode} - ${responseBody}`);
+        }
+      });
     });
 
     req.on('error', (e) => {
-      console.error(`❌ Error en la petición a IndexNow: ${e.message}`);
+      if (e.code !== 'ECONNRESET') {
+        console.error(`❌ Error en la petición a IndexNow: ${e.message}`);
+      }
     });
 
     req.write(postData);
