@@ -5,6 +5,7 @@ export const prerender = false;
 
 export const GET: APIRoute = async () => {
   try {
+    // 1. Obtenemos las IPs públicas en paralelo
     const [resV4, resV6] = await Promise.allSettled([
       fetch('https://api.ipify.org?format=json').then(r => r.json()),
       fetch('https://api64.ipify.org?format=json').then(r => r.json())
@@ -15,12 +16,16 @@ export const GET: APIRoute = async () => {
     const ipv6 = (v6Val && v6Val.includes(':')) ? v6Val : 'No disponible';
 
     let geo = {} as any;
+
+    // 2. Consultamos la geolocalización enviando la IP específica encontrada
     if (ipv4) {
       try {
-        const geoRes = await fetch(`https://ipwho.is/${ipv4}`);
-        geo = await geoRes.json();
+        const geoRes = await fetch(`https://ipapi.co/${ipv4}/json/`);
+        if (geoRes.ok) {
+          geo = await geoRes.json();
+        }
       } catch (e) {
-        // Fallback en caso de error en geolocalización
+        // Silencioso en caso de fallo temporal de la API de geolocalización
       }
     }
 
@@ -28,11 +33,11 @@ export const GET: APIRoute = async () => {
       success: true,
       ipv4: ipv4 || 'No disponible',
       ipv6: ipv6,
-      country: geo.country || 'No disponible',
+      country: geo.country_name || 'No disponible',
       country_code: geo.country_code || '',
       city: geo.city || '-',
       region: geo.region || '',
-      org: geo.connection?.org || geo.connection?.isp || 'Desconocido',
+      org: geo.org || geo.asn || 'Desconocido',
       latitude: geo.latitude || '-',
       longitude: geo.longitude || '-'
     }), {
