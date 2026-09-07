@@ -1,5 +1,4 @@
 ---
-// src/pages/tools/index.astro
 import Layout from '../../layouts/Layout.astro';
 
 const tools = [
@@ -8,126 +7,126 @@ const tools = [
     description: "Consolidado multi-herramienta de hardening, análisis de protocolos de transporte y conformidad global.",
     href: "/tools/report",
     badge: "Auditoría Global",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`
   },
   {
     title: "Auditoría de Salud DNS y Correo",
     description: "Analiza la salud general de servidores DNS (NS, MX) y configuraciones de seguridad (SPF, DMARC).",
     href: "/tools/dns-health-audit",
     badge: "Diagnóstico DNS",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>`
   },
   {
     title: "Calculadora VLSM (IPv4)",
     description: "Diseña subredes IP de tamaño variable de forma eficiente y optimiza el direccionamiento IPv4.",
     href: "/tools/vlsm",
     badge: "Redes IPv4",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>`
   },
   {
     title: "Calculadora CIDR (IPv4)",
     description: "Desglosa bloques de red en notación CIDR para obtener máscaras y rangos de hosts útiles.",
     href: "/tools/cidr",
     badge: "Redes IPv4",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 010 18M12 3a15.3 15.3 0 000 18"/></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 010 18M12 3a15.3 15.3 0 000 18"/></svg>`
   },
   {
     title: "Calculadora de Subredes (IPv6)",
     description: "Distribuye y planifica bloques jerárquicos de red IPv6 por requerimientos de subred o dispositivos.",
     href: "/tools/ipv6-subnetting",
     badge: "Redes IPv6",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>`
   },
   {
     title: "Calculadora CIDR IPv6",
     description: "Analiza prefijos y bloques jerárquicos de red IPv6 con soporte para expansión de ceros.",
     href: "/tools/ipv6-cidr",
     badge: "Redes IPv6",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 010 18M12 3a15.3 15.3 0 000 18"/></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a15.3 15.3 0 010 18M12 3a15.3 15.3 0 000 18"/></svg>`
   },
   {
     title: "Buscador WHOIS de Dominios",
     description: "Consulta información de registro, fechas de expiración y servidores de nombres en tiempo real.",
     href: "/tools/whois",
     badge: "Redes & DNS",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`
   },
   {
     title: "Validador de Registros MX",
     description: "Verifica los servidores de correo electrónico configurados y su jerarquía de prioridad para dominios.",
     href: "/tools/mx",
     badge: "DNS & Correo",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`
   },
   {
     title: "Validador de Registro SPF",
     description: "Inspecciona los registros TXT y valida la sintaxis de las políticas SPF para proteger tu dominio.",
     href: "/tools/spf",
     badge: "Seguridad & DNS",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
   },
   {
     title: "Validador de Registro DKIM",
     description: "Comprueba la clave pública y la integridad de los registros DKIM bajo selectores personalizados.",
     href: "/tools/dkim-checker",
     badge: "Seguridad & DNS",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>`
   },
   {
     title: "Validador DMARC",
     description: "Audita la política de autenticación, reporte y conformidad de correo electrónico de tus dominios.",
     href: "/tools/dmarc-checker",
     badge: "Seguridad & DNS",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`
   },
   {
     title: "Generador de Registros DMARC",
     description: "Construye cadenas de texto para registros DNS TXT de DMARC con soporte para políticas.",
     href: "/tools/dmarc-generator",
     badge: "Seguridad & Correo",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`
   },
   {
     title: "Analizador de Cabeceras de Correo",
     description: "Inspecciona saltos de red detallados, latencias y validaciones SPF, DKIM y DMARC.",
     href: "/tools/email-analyzer",
     badge: "Seguridad & M365",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`
   },
   {
     title: "Analizador de Cabeceras HTTP / HTTPS",
     description: "Audita cabeceras de respuesta de servidores bajo protocolos seguros TLS/SSL.",
     href: "/tools/http-headers",
     badge: "Seguridad Web",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`
   },
   {
     title: "Comprobador de Puertos TCP",
     description: "Verifica disponibilidad y estado de puertos específicos mediante conexión TCP (Handshake).",
     href: "/tools/port-checker",
     badge: "Redes & Sockets",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`
   },
   {
     title: "Validador de Certificados X.509",
     description: "Analiza la validez, vigencia, emisor y propiedades criptográficas de certificados SSL/TLS en PEM.",
     href: "/tools/certificate-validator",
     badge: "Seguridad & SSL",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
   },
   {
     title: "Generador de Claves y Contraseñas",
     description: "Crea claves robustas y contraseñas seguras utilizando entropía nativa del navegador de forma local.",
     href: "/tools/key-generator",
     badge: "Seguridad & Criptografía",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>`
   },
   {
     title: "¿Cuál es mi IP?",
     description: "Visualiza tu dirección IP pública actual, navegador y detalles de red de forma rápida y directa.",
     href: "/tools/what-is-my-ip",
     badge: "Redes",
-    svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>'
+    svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>`
   }
 ];
 ---
@@ -147,16 +146,14 @@ const tools = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
         {tools.map((tool) => (
-          <article class="rounded-lg p-4 border transition-all duration-200 flex flex-col justify-between space-y-3 bg-slate-200/60 border-slate-400/80 shadow-xs hover:bg-white hover:border-blue-500 hover:shadow-md relative overflow-hidden group">
+          <article class="rounded-lg p-4 border transition-all duration-200 flex flex-col justify-between space-y-3 bg-slate-50 border-slate-300 shadow-xs hover:bg-white hover:border-blue-500 hover:shadow-md relative overflow-hidden group">
             
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <!-- Icono con diseño neutro/limpio -->
                 <div class="p-1.5 bg-slate-800 border border-slate-700 rounded shrink-0 flex items-center justify-center shadow-xs group-hover:bg-blue-600 group-hover:border-blue-500 transition-colors">
                   <Fragment set:html={tool.svgIcon} />
                 </div>
                 <div>
-                  <!-- CUADRO / BADGE MODIFICADO AQUÍ -->
                   <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-600 shadow-xs">
                     {tool.badge}
                   </span>

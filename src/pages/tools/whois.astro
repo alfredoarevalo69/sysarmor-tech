@@ -1,155 +1,207 @@
 ---
-// src/pages/tools/whois.astro
+// src/pages/tools/what-is-my-ip.astro
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Buscador WHOIS de Dominios | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+<Layout title="¿Cuál es mi IP y Geolocalización | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
+      <!-- Navegación de retorno -->
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
         >
           <span>←</span> Volver a Herramientas
         </a>
       </div>
 
-      <div class="space-y-2 text-center">
-        <h1 class="text-3xl font-display font-bold text-neutral-900 tracking-wide">
-          Buscador WHOIS de Dominios
+      <!-- Encabezado -->
+      <div class="space-y-3 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+          ¿Cuál es mi IP y Red?
         </h1>
-        <p class="text-neutral-700 font-medium text-sm">
-          Consulta registros detallados de dominios globales y ccTLDs, contactos, fechas y servidores de nombres.
+        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+          Diagnóstico en tiempo real de tus direcciones IP, geolocalización y entorno de conexión.
         </p>
       </div>
 
-      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
-        <form id="whois-form" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="domain-input" 
-            placeholder="ej. sysarmortech.com o mintic.gov.co" 
-            required
-            class="flex-1 bg-white border-2 border-slate-300 rounded-lg px-4 py-2.5 text-neutral-900 font-medium focus:outline-none focus:border-blue-700 text-sm"
-          />
-          <button 
-            type="submit" 
-            id="submit-btn"
-            class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg transition-colors text-sm shadow-sm cursor-pointer"
-          >
-            Consultar WHOIS
-          </button>
-        </form>
+      <!-- Tarjeta Principal de IPs -->
+      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
+          Conectividad de Red
+        </h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- IPv4 -->
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv4 Pública</span>
+            <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-[#D4AF37]">
+              Consultando...
+            </span>
+          </div>
+
+          <!-- IPv6 -->
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv6 Pública</span>
+            <span id="ipv6-display" class="font-mono text-xs sm:text-sm font-bold text-slate-200">
+              Buscando...
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div id="result-container" class="hidden bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
-        <h2 class="text-lg font-bold text-neutral-900 border-b-2 border-slate-300 pb-2">Resultados de la Consulta</h2>
-        <div id="result-content" class="overflow-x-auto"></div>
+      <!-- Panel de Datos Detallados -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Geolocalización -->
+        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
+          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
+            Geolocalización
+          </h2>
+          
+          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
+            <li class="flex justify-between items-center pt-2">
+              <span class="text-slate-400 text-xs font-semibold">País</span>
+              <span id="geo-country" class="font-medium text-slate-100 flex items-center gap-1.5">Cargando...</span>
+            </li>
+            <li class="flex justify-between items-center pt-3">
+              <span class="text-slate-400 text-xs font-semibold">Ciudad / Región</span>
+              <span id="geo-city" class="font-medium text-slate-100">-</span>
+            </li>
+            <li class="flex justify-between items-center pt-3">
+              <span class="text-slate-400 text-xs font-semibold">ISP / Proveedor</span>
+              <span id="geo-isp" class="font-mono text-xs text-slate-300 truncate max-w-[180px] sm:max-w-[200px]" title="-">-</span>
+            </li>
+            <li class="flex justify-between items-center pt-3">
+              <span class="text-slate-400 text-xs font-semibold">Coordenadas</span>
+              <span id="geo-coords" class="font-mono text-xs text-slate-300">-</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Entorno del Cliente -->
+        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
+          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
+            Entorno del Cliente
+          </h2>
+          
+          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
+            <li class="flex justify-between items-center pt-2">
+              <span class="text-slate-400 text-xs font-semibold">Sistema Operativo</span>
+              <span id="client-os" class="font-medium text-slate-100">Detectando...</span>
+            </li>
+            <li class="flex justify-between items-center pt-3">
+              <span class="text-slate-400 text-xs font-semibold">Navegador Web</span>
+              <span id="client-browser" class="font-medium text-slate-100">Detectando...</span>
+            </li>
+            <li class="flex justify-between items-center pt-3">
+              <span class="text-slate-400 text-xs font-semibold">Protocolo / Puerto</span>
+              <span id="connection-protocol" class="font-mono text-xs text-slate-300">-</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Botón de actualización -->
+      <div class="flex justify-end pt-2">
+        <button 
+          id="client-refresh"
+          class="w-full sm:w-auto bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg inline-flex items-center justify-center gap-2 cursor-pointer"
+        >
+          🔄 Actualizar Información
+        </button>
       </div>
 
     </div>
   </main>
-
-  <script>
-    const form = document.getElementById('whois-form') as HTMLFormElement;
-    const input = document.getElementById('domain-input') as HTMLInputElement;
-    const container = document.getElementById('result-container') as HTMLDivElement;
-    const resultContent = document.getElementById('result-content') as HTMLDivElement;
-    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
-
-    const sanitizeValue = (val: any): string => {
-      if (val === null || val === undefined || val === '') return '';
-      
-      if (Array.isArray(val)) {
-        return val.map(item => sanitizeValue(item)).filter(Boolean).join('<br>');
-      }
-      
-      if (typeof val === 'object') {
-        return Object.entries(val)
-          .map(([k, v]) => `<strong>${k}:</strong> ${sanitizeValue(v)}`)
-          .filter(Boolean)
-          .join('<br>');
-      }
-      
-      let str = String(val).trim();
-      if (/^\d{4}-\d{2}-\d{2}T/.test(str)) {
-        try {
-          str = new Date(str).toUTCString();
-        } catch (e) {
-          // Mantiene el original si falla
-        }
-      }
-      return str.replace(/\n/g, '<br>');
-    };
-
-    const renderTable = (rows: [string, string][]) => {
-      let tableHtml = `<table class="w-full text-left border-collapse bg-white rounded-lg overflow-hidden border-2 border-slate-300 text-xs sm:text-sm font-mono shadow-sm"><tbody>`;
-      rows.forEach(([key, value], index) => {
-        const bgClass = index % 2 === 0 ? 'bg-white' : 'bg-slate-50';
-        tableHtml += `
-          <tr class="${bgClass} border-b border-slate-200">
-            <td class="p-3 font-bold text-neutral-700 w-1/3 border-r border-slate-200 capitalize">${key.replace(/([A-Z])/g, ' $1').trim()}</td>
-            <td class="p-3 text-neutral-900 w-2/3 break-all">${value}</td>
-          </tr>
-        `;
-      });
-      tableHtml += `</tbody></table>`;
-      return tableHtml;
-    };
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const domain = input.value.trim();
-      if (!domain) return;
-
-      btn.textContent = 'Consultando...';
-      btn.setAttribute('disabled', 'true');
-      container.classList.add('hidden');
-
-      try {
-        const response = await fetch(`/api/whois?domain=${encodeURIComponent(domain)}`);
-        const result = await response.json();
-
-        if (result.success) {
-          const data = result.data;
-          
-          if (data && data.status && ['NOT_FOUND_OR_PROTECTED', 'PRIVACY_RESTRICTED', 'LOOKUP_NOTICE', 'NOTICE'].includes(data.status[0])) {
-            resultContent.innerHTML = `
-              <div class="bg-amber-50 border-2 border-amber-400 text-amber-900 p-4 rounded-lg text-sm font-medium space-y-2">
-                <div class="flex items-center gap-2 font-bold">
-                  Aviso de Registro
-                </div>
-                <p>${data.message}</p>
-              </div>
-            `;
-          } else {
-            const excludeKeys = ['handle', 'ldhName', 'unicodeName', 'links', 'notices', 'remarks', 'entities', '_extractedContacts'];
-            const rows: [string, string][] = [];
-
-            for (const [key, val] of Object.entries(data)) {
-              if (excludeKeys.includes(key)) continue;
-              
-              const formattedVal = sanitizeValue(val);
-              if (!formattedVal) continue;
-
-              rows.push([key, formattedVal]);
-            }
-
-            resultContent.innerHTML = rows.length > 0 ? renderTable(rows) : `<p class="text-neutral-700 font-bold text-sm">No se encontraron datos públicos para mostrar.</p>`;
-          }
-        } else {
-          resultContent.innerHTML = `<p class="text-red-700 font-bold text-sm">Error: ${result.error}</p>`;
-        }
-        container.classList.remove('hidden');
-      } catch (err) {
-        resultContent.innerHTML = `<p class="text-red-700 font-bold text-sm">Error de conexión con el servidor.</p>`;
-        container.classList.add('hidden');
-      } finally {
-        btn.textContent = 'Consultar WHOIS';
-        btn.removeAttribute('disabled');
-      }
-    });
-  </script>
 </Layout>
+
+<script>
+  function detectOSAndBrowser() {
+    const ua = navigator.userAgent;
+    const osElement = document.getElementById('client-os');
+    const browserElement = document.getElementById('client-browser');
+    const protoElement = document.getElementById('connection-protocol');
+
+    let os = 'Desconocido';
+    if (ua.includes('Win')) os = 'Windows';
+    else if (ua.includes('Mac')) os = 'macOS';
+    else if (ua.includes('Linux')) os = 'Linux';
+    else if (ua.includes('Android')) os = 'Android';
+    else if (ua.includes('like Mac') || ua.includes('iOS')) os = 'iOS';
+    if (osElement) osElement.textContent = os;
+
+    let browser = 'Desconocido';
+    if (ua.includes('Firefox/')) browser = 'Mozilla Firefox';
+    else if (ua.includes('Edg/')) browser = 'Microsoft Edge';
+    else if (ua.includes('Chrome/')) browser = 'Google Chrome';
+    else if (ua.includes('Safari/') && !ua.includes('Chrome')) browser = 'Apple Safari';
+    else if (ua.includes('OPR/') || ua.includes('Opera/')) browser = 'Opera';
+    if (browserElement) browserElement.textContent = browser;
+
+    if (protoElement) {
+      protoElement.textContent = `${window.location.protocol.replace(':', '').toUpperCase()} (${window.location.port || (window.location.protocol === 'https:' ? '443' : '80')})`;
+    }
+  }
+
+  async function fetchNetworkData() {
+    detectOSAndBrowser();
+    const ipv4Element = document.getElementById('ipv4-display');
+    const ipv6Element = document.getElementById('ipv6-display');
+    const countryElement = document.getElementById('geo-country');
+    const cityElement = document.getElementById('geo-city');
+    const ispElement = document.getElementById('geo-isp');
+    const coordsElement = document.getElementById('geo-coords');
+
+    try {
+      const resV4 = await fetch('https://api.ipify.org?format=json');
+      const dataV4 = await resV4.json();
+      if (ipv4Element) ipv4Element.textContent = dataV4.ip;
+    } catch {
+      if (ipv4Element) ipv4Element.textContent = 'No disponible';
+    }
+
+    try {
+      const resV6 = await fetch('https://api64.ipify.org?format=json');
+      const dataV6 = await resV6.json();
+      if (ipv6Element) {
+        ipv6Element.textContent = (dataV6.ip && dataV6.ip.includes(':')) ? dataV6.ip : 'No disponible';
+      }
+    } catch {
+      if (ipv6Element) ipv6Element.textContent = 'No disponible';
+    }
+
+    try {
+      const resGeo = await fetch('https://ipapi.co/json/');
+      const geo = await resGeo.json();
+
+      if (!geo.error) {
+        if (countryElement) {
+          const countryCode = geo.country_code || '';
+          const flag = countryCode ? countryCode.toUpperCase().replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0))) : '';
+          countryElement.textContent = `${flag} ${geo.country_name}`;
+        }
+        if (cityElement) cityElement.textContent = `${geo.city}, ${geo.region}`;
+        if (ispElement) {
+          ispElement.textContent = geo.org || 'Desconocido';
+          ispElement.setAttribute('title', geo.org || 'Desconocido');
+        }
+        if (coordsElement) coordsElement.textContent = `${geo.latitude}, ${geo.longitude}`;
+      } else {
+        throw new Error('Error en geolocalización');
+      }
+    } catch {
+      if (countryElement) countryElement.textContent = 'No disponible';
+      if (cityElement) cityElement.textContent = '-';
+      if (ispElement) ispElement.textContent = '-';
+      if (coordsElement) coordsElement.textContent = '-';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchNetworkData);
+  document.addEventListener('astro:page-load', fetchNetworkData);
+  document.getElementById('client-refresh')?.addEventListener('click', fetchNetworkData);
+</script>

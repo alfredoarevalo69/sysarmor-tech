@@ -4,20 +4,20 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Validador de Certificados X.509 | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
-    <div class="max-w-5xl mx-auto space-y-6">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-neutral-900">
+    <div class="max-w-5xl mx-auto space-y-8">
 
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/85 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
         >
           <span>←</span> Volver a Herramientas
         </a>
       </div>
 
-      <div class="space-y-1.5">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-wide">
+      <div class="space-y-2 text-center max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
           Validador de Certificados X.509
         </h1>
         <p class="text-neutral-700 font-medium text-base">
@@ -26,28 +26,32 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <!-- Tarjeta Principal de Entrada -->
-      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
+      <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
         <div class="space-y-2">
-          <label for="pem-input" class="block text-sm font-bold text-slate-900">
-            Certificado PEM (<code class="font-mono text-xs text-blue-800">-----BEGIN CERTIFICATE-----</code>):
+          <label for="pem-input" class="block text-sm font-bold text-slate-100">
+            Certificado PEM (<code class="font-mono text-xs text-amber-400">-----BEGIN CERTIFICATE-----</code>):
           </label>
           <textarea 
             id="pem-input" 
             rows="8" 
-            class="w-full bg-white border-2 border-slate-300 rounded-lg p-3 text-neutral-900 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all shadow-xs resize-y"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            class="w-full bg-slate-900 border-2 border-slate-800 rounded-xl p-4 text-slate-100 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all shadow-inner resize-y placeholder-slate-500"
             placeholder="Pega aquí el contenido en formato PEM de tu certificado .cer o .pem..."
           ></textarea>
         </div>
 
         <!-- Banner de Error UI Integrado y Limpio -->
-        <div id="error-container" class="hidden bg-red-100 border-2 border-red-400 rounded-lg p-4 transition-all">
+        <div id="error-container" class="hidden bg-slate-900 border-2 border-red-900/60 rounded-xl p-5 transition-all shadow-inner">
           <div class="flex items-start gap-3">
-            <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
             </svg>
             <div class="space-y-1">
-              <h3 class="text-xs font-bold text-red-900 uppercase tracking-wider">Error de validación</h3>
-              <p id="error-text" class="text-xs text-red-800 font-medium font-sans">
+              <h3 class="text-xs font-bold text-red-400 uppercase tracking-wider">Error de validación</h3>
+              <p id="error-text" class="text-xs text-slate-300 font-mono">
                 La entrada no es un certificado válido.
               </p>
             </div>
@@ -59,7 +63,7 @@ import Layout from '../../layouts/Layout.astro';
           <button 
             type="button"
             id="analyze-btn"
-            class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-lg transition-colors text-sm cursor-pointer shadow-sm text-center"
+            class="flex-1 bg-amber-400 hover:bg-amber-500 text-neutral-900 font-bold py-3 px-4 rounded-xl transition-colors text-sm cursor-pointer shadow-md text-center"
           >
             Analizar Certificado
           </button>
@@ -67,7 +71,7 @@ import Layout from '../../layouts/Layout.astro';
           <button 
             type="button"
             id="reset-btn"
-            class="hidden bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-lg transition-colors text-sm cursor-pointer shadow-md inline-flex items-center justify-center gap-2"
+            class="hidden bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-bold py-3 px-6 rounded-xl transition-colors text-sm cursor-pointer shadow-sm inline-flex items-center justify-center gap-2"
           >
             <span>🔄</span> Validar otro certificado
           </button>
@@ -78,49 +82,49 @@ import Layout from '../../layouts/Layout.astro';
       <div id="results-container" class="hidden space-y-6">
         
         <!-- Estado General -->
-        <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
-          <h2 class="text-lg font-bold text-neutral-900 border-b-2 border-slate-400 pb-2">Diagnóstico y Verificaciones</h2>
+        <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <h2 class="text-lg font-bold text-slate-100 border-b-2 border-slate-900 pb-3">Diagnóstico y Verificaciones</h2>
           <div id="checks-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono"></div>
         </div>
 
         <!-- Sujeto y Emisor -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-3">
-            <h3 class="text-sm font-bold text-blue-900 uppercase tracking-wider border-b border-slate-300 pb-2">Sujeto (Subject)</h3>
-            <div id="res-subject" class="space-y-1 font-mono text-xs text-neutral-900">-</div>
+          <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+            <h3 class="text-xs uppercase tracking-wider text-amber-400 font-extrabold border-b-2 border-slate-900 pb-3">Sujeto (Subject)</h3>
+            <div id="res-subject" class="space-y-2 font-mono text-xs text-slate-200">-</div>
           </div>
-          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-3">
-            <h3 class="text-sm font-bold text-blue-900 uppercase tracking-wider border-b border-slate-300 pb-2">Emisor (Issuer)</h3>
-            <div id="res-issuer" class="space-y-1 font-mono text-xs text-neutral-900">-</div>
+          <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+            <h3 class="text-xs uppercase tracking-wider text-amber-400 font-extrabold border-b-2 border-slate-900 pb-3">Emisor (Issuer)</h3>
+            <div id="res-issuer" class="space-y-2 font-mono text-xs text-slate-200">-</div>
           </div>
         </div>
 
         <!-- Vigencia -->
-        <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-4">
-          <h3 class="text-sm font-bold text-neutral-900 uppercase tracking-wider border-b-2 border-slate-400 pb-2">Validez Temporal</h3>
+        <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <h3 class="text-xs uppercase tracking-wider text-slate-300 font-extrabold border-b-2 border-slate-900 pb-3">Validez Temporal</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-white p-4 rounded-lg border-2 border-slate-300 space-y-1 shadow-xs font-mono text-xs">
-              <span class="text-neutral-500 block uppercase font-bold text-[10px]">Válido Desde:</span>
-              <span id="res-not-before" class="font-bold text-neutral-900">-</span>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner font-mono text-xs">
+              <span class="text-slate-400 block uppercase font-bold text-[10px] tracking-wider">Válido Desde:</span>
+              <span id="res-not-before" class="font-bold text-amber-400">-</span>
             </div>
-            <div class="bg-white p-4 rounded-lg border-2 border-slate-300 space-y-1 shadow-xs font-mono text-xs">
-              <span class="text-neutral-500 block uppercase font-bold text-[10px]">Válido Hasta:</span>
-              <span id="res-not-after" class="font-bold text-neutral-900">-</span>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner font-mono text-xs">
+              <span class="text-slate-400 block uppercase font-bold text-[10px] tracking-wider">Válido Hasta:</span>
+              <span id="res-not-after" class="font-bold text-amber-400">-</span>
             </div>
           </div>
         </div>
 
         <!-- Llave Pública y Firma -->
-        <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-3">
-          <h3 class="text-sm font-bold text-neutral-900 uppercase tracking-wider border-b-2 border-slate-400 pb-2">Propiedades Criptográficas</h3>
+        <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <h3 class="text-xs uppercase tracking-wider text-slate-300 font-extrabold border-b-2 border-slate-900 pb-3">Propiedades Criptográficas</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-            <div class="bg-white p-3 rounded-lg border border-slate-300">
-              <span class="text-neutral-500 block font-bold text-[10px]">Tamaño de Llave Pública:</span>
-              <span id="res-key-size" class="text-blue-800 font-bold text-sm">-</span>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
+              <span class="text-slate-400 block font-bold text-[10px] uppercase tracking-wider">Tamaño de Llave Pública:</span>
+              <span id="res-key-size" class="text-amber-400 font-bold text-sm">-</span>
             </div>
-            <div class="bg-white p-3 rounded-lg border border-slate-300">
-              <span class="text-neutral-500 block font-bold text-[10px]">Algoritmo de Firma:</span>
-              <span id="res-sig-algo" class="text-blue-800 font-bold text-sm">-</span>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
+              <span class="text-slate-400 block font-bold text-[10px] uppercase tracking-wider">Algoritmo de Firma:</span>
+              <span id="res-sig-algo" class="text-amber-400 font-bold text-sm">-</span>
             </div>
           </div>
         </div>
@@ -149,13 +153,24 @@ import Layout from '../../layouts/Layout.astro';
   const resSigAlgo = document.getElementById('res-sig-algo');
   const checksGrid = document.getElementById('checks-grid');
 
+  if (pemInput) pemInput.value = '';
+
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted && pemInput) {
+      pemInput.value = '';
+      clearError();
+      if (resultsContainer) resultsContainer.classList.add('hidden');
+      if (resetBtn) resetBtn.classList.add('hidden');
+    }
+  });
+
   function showError(msg: string) {
     if (errorText) errorText.textContent = msg;
     if (errorContainer) {
       errorContainer.classList.remove('hidden');
     }
-    pemInput?.classList.add('border-red-400', 'ring-2', 'ring-red-500');
-    pemInput?.classList.remove('border-slate-300');
+    pemInput?.classList.add('border-red-500', 'ring-2', 'ring-red-500');
+    pemInput?.classList.remove('border-slate-800');
     if (resultsContainer) {
       resultsContainer.classList.add('hidden');
     }
@@ -165,8 +180,8 @@ import Layout from '../../layouts/Layout.astro';
     if (errorContainer) {
       errorContainer.classList.add('hidden');
     }
-    pemInput?.classList.remove('border-red-400', 'ring-2', 'ring-red-500');
-    pemInput?.classList.add('border-slate-300');
+    pemInput?.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
+    pemInput?.classList.add('border-slate-800');
   }
 
   resetBtn?.addEventListener('click', () => {
@@ -187,14 +202,14 @@ import Layout from '../../layouts/Layout.astro';
 
       if (resSubject) {
         resSubject.innerHTML = data.subjectAttributes.length > 0
-          ? data.subjectAttributes.map(attr => `<div class="p-1.5 bg-white rounded border border-slate-300 font-mono text-xs">${attr}</div>`).join('')
-          : `<span class="text-neutral-700">${data.subject || 'No disponible'}</span>`;
+          ? data.subjectAttributes.map(attr => `<div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800 font-mono text-xs text-slate-200">${attr}</div>`).join('')
+          : `<span class="text-slate-400">${data.subject || 'No disponible'}</span>`;
       }
 
       if (resIssuer) {
         resIssuer.innerHTML = data.issuerAttributes.length > 0
-          ? data.issuerAttributes.map(attr => `<div class="p-1.5 bg-white rounded border border-slate-300 font-mono text-xs">${attr}</div>`).join('')
-          : `<span class="text-neutral-700">${data.issuer || 'No disponible'}</span>`;
+          ? data.issuerAttributes.map(attr => `<div class="p-2.5 bg-slate-900 rounded-lg border border-slate-800 font-mono text-xs text-slate-200">${attr}</div>`).join('')
+          : `<span class="text-slate-400">${data.issuer || 'No disponible'}</span>`;
       }
 
       if (resNotBefore) resNotBefore.textContent = data.notBefore;
@@ -204,23 +219,23 @@ import Layout from '../../layouts/Layout.astro';
 
       if (checksGrid) {
         checksGrid.innerHTML = `
-          <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs flex flex-col justify-between">
-            <span class="text-neutral-500 font-bold">Estado de Vigencia:</span>
-            <span class="font-bold ${data.isValid ? 'text-emerald-700' : 'text-red-700'}">
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-inner flex flex-col justify-between space-y-2">
+            <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Estado de Vigencia:</span>
+            <span class="font-bold ${data.isValid ? 'text-emerald-400' : 'text-red-400'}">
               ${data.isValid ? 'Vigente (Válido)' : 'Expirado / No Vigente'}
             </span>
           </div>
-          <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs flex flex-col justify-between">
-            <span class="text-neutral-500 font-bold">Estructura PEM:</span>
-            <span class="font-bold text-emerald-700">Verificada OK</span>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-inner flex flex-col justify-between space-y-2">
+            <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Estructura PEM:</span>
+            <span class="font-bold text-emerald-400">Verificada OK</span>
           </div>
-          <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs flex flex-col justify-between">
-            <span class="text-neutral-500 font-bold">Procesamiento:</span>
-            <span class="font-bold text-blue-700">Local / Seguro</span>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-inner flex flex-col justify-between space-y-2">
+            <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Procesamiento:</span>
+            <span class="font-bold text-amber-400">Local / Seguro</span>
           </div>
-          <div class="bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs flex flex-col justify-between">
-            <span class="text-neutral-500 font-bold">Motor Criptográfico:</span>
-            <span class="font-bold text-emerald-700">jsrsasign X.509</span>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-inner flex flex-col justify-between space-y-2">
+            <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Motor Criptográfico:</span>
+            <span class="font-bold text-emerald-400">jsrsasign X.509</span>
           </div>
         `;
       }

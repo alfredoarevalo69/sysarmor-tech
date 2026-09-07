@@ -4,36 +4,49 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Analizador de Cabeceras HTTP | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-neutral-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <div class="space-y-2">
-        <h1 class="text-3xl font-display font-bold text-neutral-900 tracking-wide">
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <div class="space-y-2 text-center max-w-xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
           Analizador de Cabeceras HTTP
         </h1>
-        <p class="text-neutral-700 text-base font-medium">
+        <p class="text-neutral-700 font-medium text-base">
           Inspecciona y audita las políticas de seguridad, cookies y cabeceras de respuesta de cualquier servidor web.
         </p>
       </div>
 
-      <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-6">
-        <form id="header-form" class="space-y-4">
+      <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <form id="header-form" autocomplete="off" class="space-y-4">
           <div class="space-y-2">
-            <label for="target-url" class="block text-sm font-bold text-neutral-900">
+            <label for="target-url" class="block text-sm font-bold text-slate-100">
               URL del Sitio Web o Servidor
             </label>
-            <div class="flex gap-3">
+            <div class="flex flex-col sm:flex-row gap-3">
               <input 
                 type="url" 
                 id="target-url" 
                 required 
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
                 placeholder="https://ejemplo.com" 
-                class="flex-1 bg-white border-2 border-slate-300 rounded-lg px-4 py-2.5 text-neutral-900 focus:outline-none focus:border-blue-700 font-medium text-sm shadow-xs"
+                class="flex-1 bg-slate-900 border-2 border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono text-xs shadow-inner placeholder-slate-500"
               />
               <button 
                 type="submit" 
                 id="submit-btn"
-                class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-lg transition-colors text-sm shadow-sm cursor-pointer"
+                class="bg-amber-400 hover:bg-amber-500 text-neutral-900 font-bold px-6 py-3 rounded-xl transition-colors text-sm cursor-pointer shadow-md"
               >
                 Analizar
               </button>
@@ -41,13 +54,13 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </form>
 
-        <div id="results-container" class="hidden space-y-6 pt-6 border-t-2 border-slate-300">
+        <div id="results-container" class="hidden space-y-6 pt-6 border-t-2 border-slate-900">
           
           <!-- Resumen de Calificación -->
-          <div id="audit-summary" class="bg-white border-2 border-slate-300 rounded-xl p-5 flex items-center justify-between shadow-xs">
+          <div id="audit-summary" class="bg-slate-900 border-2 border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-inner">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-neutral-500 block">Calificación de Seguridad</span>
-              <div class="text-sm text-neutral-700 font-medium mt-0.5">Basado en cabeceras de hardening recomendadas</div>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Calificación de Seguridad</span>
+              <div class="text-xs text-slate-300 font-medium mt-0.5">Basado en cabeceras de hardening recomendadas</div>
             </div>
             <div id="grade-badge" class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-extrabold shadow-sm text-white">
               -
@@ -55,19 +68,19 @@ import Layout from '../../layouts/Layout.astro';
           </div>
 
           <!-- Cabeceras Faltantes con Explicación Detallada -->
-          <div class="bg-white border-2 border-slate-300 rounded-xl p-5 space-y-4 shadow-xs">
-            <h3 class="text-base font-bold text-neutral-900 border-b border-slate-200 pb-3">
+          <div class="bg-slate-900 border-2 border-slate-800 rounded-xl p-5 space-y-4 shadow-inner">
+            <h3 class="text-sm uppercase tracking-wider text-slate-300 font-extrabold border-b-2 border-slate-800 pb-3">
               Cabeceras de Seguridad Faltantes (Missing Headers)
             </h3>
-            <div id="missing-headers-list" class="space-y-4 divide-y divide-slate-200">
+            <div id="missing-headers-list" class="space-y-4 divide-y divide-slate-800">
               <!-- Dinámico -->
             </div>
           </div>
 
           <!-- Todas las cabeceras devueltas -->
           <div class="space-y-3">
-            <h3 class="text-base font-bold text-neutral-900">Cabeceras de Respuesta HTTP del Servidor</h3>
-            <div id="results-content" class="bg-white border-2 border-slate-300 rounded-lg p-4 font-mono text-xs overflow-x-auto text-neutral-800 space-y-1.5 max-h-80 overflow-y-auto">
+            <h3 class="text-sm uppercase tracking-wider text-slate-300 font-extrabold">Cabeceras de Respuesta HTTP del Servidor</h3>
+            <div id="results-content" class="bg-slate-900 border-2 border-slate-800 rounded-xl p-4 font-mono text-xs overflow-x-auto text-slate-200 space-y-1.5 max-h-80 overflow-y-auto shadow-inner">
               <!-- Resultados dinámicos -->
             </div>
           </div>
@@ -95,6 +108,17 @@ import Layout from '../../layouts/Layout.astro';
     const missingHeadersList = document.getElementById('missing-headers-list');
     const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
 
+    if (form) form.reset();
+    if (inputUrl) inputUrl.value = '';
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted && form) {
+        form.reset();
+        if (inputUrl) inputUrl.value = '';
+        if (resultsContainer) resultsContainer.classList.add('hidden');
+      }
+    });
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const url = inputUrl.value.trim();
@@ -111,45 +135,42 @@ import Layout from '../../layouts/Layout.astro';
 
         if (!res.ok) {
           if (resultsContent) {
-            resultsContent.innerHTML = `<div class="text-red-700 font-bold">Error: ${data.error}</div>`;
+            resultsContent.innerHTML = `<div class="text-red-400 font-bold">Error: ${data.error}</div>`;
           }
           return;
         }
 
-        // Calificación
         const grade = data.audit.grade;
         if (gradeBadge) {
           gradeBadge.textContent = grade;
-          let colorClass = 'bg-emerald-700';
-          if (grade === 'B') colorClass = 'bg-blue-700';
-          if (grade === 'C') colorClass = 'bg-amber-600';
-          if (grade === 'D') colorClass = 'bg-orange-600';
-          if (grade === 'F') colorClass = 'bg-red-700';
-          gradeBadge.className = `w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-extrabold shadow-sm text-white ${colorClass}`;
+          let colorClass = 'bg-emerald-500 text-neutral-900';
+          if (grade === 'B') colorClass = 'bg-blue-500 text-neutral-900';
+          if (grade === 'C') colorClass = 'bg-amber-400 text-neutral-900';
+          if (grade === 'D') colorClass = 'bg-orange-500 text-neutral-900';
+          if (grade === 'F') colorClass = 'bg-red-500 text-neutral-900';
+          gradeBadge.className = `w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-extrabold shadow-sm ${colorClass}`;
         }
 
-        // Listado de faltantes con explicación estructurada
         if (missingHeadersList) {
           const missing = data.audit.missingHeaders || [];
           if (missing.length === 0) {
-            missingHeadersList.innerHTML = `<div class="text-xs font-bold text-emerald-700 py-2">¡Excelente! El sitio cuenta con todas las cabeceras de seguridad críticas evaluadas.</div>`;
+            missingHeadersList.innerHTML = `<div class="text-xs font-bold text-emerald-400 py-2">¡Excelente! El sitio cuenta con todas las cabeceras de seguridad críticas evaluadas.</div>`;
           } else {
             missingHeadersList.innerHTML = missing.map((h: string) => {
               const desc = descriptions[h] || 'Cabecera de seguridad recomendada para mejorar el endurecimiento del servidor.';
               return `
                 <div class="pt-4 first:pt-0 grid grid-cols-1 sm:grid-cols-3 gap-2 items-start">
-                  <span class="font-bold text-red-700 text-sm">${h}</span>
-                  <p class="sm:col-span-2 text-xs text-neutral-600 leading-relaxed">${desc}</p>
+                  <span class="font-bold text-red-400 text-sm">${h}</span>
+                  <p class="sm:col-span-2 text-xs text-slate-300 leading-relaxed">${desc}</p>
                 </div>
               `;
             }).join('');
           }
         }
 
-        // Cabeceras HTTP totales
-        let headersHtml = `<div class="text-emerald-700 font-bold pb-2">✓ Estado HTTP: ${data.status} ${data.statusText}</div>`;
+        let headersHtml = `<div class="text-emerald-400 font-bold pb-2">✓ Estado HTTP: ${data.status} ${data.statusText}</div>`;
         for (const [key, value] of Object.entries(data.headers)) {
-          headersHtml += `<div><span class="font-bold text-blue-800">${key}:</span> ${value}</div>`;
+          headersHtml += `<div><span class="font-bold text-amber-400">${key}:</span> ${value}</div>`;
         }
 
         if (resultsContent) {
@@ -158,7 +179,7 @@ import Layout from '../../layouts/Layout.astro';
 
       } catch (error) {
         if (resultsContent) {
-          resultsContent.innerHTML = `<div class="text-red-700 font-bold">Error crítico al procesar la petición.</div>`;
+          resultsContent.innerHTML = `<div class="text-red-400 font-bold">Error crítico al procesar la petición.</div>`;
         }
       } finally {
         submitBtn.textContent = 'Analizar';

@@ -37,15 +37,15 @@ if (Astro.request.method === 'POST') {
 ---
 
 <Layout title="Generador de Registros DMARC | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-10 px-4 sm:px-6 bg-slate-100 text-slate-900 border-t border-slate-200">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
     <div class="max-w-6xl mx-auto space-y-8">
       
       <!-- Cabecera de la Herramienta -->
       <div class="space-y-2">
-        <h1 class="text-3xl font-display font-bold text-slate-900 tracking-wide">
+        <h1 class="text-3xl font-display font-bold text-neutral-900 tracking-wide">
           Generador de Registros DMARC
         </h1>
-        <p class="text-slate-700 font-medium text-base">
+        <p class="text-neutral-700 font-medium text-base">
           Construye la política de autenticación, reportes y alineación de correo electrónico en formato DNS TXT estándar.
         </p>
       </div>
@@ -54,17 +54,17 @@ if (Astro.request.method === 'POST') {
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Columna Izquierda: Formulario de Configuración -->
-        <div class="lg:col-span-7 bg-white border-2 border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xl shadow-slate-300/50 space-y-6">
-          <h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3">
+        <div class="lg:col-span-7 bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+          <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-300 pb-3">
             Configuración de la Política DMARC
           </h2>
 
           <!-- Campo 0: Dominio Objetivo -->
-          <div class="space-y-2 bg-blue-50/60 p-4 rounded-xl border border-blue-200">
-            <label for="domain" class="block text-sm font-bold text-slate-900">
+          <div class="space-y-2 bg-white p-4 rounded-lg border-2 border-slate-300 shadow-xs">
+            <label for="domain" class="block text-sm font-bold text-neutral-900">
               Nombre de Dominio u Host:
             </label>
-            <p class="text-xs text-slate-600">
+            <p class="text-xs text-neutral-600">
               Introduce el dominio para consultar su registro actual y generar nuevas pautas.
             </p>
             <div class="flex gap-2">
@@ -72,13 +72,16 @@ if (Astro.request.method === 'POST') {
                 type="text" 
                 id="domain" 
                 value="" 
-                placeholder="tudominio.com" 
                 autocomplete="off"
-                class="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="tudominio.com" 
+                class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
               />
               <button 
                 id="fetch-dns-btn"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm transition-colors shrink-0"
+                class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-lg text-sm transition-colors shrink-0 cursor-pointer shadow-sm"
               >
                 Consultar DNS
               </button>
@@ -87,10 +90,10 @@ if (Astro.request.method === 'POST') {
 
           <!-- Campo 1: Política (p) -->
           <div class="space-y-2">
-            <label for="policy" class="block text-sm font-bold text-slate-900">
+            <label for="policy" class="block text-sm font-bold text-neutral-900">
               1. ¿Cómo deseas que el correo que falla DMARC sea tratado por el receptor?
             </label>
-            <select id="policy" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <select id="policy" autocomplete="off" class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs">
               <option value="none">None (Monitoreo / Sin acción)</option>
               <option value="quarantine">Quarantine (Enviar a Spam/Cuarentena)</option>
               <option value="reject">Reject (Rechazar mensaje por completo)</option>
@@ -99,37 +102,43 @@ if (Astro.request.method === 'POST') {
 
           <!-- Campo 2: Correos Agregados (rua) -->
           <div class="space-y-2">
-            <label for="rua" class="block text-sm font-bold text-slate-900">
+            <label for="rua" class="block text-sm font-bold text-neutral-900">
               2. ¿A qué dirección(es) de correo se deben enviar los reportes agregados (rua)?
             </label>
             <input 
               type="text" 
               id="rua" 
               value="" 
-              placeholder="mailto:dmarc-reports@tudominio.com" 
               autocomplete="off"
-              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="mailto:dmarc-reports@tudominio.com" 
+              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-mono text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
             />
           </div>
 
           <!-- Campo 3: Correos Forenses (ruf) -->
           <div class="space-y-2">
-            <label for="ruf" class="block text-sm font-bold text-slate-900">
+            <label for="ruf" class="block text-sm font-bold text-neutral-900">
               3. ¿A qué dirección(es) deseas recibir reportes forenses de fallos (ruf)?
             </label>
             <input 
               type="text" 
               id="ruf" 
               value="" 
-              placeholder="mailto:dmarc-reports@tudominio.com" 
               autocomplete="off"
-              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="mailto:dmarc-reports@tudominio.com" 
+              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-mono text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
             />
           </div>
 
           <!-- Campo 4: Porcentaje (pct) -->
           <div class="space-y-2">
-            <label for="pct" class="block text-sm font-bold text-slate-900">
+            <label for="pct" class="block text-sm font-bold text-neutral-900">
               4. Porcentaje de mensajes sujetos a filtrado (pct):
             </label>
             <input 
@@ -139,9 +148,9 @@ if (Astro.request.method === 'POST') {
               max="100" 
               value="100" 
               autocomplete="off"
-              class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
             />
-            <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <p class="text-xs text-neutral-700 bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
               💡 <strong>Recomendación:</strong> Se aconseja mantenerlo siempre en <strong>100</strong> en producción. Reducir este valor (ej. 10 o 50) solo es útil para despliegues graduales de políticas restrictivas y evitar bloqueos masivos iniciales.
             </p>
           </div>
@@ -149,12 +158,12 @@ if (Astro.request.method === 'POST') {
 
         <!-- Columna Derecha: Salida y Registro Actual -->
         <div class="lg:col-span-5 space-y-6">
-          <div class="bg-emerald-50 border-2 border-emerald-500/50 rounded-2xl p-6 sm:p-8 shadow-xl shadow-emerald-500/10 space-y-5">
+          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 sm:p-8 shadow-xl space-y-5">
             <div class="space-y-1">
-              <h2 class="text-lg font-bold text-emerald-900">
+              <h2 class="text-lg font-bold text-neutral-900">
                 Resultado del Registro Creado:
               </h2>
-              <p class="text-xs text-emerald-800">
+              <p class="text-xs text-neutral-700">
                 El registro inferior se actualiza automáticamente a medida que modificas los campos de la izquierda.
               </p>
             </div>
@@ -172,24 +181,24 @@ if (Astro.request.method === 'POST') {
               </div>
             </div>
 
-            <p class="text-xs text-emerald-900 font-medium bg-emerald-100/70 p-3 rounded-lg border border-emerald-200">
-              💡 <strong>Nota Importante:</strong> En la mayoría de proveedores DNS (como Cloudflare o cPanel), solo debes introducir <code class="bg-white px-1 py-0.5 rounded font-bold text-emerald-800 border border-emerald-300">_dmarc</code> en el campo de Nombre/Host. La plataforma añadirá tu dominio automáticamente al guardarlo.
+            <p class="text-xs text-neutral-900 font-medium bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+              💡 <strong>Nota Importante:</strong> En la mayoría de proveedores DNS (como Cloudflare o cPanel), solo debes introducir <code class="bg-slate-100 px-1 py-0.5 rounded font-bold text-blue-800 border border-slate-300">_dmarc</code> en el campo de Nombre/Host. La plataforma añadirá tu dominio automáticamente al guardarlo.
             </p>
 
             <button 
               id="copy-btn" 
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+              class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               Copiar Registro al Portapapeles
             </button>
           </div>
 
           <!-- Bloque: Current Record -->
-          <div class="bg-white border-2 border-slate-300 rounded-2xl p-6 shadow-lg space-y-3">
-            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-3">
+            <h3 class="text-sm font-bold text-neutral-900 flex items-center gap-2">
               Registro Actual en DNS: <span id="current-status-icon" class="text-slate-400">⚡</span>
             </h3>
-            <div id="current-record-box" class="bg-slate-200 text-slate-700 p-3 rounded-xl font-mono text-xs break-all border border-slate-300 min-h-[48px] flex items-center">
+            <div id="current-record-box" class="bg-white text-neutral-800 p-3 rounded-lg font-mono text-xs break-all border-2 border-slate-300 min-h-[48px] flex items-center shadow-xs">
               Sin consultar / No encontrado
             </div>
           </div>
@@ -213,12 +222,22 @@ if (Astro.request.method === 'POST') {
     const currentRecordBox = document.getElementById('current-record-box');
     const currentStatusIcon = document.getElementById('current-status-icon');
 
-    // Limpiar caché al iniciar
+    // Forzar vaciado de campos al cargar la página para evitar caché del navegador
     if (domainInput) domainInput.value = '';
     if (ruaInput) ruaInput.value = '';
     if (rufInput) rufInput.value = '';
     if (policySelect) policySelect.value = 'none';
     if (pctInput) pctInput.value = '100';
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        if (domainInput) domainInput.value = '';
+        if (ruaInput) ruaInput.value = '';
+        if (rufInput) rufInput.value = '';
+        if (policySelect) policySelect.value = 'none';
+        if (pctInput) pctInput.value = '100';
+      }
+    });
 
     function updateDmarcRecord() {
       const domain = domainInput.value.trim() || 'tudominio.com';

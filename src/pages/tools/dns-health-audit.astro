@@ -4,39 +4,39 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Auditoría de Salud DNS y Correo | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
         >
           <span>←</span> Volver a Herramientas
         </a>
       </div>
 
       <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide">
           Auditoría de Salud DNS y Correo
         </h1>
-        <p class="text-neutral-700 font-medium text-base">
+        <p class="text-slate-700 font-medium text-base">
           Analiza de forma integral la salud general de tus servidores DNS (NS, MX) y configuraciones de seguridad de correo (SPF, DMARC) en un solo escaneo rápido.
         </p>
       </div>
 
-      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 shadow-md">
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
         <form id="audit-form" class="flex flex-col sm:flex-row gap-3">
           <input 
             type="text" 
             id="domain-input" 
-            placeholder="Ej. midominio.com" 
+            placeholder="ej. midominio.com" 
             required
-            class="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-600 font-medium text-neutral-900"
+            class="flex-1 px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500 shadow-inner"
           />
           <button 
             type="submit"
-            class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-sm cursor-pointer"
+            class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-colors shadow-sm cursor-pointer"
           >
             Iniciar Auditoría
           </button>
@@ -44,9 +44,9 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <div id="results-container" class="space-y-4">
-        <h2 class="text-xl font-bold text-neutral-900">Resultado del Escaneo Global</h2>
+        <h2 class="text-xl font-bold text-slate-900">Resultado del Escaneo Global</h2>
         
-        <div id="results-content" class="bg-white border-2 border-slate-300 rounded-xl p-6 text-center text-neutral-500 font-medium shadow-md">
+        <div id="results-content" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center text-slate-400 font-medium shadow-xl">
           Ingresa un dominio para ejecutar la auditoría integral en paralelo.
         </div>
       </div>
@@ -66,11 +66,11 @@ import Layout from '../../layouts/Layout.astro';
 
       content.innerHTML = `
         <div class="py-8 flex justify-center items-center gap-3">
-          <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin h-6 w-6 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span class="font-semibold text-neutral-700">Consultando registros autoritativos y calculando lookups SPF...</span>
+          <span class="font-semibold text-slate-300">Consultando registros autoritativos y calculando lookups SPF...</span>
         </div>
       `;
 
@@ -79,13 +79,13 @@ import Layout from '../../layouts/Layout.astro';
         const result = await response.json();
 
         if (!result.success) {
-          content.innerHTML = `<p class="text-red-600 font-semibold py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
+          content.innerHTML = `<p class="text-red-400 font-semibold py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
           return;
         }
 
         renderResults(result);
       } catch (error) {
-        content.innerHTML = `<p class="text-red-600 font-semibold py-4">Error de red al conectar con el servidor.</p>`;
+        content.innerHTML = `<p class="text-red-400 font-semibold py-4">Error de red al conectar con el servidor.</p>`;
       }
     });
 
@@ -97,10 +97,10 @@ import Layout from '../../layouts/Layout.astro';
       const hasDmarc = data.security && data.security.dmarc !== null;
 
       const nsHtml = hasNs 
-        ? `<ul class="space-y-2 text-sm text-neutral-700">${data.nameservers.map((ns: string) => `<li class="font-mono bg-slate-50 border border-slate-200 px-3 py-2 rounded-md">✔ ${ns}</li>`).join('')}</ul>`
-        : `<p class="text-amber-600 text-sm font-semibold">No se detectaron servidores de nombres (NS).</p>`;
+        ? `<ul class="space-y-2 text-sm text-slate-300">${data.nameservers.map((ns: string) => `<li class="font-mono bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg">✔ ${ns}</li>`).join('')}</ul>`
+        : `<p class="text-amber-400 text-sm font-semibold">No se detectaron servidores de nombres (NS).</p>`;
 
-      let mxHtml = `<p class="text-amber-600 text-sm font-semibold">No se detectaron registros MX.</p>`;
+      let mxHtml = `<p class="text-amber-400 text-sm font-semibold">No se detectaron registros MX.</p>`;
       
       if (hasMx) {
         let mxRows = '';
@@ -113,26 +113,26 @@ import Layout from '../../layouts/Layout.astro';
 
           ips.forEach((ipAddr: string) => {
             mxRows += `
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="py-3 px-4 font-semibold text-slate-900">${priority}</td>
-                <td class="py-3 px-4 text-blue-600 font-medium break-all">${hostname}</td>
-                <td class="py-3 px-4 font-mono text-xs text-slate-600">${ipAddr}</td>
+              <tr class="hover:bg-slate-900 transition-colors">
+                <td class="py-3 px-4 font-semibold text-white">${priority}</td>
+                <td class="py-3 px-4 text-amber-400 font-medium break-all">${hostname}</td>
+                <td class="py-3 px-4 font-mono text-xs text-slate-400">${ipAddr}</td>
               </tr>
             `;
           });
         });
 
         mxHtml = `
-          <div class="overflow-x-auto rounded-lg border border-slate-300 bg-white shadow-sm text-left">
+          <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900 shadow-sm text-left">
             <table class="w-full border-collapse text-sm">
-              <thead class="bg-slate-200 text-slate-800 font-bold border-b border-slate-300">
+              <thead class="bg-slate-950 text-slate-300 font-bold border-b border-slate-800">
                 <tr>
                   <th class="py-3 px-4 w-20">Pref</th>
                   <th class="py-3 px-4">Hostname</th>
                   <th class="py-3 px-4">IP Address</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tbody class="divide-y divide-slate-800 text-slate-300">
                 ${mxRows}
               </tbody>
             </table>
@@ -140,58 +140,58 @@ import Layout from '../../layouts/Layout.astro';
         `;
       }
 
-      let spfContentHtml = `<p class="text-amber-600 text-sm font-semibold">No se encontró registro SPF configurado.</p>`;
+      let spfContentHtml = `<p class="text-amber-400 text-sm font-semibold">No se encontró registro SPF configurado.</p>`;
       
       if (hasSpf) {
         const lookupCount = data.security.lookupCount;
         const exceedsLimit = data.security.exceedsLimit;
 
-        let lookupBadgeColor = "bg-emerald-100 text-emerald-900 border-emerald-300";
+        let lookupBadgeColor = "bg-emerald-950/80 text-emerald-300 border-emerald-800";
         let lookupText = "Óptimo (Dentro del límite permitido de 10)";
         if (lookupCount > 10) {
-          lookupBadgeColor = "bg-red-100 text-red-900 border-red-300";
+          lookupBadgeColor = "bg-red-950/80 text-red-300 border-red-800";
           lookupText = "¡Peligro! Supera el límite máximo de 10 consultas (RFC 7208).";
         } else if (lookupCount >= 8) {
-          lookupBadgeColor = "bg-amber-100 text-amber-900 border-amber-300";
+          lookupBadgeColor = "bg-amber-950/80 text-amber-300 border-amber-800";
           lookupText = "Advertencia: Cerca del límite máximo de 10 consultas.";
         }
 
         const spfRecommendationHtml = !data.security.isStrictSpf ? `
-          <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
-            <div class="flex items-center justify-between border-b border-amber-200 pb-2">
+          <div class="mt-4 p-4 bg-amber-950/40 border border-amber-900/60 rounded-xl space-y-2">
+            <div class="flex items-center justify-between border-b border-amber-900/60 pb-2">
               <div class="flex items-center gap-2">
-                <span class="text-amber-600 font-bold">⚠</span>
-                <span class="font-bold text-amber-900 text-xs uppercase tracking-wider">Recomendación de Seguridad</span>
+                <span class="text-amber-400 font-bold">⚠</span>
+                <span class="font-bold text-amber-300 text-xs uppercase tracking-wider">Recomendación de Seguridad</span>
               </div>
-              <span class="text-xs text-amber-700 font-medium">Mejorar seguridad</span>
+              <span class="text-xs text-amber-400 font-medium">Mejorar seguridad</span>
             </div>
             <div class="flex items-center justify-between pt-1">
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded">CORREO</span>
-                  <h4 class="font-bold text-slate-900 text-sm">Política SPF estricta (-all)</h4>
+                  <span class="px-2 py-0.5 bg-amber-500 text-slate-950 text-xs font-bold rounded">CORREO</span>
+                  <h4 class="font-bold text-white text-sm">Política SPF estricta (-all)</h4>
                 </div>
-                <p class="text-xs text-slate-600">El registro SPF utiliza ~all o ?all. Cambie a -all para una aplicación estricta.</p>
+                <p class="text-xs text-slate-400">El registro SPF utiliza ~all o ?all. Cambie a -all para una aplicación estricta.</p>
               </div>
-              <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded shrink-0">-10 pts</span>
+              <span class="text-xs font-bold text-red-400 bg-red-950 px-2 py-1 rounded shrink-0">-10 pts</span>
             </div>
           </div>
         ` : '';
 
         spfContentHtml = `
           <div class="space-y-4">
-            <div class="p-4 border-2 rounded-lg ${lookupBadgeColor} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="p-4 border rounded-xl ${lookupBadgeColor} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
                 <p class="font-bold text-sm uppercase tracking-wider">Límite de Consultas DNS (RFC 7208)</p>
                 <p class="text-sm mt-0.5">${lookupText}</p>
               </div>
-              <div class="bg-white px-4 py-2 rounded-lg border border-slate-300 text-center shadow-xs">
-                <span class="block text-2xl font-black font-mono ${exceedsLimit ? 'text-red-600' : 'text-slate-900'}">${lookupCount} / 10</span>
-                <span class="text-[10px] uppercase font-bold text-slate-500">Lookups</span>
+              <div class="bg-slate-900 px-4 py-2 rounded-lg border border-slate-800 text-center shadow-xs">
+                <span class="block text-2xl font-black font-mono ${exceedsLimit ? 'text-red-400' : 'text-white'}">${lookupCount} / 10</span>
+                <span class="text-[10px] uppercase font-bold text-slate-400">Lookups</span>
               </div>
             </div>
 
-            <code class="block bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-xs break-all">${data.security.spf}</code>
+            <code class="block bg-slate-900 text-amber-400 p-4 rounded-xl border border-slate-800 font-mono text-xs break-all">${data.security.spf}</code>
 
             ${spfRecommendationHtml}
           </div>
@@ -199,33 +199,33 @@ import Layout from '../../layouts/Layout.astro';
       }
 
       const dmarcHtml = hasDmarc
-        ? `<code class="block bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-xs break-all">${data.security.dmarc}</code>`
-        : `<p class="text-amber-600 text-sm font-semibold">No se encontró registro DMARC en _dmarc.${data.domain}.</p>`;
+        ? `<code class="block bg-slate-900 text-amber-400 p-4 rounded-xl border border-slate-800 font-mono text-xs break-all">${data.security.dmarc}</code>`
+        : `<p class="text-amber-400 text-sm font-semibold">No se encontró registro DMARC en _dmarc.${data.domain}.</p>`;
 
       content.innerHTML = `
         <div class="space-y-6 text-left">
-          <div class="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-lg">
-            <p class="font-bold text-emerald-900">Auditoría completada para: <span class="font-mono underline">${data.domain}</span></p>
-            <p class="text-emerald-800 text-sm mt-1">Escaneo ejecutado de forma concurrente sobre los servidores autoritativos.</p>
+          <div class="p-4 bg-emerald-950/60 border border-emerald-800 rounded-xl shadow-xs">
+            <p class="font-bold text-emerald-300">Auditoría completada para: <span class="font-mono underline">${data.domain}</span></p>
+            <p class="text-emerald-400 text-sm mt-1">Escaneo ejecutado de forma concurrente sobre los servidores autoritativos.</p>
           </div>
 
-          <div class="bg-white border-2 border-slate-300 rounded-xl p-5 shadow-xs space-y-3">
-            <h3 class="font-bold text-neutral-900 text-base border-b-2 border-slate-200 pb-2">Servidores de Nombres (NS)</h3>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+            <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Servidores de Nombres (NS)</h3>
             ${nsHtml}
           </div>
 
-          <div class="bg-white border-2 border-slate-300 rounded-xl p-5 shadow-xs space-y-3">
-            <h3 class="font-bold text-neutral-900 text-base border-b-2 border-slate-200 pb-2">Servidores de Correo (MX)</h3>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+            <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Servidores de Correo (MX)</h3>
             ${mxHtml}
           </div>
 
-          <div class="bg-white border-2 border-slate-300 rounded-xl p-5 shadow-xs space-y-3">
-            <h3 class="font-bold text-neutral-900 text-base border-b-2 border-slate-200 pb-2">Política SPF y Conteo de Lookups</h3>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+            <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Política SPF y Conteo de Lookups</h3>
             ${spfContentHtml}
           </div>
 
-          <div class="bg-white border-2 border-slate-300 rounded-xl p-5 shadow-xs space-y-3">
-            <h3 class="font-bold text-neutral-900 text-base border-b-2 border-slate-200 pb-2">Política DMARC</h3>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+            <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Política DMARC</h3>
             ${dmarcHtml}
           </div>
         </div>

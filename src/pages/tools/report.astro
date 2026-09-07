@@ -1,58 +1,57 @@
 ---
-// src/pages/tools/report.astro
 import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Auditoría de Hardening y Conformidad | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-8 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900 print:bg-white print:py-0">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900 print:bg-white print:py-0">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <header class="report-header flex items-center justify-between pb-4 border-b-2 border-neutral-300 print:mb-6">
+      <header class="report-header flex items-center justify-between pb-4 border-b border-slate-300 print:mb-6">
         <div class="flex items-center gap-3">
           <div class="flex flex-col">
-            <span class="font-black text-xl tracking-wider text-neutral-900">SYSARMOR <span class="text-blue-700">TECH</span></span>
-            <span class="text-xs font-bold text-neutral-600 uppercase tracking-widest">Infraestructura & Ciberseguridad</span>
+            <span class="font-black text-xl tracking-wider text-slate-900">SYSARMOR <span class="text-amber-500">TECH</span></span>
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">Infraestructura & Ciberseguridad</span>
           </div>
         </div>
         <div class="text-right hidden sm:block print:block">
-          <span class="text-xs font-semibold text-neutral-500">Reporte Técnico de Diagnóstico</span>
+          <span class="text-xs font-semibold text-slate-700">Reporte Técnico de Diagnóstico</span>
         </div>
       </header>
 
       <div class="print:hidden">
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm rounded-xl transition-colors shadow-sm cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
         >
-          <span>←</span> VOLVER A HERRAMIENTAS
+          <span>←</span> Volver a Herramientas
         </a>
       </div>
 
       <div class="space-y-2 text-center max-w-3xl mx-auto print:mb-6">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide">
           Auditoría de Hardening y Conformidad de Infraestructura
         </h1>
-        <p class="text-neutral-700 font-medium text-base">
+        <p class="text-slate-700 font-medium text-base">
           Motor de diagnóstico integral para evaluar la postura de seguridad perimetral, cifrado de transporte y políticas de cabeceras en entornos de producción.
         </p>
       </div>
 
-      <div class="bg-white p-6 rounded-xl border-2 border-slate-300 shadow-md space-y-4 print:hidden">
+      <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 print:hidden">
         <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div class="w-full sm:w-2/3">
-            <label for="targetInput" class="block text-sm font-bold text-neutral-800 mb-1">Dominio o Servidor Objetivo</label>
+            <label for="targetInput" class="block text-sm font-bold text-slate-300 mb-1">Dominio o Servidor Objetivo</label>
             <input 
               type="text" 
               id="targetInput" 
               placeholder="ej. miservidor.com o https://dominio.com" 
               autocomplete="off"
-              class="w-full px-4 py-2 border-2 border-slate-300 rounded-lg font-medium focus:outline-none focus:border-blue-700 text-neutral-900"
+              class="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl font-medium focus:outline-none focus:border-amber-500 text-white placeholder-slate-500 shadow-inner"
             />
           </div>
           <div class="w-full sm:w-1/3 flex items-end">
             <button 
               id="runAuditBtn" 
-              class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-lg transition-colors text-sm shadow-sm mt-6 sm:mt-0 cursor-pointer"
+              class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 px-4 rounded-xl transition-colors text-sm shadow-sm mt-6 sm:mt-0 cursor-pointer"
             >
               Ejecutar Auditoría Global
             </button>
@@ -62,29 +61,29 @@ import Layout from '../../layouts/Layout.astro';
 
       <div id="reportContainer" class="hidden space-y-6">
         
-        <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl flex items-center justify-between">
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl flex items-center justify-between">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-600 block">Evaluación General de Infraestructura</span>
-            <h2 id="reportTarget" class="text-xl font-bold text-neutral-900"></h2>
-            <p id="reportTimestamp" class="text-xs text-neutral-600 mt-1 font-mono"></p>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Evaluación General de Infraestructura</span>
+            <h2 id="reportTarget" class="text-xl font-bold text-white"></h2>
+            <p id="reportTimestamp" class="text-xs text-slate-400 mt-1 font-mono"></p>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-sm font-bold text-neutral-700">Calificación Global:</span>
-            <div id="globalBadge" class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-white shadow-md">
+            <span class="text-sm font-bold text-slate-300">Calificación Global:</span>
+            <div id="globalBadge" class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-slate-950 shadow-sm">
               -
             </div>
           </div>
         </div>
 
         <div class="space-y-4">
-          <h3 class="text-xl font-bold text-neutral-900">Resumen de Hallazgos y Evaluaciones</h3>
+          <h3 class="text-xl font-bold text-slate-950">Resumen de Hallazgos y Evaluaciones</h3>
           <div id="modulesList" class="space-y-6"></div>
         </div>
 
         <div class="flex justify-end pt-4 print:hidden">
           <button 
             onclick="window.print()" 
-            class="bg-blue-800 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-sm shadow-sm cursor-pointer"
+            class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 px-6 rounded-xl transition-colors text-sm shadow-sm cursor-pointer"
           >
             Imprimir / Guardar Reporte PDF
           </button>
@@ -93,8 +92,8 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <div id="loadingState" class="hidden text-center py-12 space-y-3">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-900 border-t-transparent"></div>
-        <p class="text-neutral-700 font-medium text-sm">Ejecutando pruebas concurrentes de infraestructura...</p>
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-amber-500 border-t-transparent"></div>
+        <p class="text-slate-700 font-medium text-sm">Ejecutando pruebas concurrentes de infraestructura...</p>
       </div>
 
     </div>
@@ -156,8 +155,8 @@ import Layout from '../../layouts/Layout.astro';
       
       if (globalBadge) {
         globalBadge.textContent = data.globalRating;
-        globalBadge.className = `w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-white shadow-md ${
-          data.globalRating === 'A' ? 'bg-emerald-700' : 'bg-red-700'
+        globalBadge.className = `w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-slate-950 shadow-sm ${
+          data.globalRating === 'A' ? 'bg-emerald-500' : 'bg-red-500'
         }`;
       }
 
@@ -167,12 +166,12 @@ import Layout from '../../layouts/Layout.astro';
           let rawHeadersHtml = '';
           if (audit.details.rawHeaders) {
             rawHeadersHtml = `
-              <div class="mt-4 pt-4 border-t-2 border-slate-200 space-y-2">
-                <span class="text-xs font-bold text-neutral-700 uppercase tracking-wider block">Cabeceras HTTP en Bruto (Raw Headers) - Detalle Completo</span>
-                <div class="bg-slate-900 text-slate-100 p-4 rounded-lg space-y-1 shadow-inner">
+              <div class="mt-4 pt-4 border-t border-slate-800 space-y-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Cabeceras HTTP en Bruto (Raw Headers) - Detalle Completo</span>
+                <div class="bg-slate-900 text-slate-200 p-4 rounded-xl space-y-1 shadow-inner border border-slate-800">
                   ${Object.entries(audit.details.rawHeaders).map(([k, v]) => `
                     <div class="flex flex-col sm:flex-row text-xs font-mono py-1 border-b border-slate-800">
-                      <span class="w-1/3 font-bold text-emerald-400">${k}</span>
+                      <span class="w-1/3 font-bold text-amber-400">${k}</span>
                       <span class="w-2/3 text-slate-300 break-all">${v}</span>
                     </div>
                   `).join('')}
@@ -182,31 +181,31 @@ import Layout from '../../layouts/Layout.astro';
           }
 
           const item = document.createElement('div');
-          item.className = 'bg-white border-2 border-slate-300 rounded-xl p-6 shadow-sm space-y-4';
+          item.className = 'bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4';
           item.innerHTML = `
-            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
-              <h4 class="font-bold text-neutral-900 text-lg">${audit.module}</h4>
-              <span class="px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wide ${
-                audit.status === 'SUCCESS' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h4 class="font-bold text-white text-lg">${audit.module}</h4>
+              <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${
+                audit.status === 'SUCCESS' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-red-950 text-red-300 border border-red-800'
               }">
                 Estado: ${audit.status} — Calificación: ${audit.score || 'N/A'}
               </span>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div class="bg-neutral-50 p-4 rounded-lg border border-slate-200 space-y-1">
-                <span class="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Componente Evaluado</span>
-                <p class="font-bold text-neutral-900">${audit.details.component}</p>
+              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Componente Evaluado</span>
+                <p class="font-bold text-white">${audit.details.component}</p>
               </div>
-              <div class="bg-neutral-50 p-4 rounded-lg border border-slate-200 space-y-1">
-                <span class="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Hallazgo Principal</span>
-                <p class="font-medium text-neutral-800">${audit.details.finding}</p>
+              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Hallazgo Principal</span>
+                <p class="font-medium text-slate-200">${audit.details.finding}</p>
               </div>
             </div>
 
-            <div class="bg-blue-50/60 p-4 rounded-lg border border-blue-200 text-sm space-y-1">
-              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider block">Recomendación Técnica</span>
-              <p class="font-medium text-blue-950">${audit.details.recommendation}</p>
+            <div class="bg-amber-950/40 p-4 rounded-xl border border-amber-900/60 text-sm space-y-1">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">Recomendación Técnica</span>
+              <p class="font-medium text-amber-200">${audit.details.recommendation}</p>
             </div>
 
             ${rawHeadersHtml}

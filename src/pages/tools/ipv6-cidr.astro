@@ -4,14 +4,14 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Calculadora CIDR IPv6 | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
       <!-- Navegación de retorno -->
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/80 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
         >
           <span>←</span> Volver a Herramientas
         </a>
@@ -19,18 +19,18 @@ import Layout from '../../layouts/Layout.astro';
 
       <!-- Encabezado -->
       <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
           Calculadora CIDR IPv6
         </h1>
-        <p class="text-neutral-700 font-medium text-base">
+        <p class="text-slate-700 font-medium text-base">
           Analiza prefijos IPv6, calcula la compresión de direcciones, rangos globales y capacidad de subredes.
         </p>
       </div>
 
       <!-- Tarjeta de Entrada -->
-      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <div class="space-y-2">
-          <label for="ipv6Input" class="block text-sm font-bold text-neutral-900 uppercase tracking-wide">
+          <label for="ipv6Input" class="block text-sm font-bold text-slate-300 uppercase tracking-wide">
             Prefijo IPv6 o Dirección con CIDR
           </label>
           <div class="flex flex-col sm:flex-row gap-3">
@@ -38,65 +38,65 @@ import Layout from '../../layouts/Layout.astro';
               type="text" 
               id="ipv6Input" 
               placeholder="Ej: 2001:db8::/32 o fe80::1/64" 
-              class="flex-1 bg-neutral-50 border-2 border-slate-300 rounded-lg px-4 py-3 text-neutral-900 font-mono text-base focus:outline-none focus:border-blue-700 transition-colors"
+              class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono text-base focus:outline-none focus:border-amber-500 shadow-inner placeholder-slate-500"
             />
             <button 
               id="calculateBtn"
-              class="bg-blue-800 hover:bg-blue-900 text-white font-bold px-6 py-3 rounded-lg transition-colors shadow-sm cursor-pointer"
+              class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-colors shadow-sm cursor-pointer"
             >
               Calcular Prefijo
             </button>
           </div>
-          <p id="errorMsg" class="text-red-600 text-xs font-bold hidden"></p>
+          <p id="errorMsg" class="text-red-400 text-xs font-bold hidden"></p>
         </div>
       </div>
 
       <!-- Resultados (Ocultos al iniciar) -->
-      <div id="resultsContainer" class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6 hidden">
-        <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-200 pb-3">
+      <div id="resultsContainer" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 hidden">
+        <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3">
           Detalles del Bloque IPv6
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Prefijo Ingresado</span>
-            <p id="resPrefix" class="font-mono font-bold text-neutral-900 text-base break-all">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Prefijo Ingresado</span>
+            <p id="resPrefix" class="font-mono font-bold text-white text-base break-all">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Longitud de Prefijo (Prefix Length)</span>
-            <p id="resPrefixLen" class="font-mono font-bold text-blue-800 text-base">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Longitud de Prefijo (Prefix Length)</span>
+            <p id="resPrefixLen" class="font-mono font-bold text-amber-400 text-base">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Dirección de Red (Comprimida)</span>
-            <p id="resCompressed" class="font-mono font-bold text-blue-800 text-base break-all">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dirección de Red (Comprimida)</span>
+            <p id="resCompressed" class="font-mono font-bold text-amber-400 text-base break-all">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Dirección de Red (Expandida)</span>
-            <p id="resExpanded" class="font-mono font-bold text-neutral-800 text-xs break-all">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dirección de Red (Expandida)</span>
+            <p id="resExpanded" class="font-mono font-bold text-slate-300 text-xs break-all">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Primera Dirección IP</span>
-            <p id="resFirstIP" class="font-mono font-bold text-emerald-700 text-base break-all">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Primera Dirección IP</span>
+            <p id="resFirstIP" class="font-mono font-bold text-emerald-400 text-base break-all">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Última Dirección IP</span>
-            <p id="resLastIP" class="font-mono font-bold text-emerald-700 text-base break-all">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Última Dirección IP</span>
+            <p id="resLastIP" class="font-mono font-bold text-emerald-400 text-base break-all">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Total de Direcciones IP</span>
-            <p id="resTotalIPs" class="font-mono font-bold text-neutral-900 text-base">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total de Direcciones IP</span>
+            <p id="resTotalIPs" class="font-mono font-bold text-white text-base">-</p>
           </div>
 
-          <div class="bg-neutral-50 border-2 border-slate-200 rounded-lg p-4 space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-neutral-500">Tipo de Dirección</span>
-            <p id="resAddressType" class="font-mono font-bold text-purple-700 text-base">-</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1 shadow-inner">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Tipo de Dirección</span>
+            <p id="resAddressType" class="font-mono font-bold text-purple-400 text-base">-</p>
           </div>
 
         </div>
@@ -106,7 +106,7 @@ import Layout from '../../layouts/Layout.astro';
   </main>
 
   <script>
-    function parseIPv6(ipStr) {
+    function parseIPv6(ipStr: string) {
       ipStr = ipStr.trim();
       if (!ipStr) throw new Error("Por favor, ingresa un prefijo IPv6 o dirección CIDR.");
       
@@ -121,7 +121,7 @@ import Layout from '../../layouts/Layout.astro';
       let dualColons = addrPart.split('::');
       if (dualColons.length > 2) throw new Error("Formato IPv6 inválido: múltiples '::'.");
 
-      let hextets = [];
+      let hextets: number[] = [];
       if (dualColons.length === 2) {
         let left = dualColons[0] ? dualColons[0].split(':') : [];
         let right = dualColons[1] ? dualColons[1].split(':') : [];
@@ -144,7 +144,7 @@ import Layout from '../../layouts/Layout.astro';
       return { hextets, prefixLen };
     }
 
-    function hextetsToBigInt(hextets) {
+    function hextetsToBigInt(hextets: number[]) {
       let res = 0n;
       for (let h of hextets) {
         res = (res << 16n) + BigInt(h);
@@ -152,7 +152,7 @@ import Layout from '../../layouts/Layout.astro';
       return res;
     }
 
-    function bigIntToHextets(bigIntVal) {
+    function bigIntToHextets(bigIntVal: bigint) {
       let hexStr = bigIntVal.toString(16).padStart(32, '0');
       let hextets = [];
       for (let i = 0; i < 32; i += 4) {
@@ -161,7 +161,7 @@ import Layout from '../../layouts/Layout.astro';
       return hextets;
     }
 
-    function compressIPv6(hextets) {
+    function compressIPv6(hextets: number[]) {
       let hexStrs = hextets.map(h => h.toString(16));
       
       let maxZeroStart = -1;
@@ -196,11 +196,11 @@ import Layout from '../../layouts/Layout.astro';
       return hexStrs.join(':');
     }
 
-    function expandIPv6(hextets) {
+    function expandIPv6(hextets: number[]) {
       return hextets.map(h => h.toString(16).padStart(4, '0')).join(':');
     }
 
-    function getAddressType(hextets) {
+    function getAddressType(hextets: number[]) {
       let firstHextet = hextets[0];
       if ((firstHextet & 0xFE00) === 0xFC00) return "ULA (Unique Local Address)";
       if ((firstHextet & 0xFFC0) === 0xFE80) return "Link-Local";
@@ -214,9 +214,13 @@ import Layout from '../../layouts/Layout.astro';
     }
 
     function calculate() {
-      const inputVal = (document.getElementById('ipv6Input') as HTMLInputElement).value;
+      const inputElement = document.getElementById('ipv6Input') as HTMLInputElement;
       const errorMsg = document.getElementById('errorMsg') as HTMLElement;
       const resultsContainer = document.getElementById('resultsContainer') as HTMLElement;
+      
+      if (!inputElement || !errorMsg || !resultsContainer) return;
+
+      const inputVal = inputElement.value;
       
       try {
         errorMsg.classList.add('hidden');
@@ -236,14 +240,19 @@ import Layout from '../../layouts/Layout.astro';
 
         let totalIPs = prefixLen === 128 ? 1n : 1n << (128n - BigInt(prefixLen));
 
-        document.getElementById('resPrefix')!.innerText = inputVal;
-        document.getElementById('resPrefixLen')!.innerText = `/${prefixLen}`;
-        document.getElementById('resCompressed')!.innerText = compressIPv6(netHextets) + `/${prefixLen}`;
-        document.getElementById('resExpanded')!.innerText = expandIPv6(netHextets);
-        document.getElementById('resFirstIP')!.innerText = compressIPv6(firstHextets);
-        document.getElementById('resLastIP')!.innerText = compressIPv6(lastHextets);
-        document.getElementById('resTotalIPs')!.innerText = totalIPs.toLocaleString('es-ES');
-        document.getElementById('resAddressType')!.innerText = getAddressType(netHextets);
+        const setElementText = (id: string, text: string) => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = text;
+        };
+
+        setElementText('resPrefix', inputVal);
+        setElementText('resPrefixLen', `/${prefixLen}`);
+        setElementText('resCompressed', compressIPv6(netHextets) + `/${prefixLen}`);
+        setElementText('resExpanded', expandIPv6(netHextets));
+        setElementText('resFirstIP', compressIPv6(firstHextets));
+        setElementText('resLastIP', compressIPv6(lastHextets));
+        setElementText('resTotalIPs', totalIPs.toLocaleString('es-ES'));
+        setElementText('resAddressType', getAddressType(netHextets));
 
         resultsContainer.classList.remove('hidden');
 

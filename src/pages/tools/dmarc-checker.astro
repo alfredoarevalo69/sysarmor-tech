@@ -5,12 +5,12 @@ import Layout from '../../layouts/Layout.astro';
 
 <Layout title="Validador DMARC | SysArmor Tech">
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
-    <div class="max-w-3xl mx-auto space-y-8">
+    <div class="max-w-4xl mx-auto space-y-8">
       
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-slate-200/85 hover:bg-slate-300 border border-slate-300 rounded-lg text-slate-800 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
         >
           <span>←</span> Volver a Herramientas
         </a>
@@ -25,35 +25,37 @@ import Layout from '../../layouts/Layout.astro';
         </p>
       </div>
 
-      <div class="bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
-        <form id="dmarc-form" class="flex flex-col sm:flex-row gap-4">
-          <div class="flex-1 space-y-1">
-            <label for="domain-input" class="block text-xs font-bold text-neutral-700 uppercase tracking-wide">Dominio o Subdominio</label>
+      <!-- Contenedor Oscuro Estándar del WHOIS -->
+      <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <form id="dmarc-form" autocomplete="off" class="space-y-4">
+          <div class="flex flex-col sm:flex-row gap-3">
             <input 
               type="text" 
               id="domain-input" 
-              placeholder="Ej: co.bancofalabella.com" 
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="Ej: co.bancofalabella.com o tudominio.com" 
               required
-              class="w-full bg-neutral-50 border-2 border-slate-300 rounded-lg px-4 py-3 text-neutral-900 font-medium text-sm focus:outline-none focus:border-blue-700 transition-colors"
+              class="flex-1 bg-slate-950 border-2 border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-medium text-sm focus:outline-none focus:border-amber-400 shadow-inner placeholder-slate-500"
             />
-          </div>
-          <div class="flex items-end">
             <button 
               type="submit" 
               id="submit-btn"
-              class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-lg transition-colors text-sm shadow-sm cursor-pointer h-[46px]"
+              class="bg-amber-400 hover:bg-amber-500 text-neutral-900 font-bold px-6 py-3 rounded-xl transition-colors text-sm shadow-md cursor-pointer shrink-0"
             >
               Verificar DMARC
             </button>
           </div>
         </form>
-      </div>
 
-      <div id="results-container" class="hidden bg-white border-2 border-slate-300 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
-        <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-200 pb-3">
-          Resultado de Validación
-        </h2>
-        <div id="results-content" class="space-y-4"></div>
+        <div id="results-container" class="hidden space-y-6 pt-6 border-t-2 border-slate-800">
+          <h2 class="text-xl font-bold text-slate-100 border-b-2 border-slate-800 pb-3">
+            Resultado de Validación
+          </h2>
+          <div id="results-content" class="space-y-4 text-slate-100"></div>
+        </div>
       </div>
 
     </div>
@@ -65,6 +67,17 @@ import Layout from '../../layouts/Layout.astro';
     const container = document.getElementById('results-container') as HTMLDivElement;
     const content = document.getElementById('results-content') as HTMLDivElement;
     const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+    if (form) form.reset();
+    if (domainInput) domainInput.value = '';
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted && form) {
+        form.reset();
+        if (domainInput) domainInput.value = '';
+        if (container) container.classList.add('hidden');
+      }
+    });
 
     const dmarcMeta: Record<string, { name: string; desc: string }> = {
       v: { name: 'Version', desc: 'Identifica el registro como DMARC1.' },
@@ -114,24 +127,24 @@ import Layout from '../../layouts/Layout.astro';
           if (status === 'PASS') {
             const tags = parseDmarcRecord(record);
             let rowsHtml = tags.map(t => `
-              <tr class="border-b border-slate-200 hover:bg-slate-50/50">
-                <td class="px-4 py-3 font-mono font-bold text-slate-900">${t?.tag}</td>
-                <td class="px-4 py-3 font-mono text-xs text-blue-700 break-all">${t?.value}</td>
-                <td class="px-4 py-3 font-semibold text-slate-800">${t?.name}</td>
-                <td class="px-4 py-3 text-slate-600 text-xs">${t?.desc}</td>
+              <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                <td class="px-4 py-3 font-mono font-bold text-amber-400">${t?.tag}</td>
+                <td class="px-4 py-3 font-mono text-xs text-blue-300 break-all">${t?.value}</td>
+                <td class="px-4 py-3 font-semibold text-slate-200">${t?.name}</td>
+                <td class="px-4 py-3 text-slate-400 text-xs">${t?.desc}</td>
               </tr>
             `).join('');
 
             content.innerHTML = `
-              <div class="p-4 bg-emerald-50 border-emerald-400 text-emerald-900 border-2 rounded-lg space-y-2">
-                <div class="font-bold text-sm uppercase tracking-wide">Registro DMARC Encontrado (${qname})</div>
-                <p class="text-xs font-mono break-all bg-white/80 p-3 rounded border border-emerald-200">${record}</p>
+              <div class="p-4 bg-slate-950 border-2 border-slate-800 rounded-xl space-y-2">
+                <div class="font-bold text-sm uppercase tracking-wide text-emerald-400">Registro DMARC Encontrado (${qname})</div>
+                <p class="text-xs font-mono break-all bg-slate-900 p-3 rounded-lg border border-slate-800 text-slate-200">${record}</p>
               </div>
 
-              <div class="overflow-x-auto border border-slate-300 rounded-lg shadow-xs">
+              <div class="overflow-x-auto border-2 border-slate-800 rounded-xl bg-slate-950 shadow-inner">
                 <table class="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr class="bg-slate-100 border-b border-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider">
+                    <tr class="bg-slate-900 border-b-2 border-slate-800 text-slate-300 font-bold text-xs uppercase tracking-wider">
                       <th class="px-4 py-3">Tag</th>
                       <th class="px-4 py-3">TagValue</th>
                       <th class="px-4 py-3">Name</th>
@@ -146,19 +159,19 @@ import Layout from '../../layouts/Layout.astro';
             `;
           } else {
             content.innerHTML = `
-              <div class="p-4 bg-red-50 border-red-400 text-red-900 border-2 rounded-lg space-y-1">
-                <div class="font-bold text-sm uppercase tracking-wide">Registro DMARC (${qname})</div>
-                <p class="text-xs">No se encontró un registro DMARC válido configurado para este dominio ni en su dominio raíz.</p>
+              <div class="p-4 bg-slate-950 border-2 border-slate-800 rounded-xl space-y-1">
+                <div class="font-bold text-sm uppercase tracking-wide text-red-400">Registro DMARC (${qname})</div>
+                <p class="text-xs text-slate-400">No se encontró un registro DMARC válido configurado para este dominio ni en su dominio raíz.</p>
               </div>
             `;
           }
         } else {
-          content.innerHTML = `<p class="text-red-700 font-bold text-sm">Error: ${result.error || 'Error desconocido'}</p>`;
+          content.innerHTML = `<p class="text-red-400 font-bold text-sm">Error: ${result.error || 'Error desconocido'}</p>`;
         }
 
         if (container) container.classList.remove('hidden');
       } catch (err) {
-        if (content) content.innerHTML = `<p class="text-red-700 font-bold text-sm">Error al conectar con el servidor.</p>`;
+        if (content) content.innerHTML = `<p class="text-red-400 font-bold text-sm">Error al conectar con el servidor.</p>`;
         if (container) container.classList.remove('hidden');
       } finally {
         if (btn) {
