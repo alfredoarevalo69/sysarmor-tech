@@ -12,13 +12,15 @@ interface Props {
   variant?: 'home' | 'legal';
   ogImage?: string;
   bgColor?: string;
+  lcpImage?: string; // Prop opcional para precargar la imagen LCP específica de la página
 }
 
 const { 
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
-  bgColor = '#f8fafc'
+  bgColor = '#f8fafc',
+  lcpImage
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
@@ -38,14 +40,14 @@ const schemaOrgData = {
       "url": siteURL,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteURL}/favicon.png?v=5`
+        "@url": `${siteURL}/favicon.png?v=5`
       },
       "description": "Firma de consultoría e ingeniería especializada en infraestructura crítica, ecosistema Microsoft, Nivel 3 y SecOps.",
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": "Engativá, Bogotá",
-        "addressRegion": "Cundinamarca",
-        "addressCountry": "CO"
+        "@addressLocality": "Engativá, Bogotá",
+        "@addressRegion": "Cundinamarca",
+        "@addressCountry": "CO"
       },
       "sameAs": [
         "https://www.linkedin.com/company/sysarmortech"
@@ -105,6 +107,11 @@ const schemaOrgData = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
+    {/* Precarga dinámica del elemento LCP si se pasa por prop */}
+    {lcpImage && (
+      <link rel="preload" href={lcpImage} as="image" type="image/webp" />
+    )}
+
     {/* Carga asíncrona optimizada de Google Fonts (elimina bloqueo de renderizado) */}
     <link 
       rel="stylesheet" 
