@@ -2,7 +2,7 @@ import https from 'https';
 import http from 'http';
 
 const HOST = 'sysarmortech.com';
-const KEY = '288ab56fe97c4744b8ea5552bcda57f0';
+const KEY = '9ce56439679d47feb8509ee2d13b14e3';
 const SITEMAP_URL = `https://${HOST}/sitemap-0.xml`;
 
 function fetchSitemap() {
