@@ -7,7 +7,6 @@ import Layout from '../../layouts/Layout.astro';
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <!-- Navegación de retorno -->
       <div>
         <a 
           href="/tools" 
@@ -17,7 +16,6 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <!-- Encabezado -->
       <div class="space-y-3 text-center">
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
           ¿Cuál es mi IP y Red?
@@ -27,14 +25,12 @@ import Layout from '../../layouts/Layout.astro';
         </p>
       </div>
 
-      <!-- Tarjeta Principal de IPs -->
       <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
         <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
           Conectividad de Red
         </h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- IPv4 -->
           <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv4 Pública</span>
             <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-[#D4AF37]">
@@ -42,7 +38,6 @@ import Layout from '../../layouts/Layout.astro';
             </span>
           </div>
 
-          <!-- IPv6 -->
           <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv6 Pública</span>
             <span id="ipv6-display" class="font-mono text-xs sm:text-sm font-bold text-slate-200">
@@ -52,10 +47,7 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Panel de Datos Detallados -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- Geolocalización -->
         <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
           <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
             Geolocalización
@@ -81,7 +73,6 @@ import Layout from '../../layouts/Layout.astro';
           </ul>
         </div>
 
-        <!-- Entorno del Cliente -->
         <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
           <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
             Entorno del Cliente
@@ -102,10 +93,8 @@ import Layout from '../../layouts/Layout.astro';
             </li>
           </ul>
         </div>
-
       </div>
 
-      <!-- Botón de actualización -->
       <div class="flex justify-end pt-2">
         <button 
           id="client-refresh"
@@ -157,43 +146,29 @@ import Layout from '../../layouts/Layout.astro';
     const coordsElement = document.getElementById('geo-coords');
 
     try {
-      const resV4 = await fetch('https://api.ipify.org?format=json');
-      const dataV4 = await resV4.json();
-      if (ipv4Element) ipv4Element.textContent = dataV4.ip;
+      const response = await fetch('/api/my-ip');
+      const result = await response.json();
+
+      if (result.success) {
+        if (ipv4Element) ipv4Element.textContent = result.ipv4;
+        if (ipv6Element) ipv6Element.textContent = result.ipv6;
+        
+        if (countryElement) {
+          const flag = result.country_code ? result.country_code.toUpperCase().replace(/./g, (char: string) => String.fromCodePoint(127397 + char.charCodeAt(0))) : '';
+          countryElement.textContent = `${flag} ${result.country}`;
+        }
+        if (cityElement) cityElement.textContent = `${result.city}, ${result.region}`;
+        if (ispElement) {
+          ispElement.textContent = result.org;
+          ispElement.setAttribute('title', result.org);
+        }
+        if (coordsElement) coordsElement.textContent = `${result.latitude}, ${result.longitude}`;
+      } else {
+        throw new Error('Error interno');
+      }
     } catch {
       if (ipv4Element) ipv4Element.textContent = 'No disponible';
-    }
-
-    try {
-      const resV6 = await fetch('https://api64.ipify.org?format=json');
-      const dataV6 = await resV6.json();
-      if (ipv6Element) {
-        ipv6Element.textContent = (dataV6.ip && dataV6.ip.includes(':')) ? dataV6.ip : 'No disponible';
-      }
-    } catch {
       if (ipv6Element) ipv6Element.textContent = 'No disponible';
-    }
-
-    try {
-      const resGeo = await fetch('https://ipapi.co/json/');
-      const geo = await resGeo.json();
-
-      if (!geo.error) {
-        if (countryElement) {
-          const countryCode = geo.country_code || '';
-          const flag = countryCode ? countryCode.toUpperCase().replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0))) : '';
-          countryElement.textContent = `${flag} ${geo.country_name}`;
-        }
-        if (cityElement) cityElement.textContent = `${geo.city}, ${geo.region}`;
-        if (ispElement) {
-          ispElement.textContent = geo.org || 'Desconocido';
-          ispElement.setAttribute('title', geo.org || 'Desconocido');
-        }
-        if (coordsElement) coordsElement.textContent = `${geo.latitude}, ${geo.longitude}`;
-      } else {
-        throw new Error('Error en geolocalización');
-      }
-    } catch {
       if (countryElement) countryElement.textContent = 'No disponible';
       if (cityElement) cityElement.textContent = '-';
       if (ispElement) ispElement.textContent = '-';
