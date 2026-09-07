@@ -1,3 +1,4 @@
+/* src/styles/global.css */
 @import "tailwindcss";
 
 @theme {
@@ -48,6 +49,7 @@
     font-family: var(--font-sans);
     background-color: #020617;
     color: white;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -58,4 +60,20 @@
     scroll-margin-top: 76px;
     padding-top: 5rem;
   }
+}
+
+/* Optimizaciones de LCP y renderizado crítico para elementos principales */
+.hero-title {
+  font-family: var(--font-display);
+  font-display: swap;
+  contain: layout paint style;
+}
+
+/* Utilidades corporativas de SysArmor Tech */
+.sys-glow {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.sys-border-gold {
+  border-color: rgba(212, 175, 55, 0.5);
 }

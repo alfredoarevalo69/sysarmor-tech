@@ -12,7 +12,7 @@ interface Props {
   variant?: 'home' | 'legal';
   ogImage?: string;
   bgColor?: string;
-  lcpImage?: string; // Prop opcional para precargar la imagen LCP específica de la página
+  lcpImage?: string;
 }
 
 const { 
@@ -107,12 +107,10 @@ const schemaOrgData = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    {/* Precarga dinámica del elemento LCP si se pasa por prop */}
     {lcpImage && (
       <link rel="preload" href={lcpImage} as="image" type="image/webp" />
     )}
 
-    {/* Carga asíncrona optimizada de Google Fonts (elimina bloqueo de renderizado) */}
     <link 
       rel="stylesheet" 
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap" 
