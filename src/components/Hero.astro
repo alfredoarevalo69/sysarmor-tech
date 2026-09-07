@@ -21,6 +21,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   <!-- Contenedor idéntico al <nav> del Navbar, sin restricciones de max-width para evitar el centrado en pantallas ultra-wide -->
   <div class="hero-inner">
     <div class="hero-content">
+      
+      <!-- Isotipo con animación de pulso sutil (EXCLUSIVO PARA MÓVIL) -->
+      <div class="mobile-badge-container md:hidden">
+        <div class="mobile-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+      </div>
+
       <h1 class="hero-title">
         Especialistas en infraestructura crítica y <br />
         <span class="highlight">actualización de sistemas legados</span>
@@ -72,7 +82,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   .hero-inner {
     width: 100%;
-    /* Eliminado el max-width y el margin: 0 auto para replicar 100% la estructura del <nav> */
     padding-left: 1rem;
     padding-right: 1rem;
     position: relative;
@@ -90,7 +99,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (min-width: 1024px) {
     .hero-inner {
-      padding-left: 3rem; /* Equivalente exacto a lg:px-12 del Navbar */
+      padding-left: 3rem;
       padding-right: 3rem;
     }
   }
@@ -101,6 +110,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     text-align: left;
     z-index: 3;
     margin-right: auto;
+  }
+
+  /* Oculto por defecto en escritorio */
+  .mobile-badge-container {
+    display: none;
   }
 
   .hero-title {
@@ -173,10 +187,15 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (max-width: 968px) {
     .hero-container {
-      padding: 2rem 0 3rem 0;
+      padding: 2.5rem 0 3.5rem 0;
       min-height: auto;
-      background: radial-gradient(circle at 50% 10%, #172849 0%, #070b12 80%);
-      border-bottom: 1px solid rgba(217, 119, 6, 0.15);
+      background-color: #070b12;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(217, 119, 6, 0.12) 0%, transparent 60%),
+        linear-gradient(to right, rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+      background-size: 100% 100%, 2.5rem 2.5rem, 2.5rem 2.5rem;
+      border-bottom: 1px solid rgba(217, 119, 6, 0.2);
     }
 
     .hero-inner {
@@ -187,6 +206,37 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
     .hero-content {
       max-width: 100%;
+      text-align: center;
+    }
+
+    .mobile-badge-container {
+      display: flex !important;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 1.25rem;
+    }
+
+    .mobile-badge {
+      width: 60px !important;
+      height: 60px !important;
+      min-width: 60px;
+      min-height: 60px;
+      border-radius: 1rem;
+      background-color: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 20px -3px rgba(245, 158, 11, 0.15);
+      animation: subtle-pulse 3s infinite ease-in-out;
+    }
+
+    .mobile-badge svg {
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px;
+      min-height: 28px;
+      color: #f59e0b;
     }
 
     .hero-bg {
@@ -222,10 +272,22 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
     .hero-features {
       gap: 0.6rem;
+      text-align: left;
     }
 
     .hero-features li {
       font-size: 0.9rem;
+    }
+  }
+
+  @keyframes subtle-pulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
     }
   }
 </style>
