@@ -4,46 +4,46 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="¿Cuál es mi IP y Geolocalización | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-10 px-4 sm:px-6 bg-slate-100 border-t border-slate-300 text-neutral-900">
-    <div class="max-w-3xl mx-auto space-y-6">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
+    <div class="max-w-4xl mx-auto space-y-8">
       
       <!-- Navegación de retorno -->
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
         >
           <span>←</span> Volver a Herramientas
         </a>
       </div>
 
-      <!-- Encabezado compacto -->
-      <div class="space-y-1 text-center sm:text-left">
-        <h1 class="text-2xl sm:text-3xl font-display font-bold text-neutral-900 tracking-wide">
+      <!-- Encabezado -->
+      <div class="space-y-3 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
           ¿Cuál es mi IP y Red?
         </h1>
-        <p class="text-neutral-600 text-sm">
+        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
           Diagnóstico en tiempo real de tus direcciones IP, geolocalización y entorno de conexión.
         </p>
       </div>
 
-      <!-- Tarjeta Principal de IPs (Diseño unificado y estilizado) -->
-      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
-        <h2 class="text-xs uppercase tracking-wider text-amber-400 font-bold border-b border-slate-800 pb-2">
+      <!-- Tarjeta Principal de IPs -->
+      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
           Conectividad de Red
         </h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- IPv4 -->
-          <div class="bg-slate-900/80 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-2">
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv4 Pública</span>
-            <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-amber-400">
+            <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-[#D4AF37]">
               Consultando...
             </span>
           </div>
 
           <!-- IPv6 -->
-          <div class="bg-slate-900/80 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-2">
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv6 Pública</span>
             <span id="ipv6-display" class="font-mono text-xs sm:text-sm font-bold text-slate-200">
               Buscando...
@@ -52,16 +52,16 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Panel de Datos Detallados (Formato lista compacta/moderna) -->
+      <!-- Panel de Datos Detallados -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <!-- Geolocalización -->
-        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4 flex flex-col justify-between">
-          <h2 class="text-xs uppercase tracking-wider text-amber-400 font-bold border-b border-slate-800 pb-2">
+        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
+          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
             Geolocalización
           </h2>
           
-          <ul class="space-y-3 text-sm divide-y divide-slate-900">
+          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
             <li class="flex justify-between items-center pt-2">
               <span class="text-slate-400 text-xs font-semibold">País</span>
               <span id="geo-country" class="font-medium text-slate-100 flex items-center gap-1.5">Cargando...</span>
@@ -72,7 +72,7 @@ import Layout from '../../layouts/Layout.astro';
             </li>
             <li class="flex justify-between items-center pt-3">
               <span class="text-slate-400 text-xs font-semibold">ISP / Proveedor</span>
-              <span id="geo-isp" class="font-mono text-xs text-slate-300 truncate max-w-[180px] sm:max-w-[220px]" title="-">-</span>
+              <span id="geo-isp" class="font-mono text-xs text-slate-300 truncate max-w-[180px] sm:max-w-[200px]" title="-">-</span>
             </li>
             <li class="flex justify-between items-center pt-3">
               <span class="text-slate-400 text-xs font-semibold">Coordenadas</span>
@@ -82,12 +82,12 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
         <!-- Entorno del Cliente -->
-        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4 flex flex-col justify-between">
-          <h2 class="text-xs uppercase tracking-wider text-amber-400 font-bold border-b border-slate-800 pb-2">
+        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
+          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
             Entorno del Cliente
           </h2>
           
-          <ul class="space-y-3 text-sm divide-y divide-slate-900">
+          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
             <li class="flex justify-between items-center pt-2">
               <span class="text-slate-400 text-xs font-semibold">Sistema Operativo</span>
               <span id="client-os" class="font-medium text-slate-100">Detectando...</span>
@@ -105,11 +105,11 @@ import Layout from '../../layouts/Layout.astro';
 
       </div>
 
-      <!-- Botón de actualización sutil -->
+      <!-- Botón de actualización -->
       <div class="flex justify-end pt-2">
         <button 
           id="client-refresh"
-          class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-800 font-bold px-4 py-2.5 rounded-xl transition-colors text-xs uppercase tracking-wider shadow-sm inline-flex items-center justify-center gap-2 cursor-pointer"
+          class="w-full sm:w-auto bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg inline-flex items-center justify-center gap-2 cursor-pointer"
         >
           🔄 Actualizar Información
         </button>
