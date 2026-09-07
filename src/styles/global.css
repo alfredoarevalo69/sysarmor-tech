@@ -56,9 +56,9 @@
     font-family: var(--font-display);
   }
 
-  /* Restringido exclusivamente a las secciones de la página */
   section[id] {
-    scroll-margin-top: 110px;
+    /* Ajustado a la altura real del menú para eliminar el espacio gigante */
+    scroll-margin-top: 76px;
   }
 }
 
