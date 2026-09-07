@@ -5,13 +5,11 @@ export const prerender = false;
 
 export const GET: APIRoute = async ({ request }) => {
   try {
-    // Extraer la IP real del cliente desde las cabeceras del proxy de Vercel
     const forwardedFor = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
     
     let clientIp = realIp || (forwardedFor ? forwardedFor.split(',')[0].trim() : null);
 
-    // Fallback si se ejecuta localmente o no hay cabecera
     if (!clientIp || clientIp === '127.0.0.1' || clientIp === '::1') {
       const ipRes = await fetch('https://api.ipify.org?format=json');
       const ipData = await ipRes.json();
@@ -21,12 +19,12 @@ export const GET: APIRoute = async ({ request }) => {
     let geo = {} as any;
     if (clientIp) {
       try {
-        const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
+        const geoRes = await fetch(`https://ipwho.is/${clientIp}`);
         if (geoRes.ok) {
           geo = await geoRes.json();
         }
       } catch (e) {
-        // Silencioso
+        // Fallback silencioso
       }
     }
 
@@ -34,11 +32,11 @@ export const GET: APIRoute = async ({ request }) => {
       success: true,
       ipv4: clientIp || 'No disponible',
       ipv6: 'No disponible',
-      country: geo.country_name || 'No disponible',
+      country: geo.country || 'No disponible',
       country_code: geo.country_code || '',
       city: geo.city || '-',
       region: geo.region || '',
-      org: geo.org || geo.asn || 'Desconocido',
+      org: geo.connection?.org || geo.connection?.isp || 'Desconocido',
       latitude: geo.latitude || '-',
       longitude: geo.longitude || '-'
     }), {
