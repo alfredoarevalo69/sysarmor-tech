@@ -5,27 +5,34 @@ export const prerender = false;
 
 export const GET: APIRoute = async () => {
   try {
-    const [resV4, resV6, resGeo] = await Promise.allSettled([
+    const [resV4, resV6] = await Promise.allSettled([
       fetch('https://api.ipify.org?format=json').then(r => r.json()),
-      fetch('https://api64.ipify.org?format=json').then(r => r.json()),
-      fetch('https://ipapi.co/json/').then(r => r.json())
+      fetch('https://api64.ipify.org?format=json').then(r => r.json())
     ]);
 
     const ipv4 = resV4.status === 'fulfilled' ? resV4.value.ip : null;
     const v6Val = resV6.status === 'fulfilled' ? resV6.value.ip : null;
     const ipv6 = (v6Val && v6Val.includes(':')) ? v6Val : 'No disponible';
 
-    const geo = resGeo.status === 'fulfilled' ? resGeo.value : {};
+    let geo = {} as any;
+    if (ipv4) {
+      try {
+        const geoRes = await fetch(`https://ipwho.is/${ipv4}`);
+        geo = await geoRes.json();
+      } catch (e) {
+        // Fallback en caso de error en geolocalización
+      }
+    }
 
     return new Response(JSON.stringify({
       success: true,
       ipv4: ipv4 || 'No disponible',
       ipv6: ipv6,
-      country: geo.country_name || 'No disponible',
+      country: geo.country || 'No disponible',
       country_code: geo.country_code || '',
       city: geo.city || '-',
       region: geo.region || '',
-      org: geo.org || 'Desconocido',
+      org: geo.connection?.org || geo.connection?.isp || 'Desconocido',
       latitude: geo.latitude || '-',
       longitude: geo.longitude || '-'
     }), {
