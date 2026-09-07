@@ -5,10 +5,10 @@
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Montserrat', sans-serif;
 
-  /* --- COLORES Y BRANDING (Totalmente Neutros) --- */
+  /* --- COLORES Y BRANDING --- */
   --color-brand-dark: #020617;
   --color-brand-card: #FFFFFF;
-  --color-brand-accent: #D4AF37; /* Dorado SysArmor */
+  --color-brand-accent: #D4AF37;
   --color-brand-accent-hover: #B8962D;
   --color-brand-gold: #D4AF37;
   --color-brand-border: #334155;
@@ -25,12 +25,10 @@
 }
 
 @layer base {
-  /* Habilita el desplazamiento suave global */
   html {
     scroll-behavior: smooth;
   }
 
-  /* KEYFRAMES */
   @keyframes subtle-pulse {
     0%, 100% { filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5)); opacity: 1; }
     50% { filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8)); opacity: 0.95; }
@@ -46,20 +44,18 @@
     to { opacity: 1; transform: translateX(0); }
   }
 
-  /* Aplicación de fuentes y color global */
   body {
-    @apply font-sans;
+    font-family: var(--font-sans);
     background-color: #020617;
     color: white;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    font-family: var(--font-display);
   }
 
-  /* --- CORRECCIÓN DE NAVEGACIÓN Y ANCLAS --- */
   section[id] {
     scroll-margin-top: 76px;
-    padding-top: 5rem; /* Asegura un respiro interno superior para que el contenido nunca toque el borde de la sección */
+    padding-top: 5rem;
   }
 }
