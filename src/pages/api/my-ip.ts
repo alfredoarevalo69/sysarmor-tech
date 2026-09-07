@@ -3,36 +3,37 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
   try {
-    // 1. Obtenemos las IPs públicas en paralelo
-    const [resV4, resV6] = await Promise.allSettled([
-      fetch('https://api.ipify.org?format=json').then(r => r.json()),
-      fetch('https://api64.ipify.org?format=json').then(r => r.json())
-    ]);
+    // Extraer la IP real del cliente desde las cabeceras del proxy de Vercel
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    
+    let clientIp = realIp || (forwardedFor ? forwardedFor.split(',')[0].trim() : null);
 
-    const ipv4 = resV4.status === 'fulfilled' ? resV4.value.ip : null;
-    const v6Val = resV6.status === 'fulfilled' ? resV6.value.ip : null;
-    const ipv6 = (v6Val && v6Val.includes(':')) ? v6Val : 'No disponible';
+    // Fallback si se ejecuta localmente o no hay cabecera
+    if (!clientIp || clientIp === '127.0.0.1' || clientIp === '::1') {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipRes.json();
+      clientIp = ipData.ip;
+    }
 
     let geo = {} as any;
-
-    // 2. Consultamos la geolocalización enviando la IP específica encontrada
-    if (ipv4) {
+    if (clientIp) {
       try {
-        const geoRes = await fetch(`https://ipapi.co/${ipv4}/json/`);
+        const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
         if (geoRes.ok) {
           geo = await geoRes.json();
         }
       } catch (e) {
-        // Silencioso en caso de fallo temporal de la API de geolocalización
+        // Silencioso
       }
     }
 
     return new Response(JSON.stringify({
       success: true,
-      ipv4: ipv4 || 'No disponible',
-      ipv6: ipv6,
+      ipv4: clientIp || 'No disponible',
+      ipv6: 'No disponible',
       country: geo.country_name || 'No disponible',
       country_code: geo.country_code || '',
       city: geo.city || '-',
@@ -45,7 +46,7 @@ export const GET: APIRoute = async () => {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    return new Response(JSON.stringify({ success: false, error: 'Error al consultar servicios' }), {
+    return new Response(JSON.stringify({ success: false, error: 'Error al procesar la solicitud' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
