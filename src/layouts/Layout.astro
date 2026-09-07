@@ -19,7 +19,7 @@ const {
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
-  bgColor = '#f8fafc',
+  bgColor = '#020617',
   lcpImage
 } = Astro.props;
 
@@ -111,14 +111,15 @@ const schemaOrgData = {
       <link rel="preload" href={lcpImage} as="image" type="image/webp" />
     )}
 
+    <!-- Carga optimizada sin bloqueo de renderizado pero manteniendo el motor de Tailwind -->
     <link 
-      rel="stylesheet" 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap" 
-      media="print" 
-      onload="this.media='all'" 
+      rel="preload" 
+      href="/_astro/Layout.css" 
+      as="style" 
+      onload="this.onload=null;this.rel='stylesheet'" 
     />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700&display=swap" />
+      <link rel="stylesheet" href="/_astro/Layout.css" />
     </noscript>
 
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=5" />
@@ -145,7 +146,7 @@ const schemaOrgData = {
   </head>
   
   <body 
-    class="text-neutral-900 selection:bg-[#D4AF37]/30 min-h-screen flex flex-col antialiased" 
+    class="text-white selection:bg-[#D4AF37]/30 min-h-screen flex flex-col antialiased" 
     style={`background-color: ${bgColor} !important;`}
   >
     <Navbar />
