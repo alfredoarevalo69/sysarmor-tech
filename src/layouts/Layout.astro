@@ -111,17 +111,6 @@ const schemaOrgData = {
       <link rel="preload" href={lcpImage} as="image" type="image/webp" />
     )}
 
-    <!-- Carga optimizada sin bloqueo de renderizado pero manteniendo el motor de Tailwind -->
-    <link 
-      rel="preload" 
-      href="/_astro/Layout.css" 
-      as="style" 
-      onload="this.onload=null;this.rel='stylesheet'" 
-    />
-    <noscript>
-      <link rel="stylesheet" href="/_astro/Layout.css" />
-    </noscript>
-
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=5" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=5" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=5" />
