@@ -8,16 +8,16 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: "¿Cómo se garantiza la integridad de nuestra data durante la intervención?",
-    answer: "Aplicamos principios de mínimo privilegio (Zero Trust) en todo momento. Todas nuestras intervenciones se realizan bajo acuerdos de confidencialidad (NDA) estrictos y, donde sea posible, empleamos acceso JIT (Just-In-Time) sin almacenamiento permanente de credenciales."
+    question: "¿Cómo se pueden utilizar las herramientas y scripts publicados?",
+    answer: "Todos los recursos técnicos y scripts se comparten bajo principios de código abierto y autoría personal para uso libre y educativo, siguiendo las licencias definidas en cada repositorio."
   },
   {
-    question: "¿Cómo se integra SysArmor con nuestro equipo de TI interno?",
-    answer: "No somos una fuerza de reemplazo, sino un brazo de soporte Nivel 3. Actuamos como un equipo extendido para gestionar incidentes complejos y automatización, permitiendo que su equipo interno mantenga el control estratégico de la operación diaria."
+    question: "¿Puedo proponer mejoras o reportar errores en las guías?",
+    answer: "Sí, al tratarse de un proyecto colaborativo de ingeniería, puedes aportar mediante Pull Requests o revisar los repositorios directamente enlazados a GitHub para auditoría y retroalimentación técnica."
   },
   {
-    question: "¿Qué diferencia hay entre una auditoría estándar y su evaluación técnica?",
-    answer: "Una auditoría estándar suele limitarse a un reporte de riesgos. Nuestra evaluación incluye la remediación: diagnosticamos el fallo, diseñamos el script o configuración correctiva y validamos su implementación técnica, garantizando el cierre real de la brecha."
+    question: "¿Cuál es el enfoque principal de los artículos y la documentación?",
+    answer: "Están centrados en resolver problemáticas complejas de nivel 2 y 3 sobre Windows Server, Active Directory, automatización avanzada con PowerShell y seguridad en entornos híbridos."
   }
 ];
 ---
@@ -26,10 +26,15 @@ const faqs: FaqItem[] = [
 <section id="faq" class="w-full py-16 bg-slate-100 border-t border-slate-200 px-6 flex flex-col justify-center">
   <div class="max-w-3xl mx-auto space-y-12 w-full">
     
-    <!-- Encabezado -->
-    <h2 class="text-3xl font-display font-bold text-neutral-900 text-center uppercase tracking-wide">
-      Preguntas Frecuentes
-    </h2>
+    <!-- Encabezado actualizado al enfoque de portafolio y recursos -->
+    <div class="text-center space-y-2">
+      <h2 class="text-3xl font-display font-bold text-neutral-900 uppercase tracking-wide">
+        Preguntas Frecuentes
+      </h2>
+      <p class="text-slate-700 font-medium text-base">
+        Sobre el uso de herramientas, licencias y colaboración técnica.
+      </p>
+    </div>
     
     <!-- Lista de FAQ con acordeón -->
     <div class="space-y-4" role="region" aria-label="Preguntas frecuentes">

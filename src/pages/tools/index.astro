@@ -135,12 +135,15 @@ const tools = [
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 text-slate-900 border-t border-slate-200">
     <div class="max-w-5xl mx-auto space-y-8">
       
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
+      <div class="space-y-3 text-center max-w-2xl mx-auto">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-wide">
           Herramientas de SysArmor Tech
         </h1>
-        <p class="text-slate-600 font-medium text-lg">
-          Utilidades especializadas diseñadas para ingenieros de sistemas y administradores de infraestructura IT.
+        <p class="text-slate-600 font-medium text-base sm:text-lg leading-relaxed">
+          Utilidades propias desarrolladas como proyectos personales, pensadas para ingenieros de sistemas y administradores de infraestructura IT.
+        </p>
+        <p class="text-xs text-amber-700 font-mono tracking-wide bg-amber-500/10 border border-amber-500/30 py-2 px-3 rounded-md inline-block">
+          🔒 Los datos y parámetros ingresados son de procesamiento temporal local: no se almacenan ni se registran en servidores.
         </p>
       </div>
 
@@ -174,6 +177,7 @@ const tools = [
               <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500">
                 SYSARMOR <span class="text-amber-600">TECH</span>
               </span>
+              
               <a 
                 href={tool.href}
                 class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"

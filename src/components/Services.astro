@@ -2,40 +2,39 @@
 // src/components/Services.astro
 const services = [
   {
-    question: "¿Le preocupa que su infraestructura esté expuesta?",
+    question: "¿Infraestructura expuesta o vulnerable?",
     title: "Evaluación & Hardening",
     iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`,
     items: ["Microsoft 365", "Entra ID", "Defender & ASR", "PIM", "Vulnerabilidades"],
-    cta: "Evaluar Seguridad"
+    cta: "Ver Documentación"
   },
   {
-    question: "¿Su equipo de TI necesita ayuda con fallas complejas?",
-    title: "Soporte Especializado Nivel 3",
+    question: "¿Fallas complejas en sistemas de nivel avanzado?",
+    title: "Troubleshooting & Nivel 3",
     iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
     items: ["Troubleshooting Avanzado", "PowerShell & Scripting", "Windows Server", "Automatización & Recovery"],
-    cta: "Solicitar Diagnóstico"
+    cta: "Ver Scripts & Herramientas"
   },
   {
-    question: "¿Necesita migrar sin interrumpir la operación?",
+    question: "¿Necesidad de migrar entornos sin afectar operación?",
     title: "Migración & Modernización",
     iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>`,
     items: ["Azure", "Microsoft 365", "Servidores On-Premises", "Backup & Entornos Híbridos"],
-    cta: "Evaluar Migración"
+    cta: "Ver Guías Técnicas"
   }
 ];
 ---
 
-<!-- Flujo natural superior compensado exclusivamente por el scroll-margin-top del CSS global -->
 <section id="servicios" class="w-full py-20 px-4 sm:px-6 bg-slate-100 border-t border-slate-200">
   <div class="max-w-6xl mx-auto space-y-8 w-full">
     
-    <!-- Encabezado -->
+    <!-- Encabezado con enfoque de portafolio/bitácora -->
     <div class="text-center space-y-1.5">
       <h2 class="text-2xl md:text-3xl font-display font-bold text-neutral-900 tracking-wide uppercase">
-        Soluciones a su medida
+        Áreas de Especialización y Enfoque Técnico
       </h2>
       <p class="text-slate-700 font-medium text-base max-w-2xl mx-auto">
-        Resolvemos problemas críticos de infraestructura que impiden el crecimiento o comprometen la seguridad de su empresa.
+        Resolución de desafíos críticos en infraestructura, automatización y seguridad de sistemas heredados e híbridos.
       </p>
     </div>
     
@@ -43,8 +42,6 @@ const services = [
     <div class="grid md:grid-cols-3 gap-6">
       {services.map((service) => (
         <article 
-          itemscope 
-          itemtype="https://schema.org/Service" 
           class="bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
         >
           
@@ -62,7 +59,7 @@ const services = [
                 {service.question}
               </h3>
               
-              <div itemprop="name" class="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+              <div class="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
                 {service.title}
               </div>
             </div>
@@ -80,11 +77,10 @@ const services = [
             </ul>
           </div>
           
-          <!-- Botón CTA -->
+          <!-- Botón CTA redirigido a artículos o repositorios -->
           <div class="p-6 pt-0">
             <a 
-              href="#contacto" 
-              aria-label={`${service.cta} para ${service.title}`}
+              href="/blog" 
               class="block w-full bg-slate-800 hover:bg-slate-900 text-white text-center py-2.5 rounded-lg font-bold transition-all duration-200 shadow-sm text-sm"
             >
               {service.cta}
