@@ -1,0 +1,178 @@
+---
+// src/pages/tools/spamhaus-checker.astro
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Validador de Reputaci&oacute;n Spamhaus DQS | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
+    <div class="max-w-4xl mx-auto space-y-8">
+      
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <div class="space-y-3 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
+          Validador Oficial Spamhaus DQS
+        </h1>
+        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+          Consulta la reputaci&oacute;n de dominios en tiempo real directamente sobre la red global de inteligencia de amenazas de Spamhaus DQS.
+        </p>
+      </div>
+
+      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <form id="spamhaus-form" class="space-y-4">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input 
+              type="text" 
+              id="domain-input" 
+              placeholder="ej. midominio.com" 
+              required
+              class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-sm transition-all font-mono"
+            />
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Consultar Spamhaus
+            </button>
+          </div>
+          <div id="cooldown-msg" class="text-xs text-amber-400 font-mono hidden"></div>
+        </form>
+      </div>
+
+      <div id="result-container" class="hidden space-y-6">
+        <div id="summary-banner" class="p-4 rounded-xl border text-sm font-medium shadow-md"></div>
+
+        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
+          <h2 class="text-xs font-mono uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-3">Detalle del Diagn&oacute;stico DQS y Pasos de Remediaci&oacute;n</h2>
+          <div id="result-details" class="space-y-4 font-mono text-xs text-slate-300"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('spamhaus-form') as HTMLFormElement;
+    const input = document.getElementById('domain-input') as HTMLInputElement;
+    const container = document.getElementById('result-container') as HTMLDivElement;
+    const summaryBanner = document.getElementById('summary-banner') as HTMLDivElement;
+    const resultDetails = document.getElementById('result-details') as HTMLDivElement;
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const cooldownMsg = document.getElementById('cooldown-msg') as HTMLDivElement;
+
+    let searchCount = 0;
+    let cooldownTimer: any = null;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const domain = input.value.trim().toLowerCase();
+      if (!domain) return;
+
+      searchCount++;
+
+      // Si supera 3 consultas seguidas, aplicamos un bloqueo temporal de 15 segundos
+      if (searchCount > 3) {
+        btn.setAttribute('disabled', 'true');
+        input.setAttribute('disabled', 'true');
+        let secondsLeft = 15;
+        cooldownMsg.classList.remove('hidden');
+        cooldownMsg.textContent = `⚠️ Límite de consultas rápidas alcanzado. Espera ${secondsLeft}s para realizar otra consulta.`;
+
+        cooldownTimer = setInterval(() => {
+          secondsLeft--;
+          if (secondsLeft > 0) {
+            cooldownMsg.textContent = `⚠️ Límite de consultas rápidas alcanzado. Espera ${secondsLeft}s para realizar otra consulta.`;
+          } else {
+            clearInterval(cooldownTimer);
+            searchCount = 0; // Reiniciamos el contador tras la espera
+            btn.removeAttribute('disabled');
+            input.removeAttribute('disabled');
+            cooldownMsg.classList.add('hidden');
+          }
+        }, 1000);
+        return;
+      }
+
+      btn.textContent = 'Consultando...';
+      btn.setAttribute('disabled', 'true');
+      container.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/spamhaus-checker', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ domain })
+        });
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+          summaryBanner.className = 'p-4 rounded-xl border bg-rose-950 border-rose-700 text-rose-200 text-sm';
+          summaryBanner.innerHTML = `<span>Error: ${result.error || 'Desconocido'}</span>`;
+          resultDetails.innerHTML = '';
+        } else {
+          if (!result.listed) {
+            summaryBanner.className = 'p-4 rounded-xl border bg-emerald-950/90 border-emerald-700 text-emerald-200 text-sm';
+            summaryBanner.innerHTML = `<span class="font-bold">Sin registros de bloqueo:</span> El dominio <span class="font-mono">${result.domain}</span> no presenta incidencias activas en Spamhaus DQS.`;
+            resultDetails.innerHTML = `<div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-emerald-400 font-sans">Estado: Operativo / Limpio en Spamhaus ZEN</div>`;
+          } else {
+            summaryBanner.className = 'p-4 rounded-xl border bg-amber-950/90 border-amber-700 text-amber-200 text-sm';
+            summaryBanner.innerHTML = `<span class="font-bold">Dominio Listado:</span> El dominio <span class="font-mono">${result.domain}</span> cuenta con incidencias activas en la red Spamhaus.`;
+            
+            let diagnosticsHtml = '';
+            result.diagnostics.forEach((diag: any) => {
+              diagnosticsHtml += `
+                <div class="p-4 bg-slate-950 rounded-xl border border-amber-800/80 space-y-3 font-sans">
+                  <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span class="font-mono text-amber-400 font-bold text-sm">Lista: ${diag.info.list}</span>
+                    <span class="font-mono text-xs text-slate-500">IP Retorno: ${diag.ip}</span>
+                  </div>
+                  <p class="text-slate-300 text-xs">${diag.info.desc}</p>
+                  
+                  <div class="pt-2 space-y-2">
+                    <p class="text-slate-200 font-bold text-xs uppercase tracking-wider">Pasos para la exclusión (Delist):</p>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-400 text-xs">
+                      <li>Asegúrate de haber solucionado la causa raíz en tu infraestructura de correo o servidor web (malware, autenticación SMTP o spam abierto).</li>
+                      <li>Accede al portal oficial de gestión de Spamhaus para este tipo de reporte.</li>
+                      <li>Introduce la dirección IP o dominio afectado y completa el formulario automatizado de remoción.</li>
+                    </ol>
+                    <div class="pt-2">
+                      <a 
+                        href="${diag.info.delistUrl}" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs transition-all shadow-md"
+                      >
+                        Gestionar Exclusión en Spamhaus ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            resultDetails.innerHTML = diagnosticsHtml;
+          }
+        }
+        container.classList.remove('hidden');
+      } catch (err) {
+        summaryBanner.className = 'p-4 rounded-xl border bg-rose-950 border-rose-700 text-rose-200 text-sm';
+        summaryBanner.innerHTML = `<span>Error de conexi&oacute;n con el servidor.</span>`;
+        resultDetails.innerHTML = '';
+        container.classList.remove('hidden');
+      } finally {
+        btn.textContent = 'Consultar Spamhaus';
+        if (searchCount <= 3) {
+          btn.removeAttribute('disabled');
+        }
+      }
+    });
+  </script>
+</Layout>
