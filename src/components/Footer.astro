@@ -4,30 +4,28 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="w-full bg-[#0d1527] border-t border-slate-800 py-6 px-6 sm:px-10 lg:px-16 backdrop-blur-md shadow-2xl">
-  <div class="w-full flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-100">
+  <div class="w-full grid grid-cols-1 md:grid-cols-3 items-center gap-4 text-sm text-slate-100">
     
-    <!-- Extremo Izquierdo -->
-    <div class="flex flex-col sm:flex-row items-center gap-4 md:gap-6 text-center sm:text-left">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-white tracking-wider">
-          SYSARMOR <span class="text-[#D4AF37]">TECH</span>
-        </span>
-        <span class="text-slate-300">— &copy; {currentYear} Todos los derechos reservados.</span>
-      </div>
-
-      <!-- Enlaces Legales -->
-      <div class="flex items-center gap-4 text-xs md:text-sm font-medium">
-        <a href="/privacidad" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
-          Política de Privacidad
-        </a>
-        <span class="text-slate-500" aria-hidden="true">|</span>
-        <a href="/terminos" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
-          Términos de Servicio
-        </a>
-      </div>
+    <!-- Lado Izquierdo: Marca y Copyright -->
+    <div class="flex items-center justify-center md:justify-start gap-2 text-center md:text-left">
+      <span class="font-bold text-white tracking-wider">
+        SYSARMOR <span class="text-[#D4AF37]">TECH</span>
+      </span>
+      <span class="text-slate-300">— &copy; {currentYear} Todos los derechos reservados.</span>
     </div>
 
-    <!-- Extremo Derecho -->
+    <!-- Centro: Enlaces Legales -->
+    <div class="flex items-center justify-center gap-4 text-xs md:text-sm font-medium">
+      <a href="/privacidad" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
+        Política de Privacidad
+      </a>
+      <span class="text-slate-500" aria-hidden="true">|</span>
+      <a href="/terminos" class="text-slate-200 hover:text-white transition-colors duration-200 underline-offset-4 hover:underline">
+        Términos de Servicio
+      </a>
+    </div>
+
+    <!-- Lado Derecho: Slogan final -->
     <div class="text-slate-200 text-xs md:text-sm text-center md:text-right font-sans font-medium">
       Herramientas técnicas y artículos de ingeniería de infraestructura IT.
     </div>
