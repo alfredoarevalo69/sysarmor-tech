@@ -140,58 +140,58 @@ const tools = [
 ---
 
 <Layout title="Herramientas de Infraestructura y Redes | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 text-slate-900 border-t border-slate-200">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-zinc-200 text-neutral-900 border-t-2 border-zinc-300">
     <div class="max-w-5xl mx-auto space-y-8">
       
       <div class="space-y-3 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-wide">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide uppercase">
           Herramientas de SysArmor Tech
         </h1>
-        <p class="text-slate-600 font-medium text-base sm:text-lg leading-relaxed">
+        <p class="text-zinc-700 font-medium text-base sm:text-lg leading-relaxed font-sans">
           Utilidades propias desarrolladas como proyectos personales, pensadas para ingenieros de sistemas y administradores de infraestructura IT.
         </p>
 
-        <!-- Aviso con fondo sólido de mayor contraste -->
-        <div class="bg-amber-100 border border-amber-400 text-amber-950 py-3 px-4 rounded-lg shadow-xs inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium tracking-wide">
+        <!-- Aviso con fondo sólido de mayor contraste alineado a zinc/amber -->
+        <div class="bg-amber-100 border-2 border-amber-400 text-amber-950 py-3 px-4 rounded-lg shadow-sm inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-wide">
           <span class="text-base shrink-0">🔒</span>
           <span>Los datos y parámetros ingresados son de procesamiento temporal local: no se almacenan ni se registran en servidores.</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         {tools.map((tool) => (
-          <article class="rounded-lg p-4 border transition-all duration-200 flex flex-col justify-between space-y-3 bg-slate-50 border-slate-300 shadow-xs hover:bg-white hover:border-blue-500 hover:shadow-md relative overflow-hidden group">
+          <article class="rounded-lg p-4 border-2 transition-all duration-200 flex flex-col justify-between space-y-3 bg-white border-zinc-300 shadow-sm hover:border-amber-600 hover:shadow-md relative overflow-hidden group">
             
             <div class="space-y-2">
               <div class="flex items-center justify-between">
-                <div class="p-1.5 bg-slate-800 border border-slate-700 rounded shrink-0 flex items-center justify-center shadow-xs group-hover:bg-blue-600 group-hover:border-blue-500 transition-colors">
+                <div class="p-1.5 bg-zinc-900 border border-zinc-700 rounded-md shrink-0 flex items-center justify-center shadow-sm group-hover:bg-amber-600 group-hover:border-amber-600 transition-colors">
                   <Fragment set:html={tool.svgIcon} />
                 </div>
                 <div>
-                  <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-600 shadow-xs">
+                  <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-amber-500/15 border-2 border-amber-500/40 text-amber-800 shadow-sm">
                     {tool.badge}
                   </span>
                 </div>
               </div>
 
               <div class="space-y-0.5">
-                <h2 class="font-display font-bold tracking-tight text-slate-900 text-sm group-hover:text-blue-600 transition-colors">
+                <h2 class="font-display font-bold tracking-tight text-neutral-900 text-sm group-hover:text-amber-700 transition-colors uppercase">
                   {tool.title}
                 </h2>
-                <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                <p class="text-xs text-zinc-600 line-clamp-2 leading-relaxed font-sans">
                   {tool.description}
                 </p>
               </div>
             </div>
 
-            <div class="pt-2.5 border-t border-slate-300/80 group-hover:border-slate-100 transition-colors flex items-center justify-between">
-              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500">
-                SYSARMOR <span class="text-amber-600">TECH</span>
+            <div class="pt-2.5 border-t-2 border-zinc-200 group-hover:border-zinc-100 transition-colors flex items-center justify-between">
+              <span class="text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                SYSARMOR <span class="text-amber-700">TECH</span>
               </span>
               
               <a 
                 href={tool.href}
-                class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                class="inline-flex items-center gap-1 text-xs font-bold text-amber-700 hover:text-amber-800 transition-colors"
               >
                 Acceder <span>→</span>
               </a>
@@ -201,11 +201,11 @@ const tools = [
         ))}
       </div>
 
-      <!-- Enlace directo inferior hacia las Preguntas Frecuentes con ruta absoluta a la home -->
-      <div class="pt-6 text-center border-t border-slate-300/80">
-        <p class="text-xs sm:text-sm text-slate-600">
-          ¿Tienes dudas sobre el uso de scripts, licencias o costos? 
-          <a href="/#faq" class="font-bold text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1 ml-1">
+      <!-- Enlace directo inferior hacia las Preguntas Frecuentes con texto fluido y sin redundancias -->
+      <div class="pt-6 text-center border-t-2 border-zinc-300">
+        <p class="text-xs sm:text-sm text-zinc-700 font-medium">
+          ¿Tienes dudas sobre el funcionamiento o los parámetros? 
+          <a href="/#faq" class="font-bold text-amber-700 hover:text-amber-800 hover:underline inline-flex items-center gap-1 ml-1">
             Consulta las Preguntas Frecuentes <span>↓</span>
           </a>
         </p>

@@ -1,12 +1,12 @@
-// src/components/Footer.astro
 ---
+// src/components/Footer.astro
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-[#0d1527] border-t border-slate-700 py-8 px-4 sm:px-8 lg:px-12 w-full">
+<footer class="w-full bg-[#0d1527] border-t border-slate-800 py-8 px-4 sm:px-8 lg:px-12 backdrop-blur-md shadow-2xl">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-100">
     
-    <!-- Lado Izquierdo: Marca, Copyright y Enlaces (alineado hacia la izquierda) -->
+    <!-- Lado Izquierdo: Marca, Copyright y Enlaces -->
     <div class="flex flex-col sm:flex-row items-center gap-4 md:gap-6">
       <div class="flex items-center gap-2">
         <span class="font-bold text-white tracking-wider">
@@ -29,7 +29,7 @@ const currentYear = new Date().getFullYear();
 
     <!-- Lado Derecho: Slogan final -->
     <div class="text-slate-200 text-xs md:text-sm text-center md:text-right font-sans font-medium">
-      Optimización y Gestión de Infraestructura Híbrida y Cloud.
+      Herramientas técnicas y artículos de ingeniería de infraestructura IT.
     </div>
 
   </div>

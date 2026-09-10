@@ -30,33 +30,33 @@ const faqs: FaqItem[] = [
 ];
 ---
 
-<!-- scroll-mt-8 reduce el espacio superior para evitar el hueco excesivo bajo el navbar -->
-<section id="faq" class="w-full pt-10 pb-16 bg-slate-100 border-t border-slate-200 px-6 flex flex-col justify-center scroll-mt-8">
-  <div class="max-w-3xl mx-auto space-y-12 w-full">
+<!-- Fondo de sección en zinc-200 para un gris neutro industrial sin subtonos azules -->
+<section id="faq" class="w-full pt-12 pb-16 bg-zinc-200 border-t border-zinc-300 px-4 sm:px-6 flex flex-col justify-center scroll-mt-8">
+  <div class="max-w-3xl mx-auto space-y-8 w-full">
     
-    <!-- Encabezado actualizado al enfoque de portafolio y recursos -->
+    <!-- Encabezado -->
     <div class="text-center space-y-2">
-      <h2 class="text-3xl font-display font-bold text-neutral-900 uppercase tracking-wide">
+      <h2 class="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">
         Preguntas Frecuentes
       </h2>
-      <p class="text-slate-700 font-medium text-base">
+      <p class="text-zinc-700 font-medium text-xs sm:text-sm">
         Sobre el uso de herramientas, licencias y colaboración técnica.
       </p>
     </div>
     
-    <!-- Lista de FAQ con acordeón -->
-    <div class="space-y-4" role="region" aria-label="Preguntas frecuentes">
+    <!-- Tarjeta principal limpia con grises neutros (zinc) -->
+    <div class="bg-white border-2 border-zinc-300 rounded-2xl shadow-lg shadow-zinc-400/30 divide-y divide-zinc-200 overflow-hidden" role="region" aria-label="Preguntas frecuentes">
       {faqs.map((faq) => (
-        <details class="group bg-white border border-slate-300 rounded-xl shadow-sm open:border-slate-400 open:shadow-md transition-all duration-300 overflow-hidden">
-          <summary class="flex justify-between items-center font-bold text-neutral-900 p-6 cursor-pointer list-none hover:text-neutral-600 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 rounded-xl">
+        <details class="group transition-colors duration-200 open:bg-zinc-50">
+          <summary class="flex justify-between items-center font-semibold text-zinc-900 px-6 py-4 sm:py-5 cursor-pointer list-none hover:text-amber-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-500 text-sm sm:text-base">
             <span>{faq.question}</span>
-            <span class="transition-transform duration-300 group-open:rotate-180 text-neutral-400 shrink-0 ml-4" aria-hidden="true">
-              <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+            <span class="transition-transform duration-200 group-open:rotate-180 text-zinc-400 shrink-0 ml-4 bg-zinc-100 p-1 rounded-full group-open:bg-amber-500/10 group-open:text-amber-600" aria-hidden="true">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M6 9l6 6 6-6"></path>
               </svg>
             </span>
           </summary>
-          <div class="text-neutral-600 px-6 pb-6 leading-relaxed border-t border-slate-100 pt-4 font-sans text-sm md:text-base">
+          <div class="text-zinc-600 px-6 pb-5 pt-1 leading-relaxed text-xs sm:text-sm font-normal">
             <p>{faq.answer}</p>
           </div>
         </details>

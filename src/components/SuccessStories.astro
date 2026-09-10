@@ -19,22 +19,22 @@ const successStories = [
 ];
 ---
 
-<section id="casos-de-exito" class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-100 border-t border-slate-200 flex flex-col justify-center items-center">
+<section id="casos-de-exito" class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-zinc-200 border-t border-zinc-300 flex flex-col justify-center items-center">
   <div class="max-w-[1400px] mx-auto space-y-12 w-full my-auto">
     
     <!-- Título de Sección -->
     <div class="text-center space-y-2">
       <h2 class="text-3xl font-display font-bold text-neutral-900 uppercase tracking-wide">Proyectos e Implementaciones</h2>
-      <p class="text-slate-700 font-medium text-base">Arquitectura, automatización e infraestructura de alto impacto.</p>
+      <p class="text-zinc-700 font-medium text-base">Arquitectura, automatización e infraestructura de alto impacto.</p>
     </div>
 
     <!-- Grid simétrico de 3 columnas para los proyectos reales -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
       {successStories.map((story) => (
-        <div class="p-6 md:p-7 rounded-xl border bg-white text-neutral-900 border-slate-300 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+        <div class="p-6 md:p-7 rounded-xl border-2 bg-white text-neutral-900 border-zinc-300 shadow-md shadow-zinc-400/20 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
-              <span class="block text-xs font-bold tracking-wider uppercase truncate text-blue-600">
+              <span class="block text-xs font-bold tracking-wider uppercase truncate text-amber-700">
                 {story.category}
               </span>
             </div>
@@ -43,7 +43,7 @@ const successStories = [
               {story.title}
             </h3>
 
-            <p class="text-sm leading-relaxed font-sans font-normal text-slate-700">
+            <p class="text-sm leading-relaxed font-sans font-normal text-zinc-700">
               {story.description}
             </p>
           </div>
