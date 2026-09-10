@@ -24,44 +24,127 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const dqsKey = import.meta.env.SPAMHAUS_DQS_KEY;
-    if (!dqsKey) {
-      return new Response(JSON.stringify({ error: 'Clave DQS no configurada en el servidor' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+    const cleanDomain = domain.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0];
+    const targetUrl = `http://${cleanDomain}/`;
+
+    // MODO DE PRUEBA TEMPORAL: Simulación de listado en los 3 motores
+    const isTestSimulation = cleanDomain === 'malicious-test.com';
+
+    // 1. Verificación en Spamhaus DQS
+    let spamhausResult = { listed: false, codes: [] as string[], diagnostics: [] as any[] };
+    
+    if (isTestSimulation) {
+      spamhausResult.listed = true;
+      spamhausResult.codes = ['127.0.0.2'];
+      spamhausResult.diagnostics = [{
+        ip: '127.0.0.2',
+        info: spamhausReasons['127.0.0.2']
+      }];
+    } else {
+      const dqsKey = import.meta.env.SPAMHAUS_DQS_KEY;
+      if (dqsKey) {
+        const queryZone = `${cleanDomain}.${dqsKey}.zen.dq.spamhaus.net`;
+        try {
+          const addresses = await dns.resolve4(queryZone);
+          if (addresses && addresses.length > 0) {
+            spamhausResult.listed = true;
+            spamhausResult.codes = addresses;
+            spamhausResult.diagnostics = addresses.map(ip => ({
+              ip,
+              info: spamhausReasons[ip] || { list: 'Desconocido / ZEN', desc: 'Código de bloqueo general de Spamhaus', delistUrl: 'https://www.spamhaus.org/lookup/' }
+            }));
+          }
+        } catch (dnsError: any) {
+          if (dnsError.code !== 'ENOTFOUND') {
+            console.error('Error en consulta DNS Spamhaus DQS:', dnsError);
+          }
+        }
+      }
     }
 
-    const cleanDomain = domain.replace(/^(https?:\/\/)?(www\.)?/i, '').split('/')[0];
-    const queryZone = `${cleanDomain}.${dqsKey}.zen.dq.spamhaus.net`;
+    // 2. Verificación en Google Safe Browsing
+    let googleResult = { listed: false, details: '' };
+    
+    if (isTestSimulation) {
+      googleResult.listed = true;
+      googleResult.details = 'SOCIAL_ENGINEERING (Simulación)';
+    } else {
+      const googleKey = import.meta.env.GOOGLE_SAFE_BROWSING_API_KEY;
+      if (googleKey) {
+        try {
+          const gsbResponse = await fetch(`https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${googleKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              client: { clientId: 'sysarmor-tech-checker', clientVersion: '1.0' },
+              threatInfo: {
+                threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
+                platformTypes: ['ANY_PLATFORM'],
+                threatEntryTypes: ['URL'],
+                threatEntries: [
+                  { url: targetUrl },
+                  { url: `https://${cleanDomain}/` }
+                ]
+              }
+            })
+          });
 
-    let isListed = false;
-    let returnCodes: string[] = [];
-    let diagnostics: any[] = [];
-
-    try {
-      const addresses = await dns.resolve4(queryZone);
-      if (addresses && addresses.length > 0) {
-        isListed = true;
-        returnCodes = addresses;
-        diagnostics = addresses.map(ip => ({
-          ip,
-          info: spamhausReasons[ip] || { list: 'Desconocido / ZEN', desc: 'Código de bloqueo general de Spamhaus', delistUrl: 'https://www.spamhaus.org/lookup/' }
-        }));
+          if (gsbResponse.ok) {
+            const gsbData = await gsbResponse.json();
+            if (gsbData && gsbData.matches && gsbData.matches.length > 0) {
+              googleResult.listed = true;
+              googleResult.details = gsbData.matches[0].threatType || 'Amenaza detectada';
+            }
+          }
+        } catch (gsbErr) {
+          console.error('Error al consultar Google Safe Browsing:', gsbErr);
+        }
       }
-    } catch (dnsError: any) {
-      // ENOTFOUND significa que el dominio no está listado (comportamiento normal y esperado para dominios limpios)
-      if (dnsError.code !== 'ENOTFOUND') {
-        console.error('Error en consulta DNS Spamhaus DQS:', dnsError);
+    }
+
+    // 3. Verificación en PhishTank
+    let phishTankResult = { listed: false, details: '' };
+    
+    if (isTestSimulation) {
+      phishTankResult.listed = true;
+      phishTankResult.details = 'Reportado y verificado como Phishing activo (Simulación)';
+    } else {
+      try {
+        const ptResponse = await fetch('https://checkurl.phishtank.com/checkurl/', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'phishtank/sysarmor-tech-checker'
+          },
+          body: new URLSearchParams({
+            url: targetUrl,
+            format: 'json'
+          })
+        });
+
+        if (ptResponse.ok) {
+          const ptData = await ptResponse.json();
+          if (ptData && ptData.results) {
+            const isDatabaseMatch = ptData.results.in_database === true || ptData.results.in_database === 'true';
+            const isValidPhish = ptData.results.valid === true || ptData.results.valid === 'y';
+            
+            if (isDatabaseMatch && isValidPhish) {
+              phishTankResult.listed = true;
+              phishTankResult.details = 'Reportado y verificado como Phishing activo';
+            }
+          }
+        }
+      } catch (ptErr) {
+        console.error('Error al consultar PhishTank:', ptErr);
       }
     }
 
     return new Response(JSON.stringify({
       domain: cleanDomain,
-      listed: isListed,
-      codes: returnCodes,
-      diagnostics,
-      provider: 'Spamhaus Data Query Service (DQS)'
+      spamhaus: spamhausResult,
+      googleSafeBrowsing: googleResult,
+      phishTank: phishTankResult,
+      provider: 'Multi-Engine Security Checker'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
