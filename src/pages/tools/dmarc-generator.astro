@@ -37,9 +37,20 @@ if (Astro.request.method === 'POST') {
 ---
 
 <Layout title="Generador de Registros DMARC | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#EAEFF5] border-t border-neutral-300 text-neutral-900">
     <div class="max-w-6xl mx-auto space-y-8">
       
+      <!-- Botón de retorno dinámico -->
+      <div>
+        <button 
+          type="button"
+          id="back-btn"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md font-mono cursor-pointer"
+        >
+          ← VOLVER A HERRAMIENTAS
+        </button>
+      </div>
+
       <!-- Cabecera de la Herramienta -->
       <div class="space-y-2">
         <h1 class="text-3xl font-display font-bold text-neutral-900 tracking-wide">
@@ -221,6 +232,16 @@ if (Astro.request.method === 'POST') {
     const copyBtn = document.getElementById('copy-btn');
     const currentRecordBox = document.getElementById('current-record-box');
     const currentStatusIcon = document.getElementById('current-status-icon');
+    const backBtn = document.getElementById('back-btn');
+
+    // Manejar el botón de regreso de forma segura
+    backBtn?.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
 
     // Forzar vaciado de campos al cargar la página para evitar caché del navegador
     if (domainInput) domainInput.value = '';
