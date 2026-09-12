@@ -132,6 +132,15 @@ const schemaOrgData = {
     <meta name="twitter:image" content={fullOgImageUrl} />
 
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
+
+    <!-- Corrección de scroll exclusivo para móviles (no afecta escritorio) -->
+    <style is:global>
+      @media (max-width: 768px) {
+        section[id], div[id] {
+          scroll-margin-top: 90px;
+        }
+      }
+    </style>
   </head>
   
   <body 
