@@ -46,7 +46,7 @@ const faqs: FaqItem[] = [
     <!-- Tarjeta principal limpia con grises neutros (zinc) -->
     <div class="bg-white border-2 border-zinc-300 rounded-2xl shadow-lg shadow-zinc-400/30 divide-y divide-zinc-200 overflow-hidden" role="region" aria-label="Preguntas frecuentes">
       {faqs.map((faq) => (
-        <details class="group transition-colors duration-200 open:bg-zinc-50">
+        <details name="faq-accordion" class="group transition-colors duration-200 open:bg-zinc-50">
           <summary class="flex justify-between items-center font-semibold text-zinc-900 px-6 py-4 sm:py-5 cursor-pointer list-none hover:text-blue-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 text-sm sm:text-base">
             <span>{faq.question}</span>
             <span class="w-7 h-7 rounded-full bg-zinc-100 border border-zinc-300 shadow-sm flex items-center justify-center text-zinc-700 shrink-0 ml-4 transition-transform duration-200 group-open:rotate-180 group-open:bg-blue-600 group-open:border-blue-600 group-open:text-white" aria-hidden="true">
@@ -55,7 +55,7 @@ const faqs: FaqItem[] = [
               </svg>
             </span>
           </summary>
-          <div class="text-zinc-600 px-6 pb-5 pt-1 leading-relaxed text-xs sm:text-sm font-normal">
+          <div class="text-zinc-700 px-6 pb-5 pt-1 leading-relaxed text-xs sm:text-sm font-medium">
             <p>{faq.answer}</p>
           </div>
         </details>
