@@ -1,0 +1,30 @@
+---
+// src/pages/tools/csr-generator.astro
+import Layout from '../../layouts/Layout.astro';
+import GeneradorCSR from '../../components/GeneradorCSR.astro';
+---
+
+<Layout title="Generador de CSR y Llave Privada | SysArmor Tech">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-zinc-200 text-neutral-900 border-t-2 border-zinc-300">
+    <div class="max-w-4xl mx-auto space-y-8">
+      
+      <div class="space-y-3 text-center">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide uppercase">
+          Generador de Solicitudes CSR
+        </h1>
+        <p class="text-zinc-700 font-medium text-base sm:text-lg leading-relaxed font-sans">
+          Genera un par de claves criptográficas y un archivo CSR X.509 de forma local y segura en tu navegador.
+        </p>
+
+        <div class="bg-amber-100 border-2 border-amber-400 text-amber-950 py-3 px-4 rounded-lg shadow-sm inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-wide">
+          <span class="text-base shrink-0">🔒</span>
+          <span>La clave privada se genera localmente en tu cliente y nunca se transmite ni almacena en ningún servidor.</span>
+        </div>
+      </div>
+
+      <!-- Componente interactivo del Generador CSR -->
+      <GeneradorCSR />
+
+    </div>
+  </main>
+</Layout>

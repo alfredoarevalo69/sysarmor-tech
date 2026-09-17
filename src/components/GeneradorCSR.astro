@@ -1,0 +1,301 @@
+---
+// src/components/GeneradorCSR.astro
+---
+
+<div class="bg-white rounded-xl border-2 border-zinc-400 p-6 md:p-8 shadow-md">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- COLUMNA IZQUIERDA: Formulario -->
+    <div class="lg:col-span-7 space-y-5">
+      <h2 class="text-xl font-display font-bold text-neutral-900 uppercase tracking-wide border-b-2 border-zinc-200 pb-3">
+        Create CSR
+      </h2>
+
+      <form id="csr-form" class="space-y-4" autocomplete="off">
+        
+        <!-- Common Name -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Common Name:</label>
+          <input type="text" id="cn" data-info="cn" required placeholder="ej. midominio.com" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- Subject Alternative Names -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Subject Alternative Names:</label>
+          <textarea id="sans" data-info="sans" rows="3" placeholder="ej. dominio1.com, dominio2.com" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans"></textarea>
+        </div>
+
+        <!-- Organization -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Organization:</label>
+          <input type="text" id="org" data-info="org" placeholder="ej. Mi Empresa S.A.S." autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- Department / Organizational Unit -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Department:</label>
+          <input type="text" id="ou" data-info="ou" placeholder="ej. TI" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- City -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">City:</label>
+          <input type="text" id="locality" data-info="city" placeholder="ej. Bogotá" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- State -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">State:</label>
+          <input type="text" id="state" data-info="state" placeholder="ej. Bogotá" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- Country -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Country:</label>
+          <input type="text" id="country" data-info="country" maxlength="2" value="CO" placeholder="CO" autocomplete="off" autocapitalize="characters" spellcheck="false" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans" />
+        </div>
+
+        <!-- Key Size -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1">Key Size:</label>
+          <select id="key-size" data-info="keysize" autocomplete="off" class="w-full bg-zinc-50 border-2 border-zinc-300 rounded-lg px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-blue-600 font-sans">
+            <option value="1024">1024 bits (Legacy / No recomendado)</option>
+            <option value="2048" selected>2048 bits (Estándar recomendado)</option>
+            <option value="4096">4096 bits (Alta seguridad)</option>
+            <option value="8192">8192 bits (Máxima seguridad)</option>
+          </select>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center gap-4 pt-4">
+          <button type="submit" id="generate-btn" class="flex-1 bg-zinc-900 hover:bg-blue-600 text-white font-bold uppercase text-xs tracking-wider py-3 px-4 rounded-lg transition-colors shadow-sm text-center cursor-pointer">
+            Generate
+          </button>
+          <button type="button" id="reset-btn" class="px-6 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 font-bold uppercase text-xs tracking-wider rounded-lg transition-colors border border-zinc-300 cursor-pointer">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- COLUMNA DERECHA: Panel de Información Dinámica -->
+    <div class="lg:col-span-5 bg-zinc-50 border-2 border-zinc-300 rounded-xl p-6 flex flex-col justify-between space-y-6">
+      <div class="space-y-4">
+        <h3 class="text-base font-display font-bold text-neutral-900 uppercase tracking-wide border-b border-zinc-300 pb-2 flex items-center gap-2">
+          <span>ℹ️</span> Information
+        </h3>
+        
+        <div id="info-panel" class="space-y-3 text-xs sm:text-sm text-zinc-700 font-sans leading-relaxed">
+          <p class="font-bold text-neutral-900" id="info-title">Common Name</p>
+          <p id="info-desc">Es el nombre de dominio totalmente calificado (FQDN) que protegerá el certificado (ej. midominio.com).</p>
+        </div>
+      </div>
+
+      <div class="bg-amber-100 border border-amber-400 text-amber-950 p-3.5 rounded-lg text-xs font-semibold space-y-1">
+        <p class="font-bold flex items-center gap-1.5 uppercase tracking-wider">🔒 Procesamiento Local</p>
+        <p class="font-sans text-[11px] leading-normal">Tanto el CSR como la clave privada se generan mediante criptografía nativa en tu navegador. Nada viaja a servidores externos.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Contenedor de Resultados -->
+  <div id="results-container" class="hidden space-y-6 pt-8 mt-8 border-t-2 border-zinc-300">
+    <h3 class="text-lg font-display font-bold text-neutral-900 uppercase tracking-wide">Resultados Generados</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold uppercase tracking-wider text-zinc-700">Certificate Signing Request (CSR)</label>
+          <button type="button" id="copy-csr-btn" class="text-xs font-bold text-blue-600 hover:underline cursor-pointer transition-all">Copiar CSR</button>
+        </div>
+        <textarea id="csr-output" readonly rows="7" autocomplete="off" spellcheck="false" class="w-full bg-zinc-900 text-zinc-100 font-mono text-xs p-3 rounded-lg border border-zinc-700 select-all"></textarea>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-xs font-bold uppercase tracking-wider text-zinc-700">Private Key</label>
+          <button type="button" id="copy-key-btn" class="text-xs font-bold text-amber-700 hover:underline cursor-pointer transition-all">Copiar Llave</button>
+        </div>
+        <textarea id="key-output" readonly rows="7" autocomplete="off" spellcheck="false" class="w-full bg-zinc-900 text-amber-400 font-mono text-xs p-3 rounded-lg border border-zinc-700 select-all"></textarea>
+        <p class="text-[11px] text-red-600 font-medium">⚠️ Guarda esta llave en un lugar seguro.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const helpTexts: Record<string, { title: string, desc: string }> = {
+    cn: { title: "Common Name", desc: "El nombre de dominio totalmente calificado (FQDN) o dirección IP que protegerá el certificado." },
+    sans: { title: "Subject Alternative Names", desc: "Permite incluir múltiples nombres de dominio o IPs alternativos." },
+    org: { title: "Organization", desc: "El nombre legal registrado de tu organización o empresa." },
+    ou: { title: "Department", desc: "El departamento o área interna responsable." },
+    city: { title: "City", desc: "La ciudad o localidad de la organización." },
+    state: { title: "State", desc: "El estado, departamento o provincia." },
+    country: { title: "Country", desc: "Código ISO de país de dos letras (ej. CO, US, ES)." },
+    keysize: { title: "Key Size", desc: "Longitud en bits del par de claves RSA. 2048 y 4096 son los estándares actuales de seguridad; 8192 ofrece máxima seguridad (puede tardar un poco más en generarse)." }
+  };
+
+  const infoTitle = document.getElementById('info-title');
+  const infoDesc = document.getElementById('info-desc');
+  const form = document.getElementById('csr-form') as HTMLFormElement;
+  const resultsContainer = document.getElementById('results-container');
+
+  document.querySelectorAll('#csr-form input, #csr-form select, #csr-form textarea').forEach(element => {
+    element.addEventListener('focus', () => {
+      const key = element.getAttribute('data-info');
+      if (key && helpTexts[key]) {
+        if(infoTitle) infoTitle.innerHTML = helpTexts[key].title;
+        if(infoDesc) infoDesc.innerHTML = helpTexts[key].desc;
+      }
+    });
+  });
+
+  document.getElementById('reset-btn')?.addEventListener('click', () => {
+    form.reset();
+    if(resultsContainer) resultsContainer.classList.add('hidden');
+    (document.getElementById('csr-output') as HTMLTextAreaElement).value = '';
+    (document.getElementById('key-output') as HTMLTextAreaElement).value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  function arrayBufferToPEM(buffer: ArrayBuffer, label: string): string {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    const base64 = btoa(binary);
+    const wrapped = base64.match(/.{1,64}/g)?.join('\n') || base64;
+    return `-----BEGIN ${label}-----\n${wrapped}\n-----END ${label}-----`;
+  }
+
+  function encodeLength(len: number): Uint8Array {
+    if (len < 128) return new Uint8Array([len]);
+    if (len < 256) return new Uint8Array([0x81, len]);
+    return new Uint8Array([0x82, len >> 8, len & 0xff]);
+  }
+
+  function encodeTLV(tag: number, value: Uint8Array): Uint8Array {
+    const len = encodeLength(value.length);
+    const res = new Uint8Array(1 + len.length + value.length);
+    res[0] = tag;
+    res.set(len, 1);
+    res.set(value, 1 + len.length);
+    return res;
+  }
+
+  function encodeString(str: string): Uint8Array {
+    const utf8 = new TextEncoder().encode(str);
+    return encodeTLV(0x0c, utf8);
+  }
+
+  function encodeRDN(oid: number[], val: string): Uint8Array {
+    const strEnc = encodeString(val);
+    const attrSeq = new Uint8Array(2 + oid.length + strEnc.length);
+    attrSeq[0] = 0x06; attrSeq[1] = oid.length;
+    attrSeq.set(oid, 2);
+    attrSeq.set(strEnc, 2 + oid.length);
+    const rdnSeq = encodeTLV(0x30, attrSeq);
+    return encodeTLV(0x31, rdnSeq);
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('generate-btn') as HTMLButtonElement;
+    if(btn) btn.innerText = "Generating...";
+
+    try {
+      const cn = (document.getElementById('cn') as HTMLInputElement).value;
+      const org = (document.getElementById('org') as HTMLInputElement).value || 'SysArmor Tech';
+      const ou = (document.getElementById('ou') as HTMLInputElement).value || 'IT';
+      const c = (document.getElementById('country') as HTMLInputElement).value || 'CO';
+      const st = (document.getElementById('state') as HTMLInputElement).value || 'Bogota';
+      const l = (document.getElementById('locality') as HTMLInputElement).value || 'Bogota';
+      const keySize = parseInt((document.getElementById('key-size') as HTMLSelectElement).value);
+
+      const keyPair = await window.crypto.subtle.generateKey(
+        { name: "RSASSA-PKCS1-v1_5", modulusLength: keySize, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" },
+        true,
+        ["sign", "verify"]
+      );
+
+      const publicKeyDer = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+      const privateKeyDer = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+      const privKeyPEM = arrayBufferToPEM(privateKeyDer, "PRIVATE KEY");
+
+      const rdnC = encodeRDN([2, 5, 4, 6], c);
+      const rdnST = encodeRDN([2, 5, 4, 8], st);
+      const rdnL = encodeRDN([2, 5, 4, 7], l);
+      const rdnO = encodeRDN([2, 5, 4, 10], org);
+      const rdnOU = encodeRDN([2, 5, 4, 11], ou);
+      const rdnCN = encodeRDN([2, 5, 4, 3], cn);
+
+      const totalRDNLen = rdnC.length + rdnST.length + rdnL.length + rdnO.length + rdnOU.length + rdnCN.length;
+      const subjectSeq = new Uint8Array(totalRDNLen);
+      let offset = 0;
+      [rdnC, rdnST, rdnL, rdnO, rdnOU, rdnCN].forEach(r => { subjectSeq.set(r, offset); offset += r.length; });
+      const subjectTlv = encodeTLV(0x30, subjectSeq);
+
+      const version = new Uint8Array([0x02, 0x01, 0x00]); 
+      const pubKeyBytes = new Uint8Array(publicKeyDer);
+      const attributes = new Uint8Array([0xa0, 0x00]);
+
+      const criLen = version.length + subjectTlv.length + pubKeyBytes.length + attributes.length;
+      const criBytes = new Uint8Array(criLen);
+      criBytes.set(version, 0);
+      criBytes.set(subjectTlv, version.length);
+      criBytes.set(pubKeyBytes, version.length + subjectTlv.length);
+      criBytes.set(attributes, version.length + subjectTlv.length + pubKeyBytes.length);
+
+      const criTlv = encodeTLV(0x30, criBytes);
+
+      const signatureBuffer = await window.crypto.subtle.sign(
+        { name: "RSASSA-PKCS1-v1_5" },
+        keyPair.privateKey,
+        criTlv
+      );
+
+      const sigAlgOid = new Uint8Array([0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b, 0x05, 0x00]);
+      const sigBits = new Uint8Array([0x00, ...new Uint8Array(signatureBuffer)]);
+      const sigTlv = encodeTLV(0x03, sigBits);
+
+      const pkcs10Seq = new Uint8Array(criTlv.length + sigAlgOid.length + sigTlv.length);
+      pkcs10Seq.set(criTlv, 0);
+      pkcs10Seq.set(sigAlgOid, criTlv.length);
+      pkcs10Seq.set(sigTlv, criTlv.length + sigAlgOid.length);
+
+      const csrDer = encodeTLV(0x30, pkcs10Seq);
+      const csrPEM = arrayBufferToPEM(csrDer.buffer, "CERTIFICATE REQUEST");
+
+      (document.getElementById('csr-output') as HTMLTextAreaElement).value = csrPEM;
+      (document.getElementById('key-output') as HTMLTextAreaElement).value = privKeyPEM;
+      
+      resultsContainer?.classList.remove('hidden');
+      resultsContainer?.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      console.error(err);
+      alert("Ocurrió un error al generar las claves criptográficas.");
+    } finally {
+      if(btn) btn.innerText = "Generate";
+    }
+  });
+
+  // Copiar al portapapeles con cambio de estado visual (sin alertas)
+  function setupCopyButton(buttonId: string, inputId: string, defaultText: string) {
+    const btn = document.getElementById(buttonId);
+    const input = document.getElementById(inputId) as HTMLTextAreaElement;
+
+    btn?.addEventListener('click', () => {
+      if (!input.value) return;
+      navigator.clipboard.writeText(input.value).then(() => {
+        btn.innerText = "¡Copiado!";
+        setTimeout(() => {
+          btn.innerText = defaultText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Error al copiar: ', err);
+      });
+    });
+  }
+
+  setupCopyButton('copy-csr-btn', 'csr-output', 'Copiar CSR');
+  setupCopyButton('copy-key-btn', 'key-output', 'Copiar Llave');
+</script>
