@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 import preact from '@astrojs/preact';
+import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,5 +34,15 @@ export default defineConfig({
   },
 
   adapter: vercel(),
-  integrations: [sitemap(), preact()],
+  integrations: [
+    sitemap(),
+    // Configuramos Preact para que maneje sus propios componentes (si los usas en otra ruta)
+    preact({
+      include: ['**/preact/*'], // O ajusta la ruta donde tengas tus componentes de Preact
+    }),
+    // Configuramos React para que se encargue exclusivamente de este nuevo analizador o su carpeta
+    react({
+      include: ['**/components/RedirectAnalyzer.jsx', '**/components/react/*'],
+    }),
+  ],
 });
