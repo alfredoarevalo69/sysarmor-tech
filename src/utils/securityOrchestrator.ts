@@ -209,6 +209,19 @@ export class SecurityOrchestrator {
   }
 
   private calculateGlobalScore(audits: AuditResult[]): string {
+    // Single Source of Truth: Derivamos el puntaje global basándonos en el porcentaje del módulo principal
+    const headerAudit = audits.find(a => a.module === 'Seguridad de Cabeceras HTTP / HTTPS');
+    
+    if (headerAudit && typeof headerAudit.details.compliancePercentage === 'number') {
+      const pts = headerAudit.details.compliancePercentage;
+      if (pts >= 90) return 'A';
+      if (pts >= 80) return 'B';
+      if (pts >= 70) return 'C';
+      if (pts >= 60) return 'D';
+      return 'F';
+    }
+
+    // Fallback estricto si no se encuentra el porcentaje numérico
     const scores = audits.map(a => a.score || 'F');
     if (scores.includes('F')) return 'F';
     if (scores.includes('C')) return 'C';
