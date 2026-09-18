@@ -1,5 +1,11 @@
 // src/utils/securityOrchestrator.ts
 
+export interface RemediationOption {
+  header: string;
+  purpose: string;
+  genericValue: string;
+}
+
 export interface AuditResult {
   module: string;
   status: 'SUCCESS' | 'WARNING' | 'FAILED';
@@ -8,6 +14,7 @@ export interface AuditResult {
     component: string;
     finding: string;
     recommendation: string;
+    remediationOptions?: RemediationOption[]; // Opciones genéricas estructuradas
     rawHeaders?: Record<string, string>;
     [key: string]: any;
   };
@@ -25,7 +32,10 @@ export class SecurityOrchestrator {
   private target: string;
 
   constructor(targetUrl: string) {
-    this.target = targetUrl;
+    const sanitized = targetUrl.trim();
+    this.target = sanitized.startsWith('http://') || sanitized.startsWith('https://') 
+      ? sanitized 
+      : `https://${sanitized}`;
   }
 
   public async generateExecutiveReport(): Promise<ExecutiveReport> {
@@ -46,47 +56,115 @@ export class SecurityOrchestrator {
   }
 
   private async auditHttpHeaders(): Promise<AuditResult> {
-    const rawHeadersRecord: Record<string, string> = {
-      "server": "Vercel",
-      "x-vercel-id": "dub1::iad1::7lkvx-1788463900409-658d92101b76",
-      "cache-control": "public, max-age=0, must-revalidate",
-      "content-encoding": "gzip",
-      "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
-      "content-type": "text/html",
-      "date": new Date().toUTCString(),
-      "permissions-policy": "camera=(), microphone=(), geolocation=()",
-      "referrer-policy": "strict-origin-when-cross-origin",
-      "strict-transport-security": "max-age=63072000",
-      "x-content-type-options": "nosniff",
-      "x-frame-options": "SAMEORIGIN",
-      "x-vercel-cache": "MISS"
-    };
+    try {
+      const response = await fetch(this.target, {
+        method: 'HEAD',
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'SysArmor-Global-Security-Scanner/1.0'
+        }
+      });
 
-    return {
-      module: 'Seguridad de Cabeceras HTTP / HTTPS',
-      status: 'SUCCESS',
-      score: 'A',
-      details: {
-        component: 'Políticas de Hardening (CSP, HSTS, X-Frame-Options)',
-        finding: 'Todas las cabeceras críticas de seguridad están inyectadas correctamente en las respuestas del servidor.',
-        recommendation: 'Mantener la configuración actual en el enrutador de borde o archivo de configuración global.',
-        rawHeaders: rawHeadersRecord
-      },
-      message: 'Cabeceras de hardening implementadas correctamente vía configuración global.'
-    };
+      const rawHeadersRecord: Record<string, string> = {};
+      response.headers.forEach((value, key) => {
+        rawHeadersRecord[key] = value;
+      });
+
+      const hasCSP = rawHeadersRecord['content-security-policy'] !== undefined;
+      const hasHSTS = rawHeadersRecord['strict-transport-security'] !== undefined;
+      const hasXFrame = rawHeadersRecord['x-frame-options'] !== undefined;
+      const hasContentTypeOptions = rawHeadersRecord['x-content-type-options'] !== undefined;
+
+      const isSecure = hasCSP && hasHSTS && hasXFrame && hasContentTypeOptions;
+      const score = isSecure ? 'A' : 'F';
+      const status = isSecure ? 'SUCCESS' : 'FAILED';
+
+      // Banco de opciones de remediación genéricas por cada cabecera crítica
+      const allRemediations: Record<string, RemediationOption> = {
+        csp: {
+          header: 'Content-Security-Policy (CSP)',
+          purpose: 'Mitiga ataques de Cross-Site Scripting (XSS) y inyección de código malicioso.',
+          genericValue: "default-src 'self'; script-src 'self'; object-src 'none';"
+        },
+        hsts: {
+          header: 'Strict-Transport-Security (HSTS)',
+          purpose: 'Obliga a los navegadores a comunicarse exclusivamente mediante canales cifrados (HTTPS).',
+          genericValue: 'max-age=31536000; includeSubDomains; preload'
+        },
+        xframe: {
+          header: 'X-Frame-Options',
+          purpose: 'Protege contra ataques de enmarcado malicioso (Clickjacking).',
+          genericValue: 'DENY (o SAMEORIGIN)'
+        },
+        contentType: {
+          header: 'X-Content-Type-Options',
+          purpose: 'Evita que el navegador realice una autodetección incorrecta del tipo MIME.',
+          genericValue: 'nosniff'
+        }
+      };
+
+      const remediationOptions: RemediationOption[] = [];
+      if (!hasCSP) remediationOptions.push(allRemediations.csp);
+      if (!hasHSTS) remediationOptions.push(allRemediations.hsts);
+      if (!hasXFrame) remediationOptions.push(allRemediations.xframe);
+      if (!hasContentTypeOptions) remediationOptions.push(allRemediations.contentType);
+
+      return {
+        module: 'Seguridad de Cabeceras HTTP / HTTPS',
+        status,
+        score,
+        details: {
+          component: 'Políticas de Hardening Perimetral',
+          finding: isSecure 
+            ? 'El servidor implementa correctamente todas las directivas de seguridad para navegadores.' 
+            : 'Se identificó la ausencia de cabeceras de control perimetral esenciales en la respuesta HTTP.',
+          recommendation: isSecure 
+            ? 'Mantener la configuración actual de seguridad en el servidor de borde.' 
+            : 'Configurar el servidor web o CDN para inyectar las cabeceras estándar especificadas en el reporte.',
+          remediationOptions: isSecure ? undefined : remediationOptions,
+          rawHeaders: rawHeadersRecord
+        },
+        message: isSecure ? 'Hardening perimetral verificado.' : 'Brechas de seguridad perimetral detectadas. Requiere aplicación de directivas.'
+      };
+    } catch (error) {
+      return {
+        module: 'Seguridad de Cabeceras HTTP / HTTPS',
+        status: 'FAILED',
+        score: 'F',
+        details: {
+          component: 'Conectividad y Resolución',
+          finding: `Imposible completar el análisis de red: ${String(error)}`,
+          recommendation: 'Compruebe que el dominio sea públicamente accesible y responda peticiones.'
+        },
+        message: 'Fallo de conectividad en la auditoría.'
+      };
+    }
   }
 
   private async auditSslCertificate(): Promise<AuditResult> {
+    const isHttps = this.target.startsWith('https://');
+
+    const remediationOptions: RemediationOption[] = !isHttps ? [{
+      header: 'Cifrado de Transporte (HTTPS / TLS)',
+      purpose: 'Garantiza la confidencialidad e integridad de los datos en tránsito mediante criptografía asimétrica.',
+      genericValue: 'Instalar certificado SSL/TLS válido (ej. Let\'s Encrypt) y habilitar redirección 301 del puerto 80 al 443.'
+    }] : [];
+
     return {
       module: 'Criptografía y Protocolo SSL/TLS',
-      status: 'SUCCESS',
-      score: 'A',
+      status: isHttps ? 'SUCCESS' : 'FAILED',
+      score: isHttps ? 'A' : 'F',
       details: {
-        component: 'Negociación TLS 1.3 y Cifrado Fuerte',
-        finding: 'El servidor opera bajo protocolos de transporte modernos y utiliza cifrados simétricos robustos (AES-256).',
-        recommendation: 'Ninguna acción requerida. La infraestructura cumple con los estándares de cifrado actuales.'
+        component: 'Negociación TLS y Cifrado Fuerte',
+        finding: isHttps 
+          ? 'El canal de comunicación está cifrado mediante protocolos seguros.' 
+          : 'El objetivo evaluado no utiliza HTTPS por defecto.',
+        recommendation: isHttps 
+          ? 'Ninguna acción requerida.' 
+          : 'Actualizar la infraestructura para soportar exclusivamente conexiones cifradas.',
+        remediationOptions: isHttps ? undefined : remediationOptions
       },
-      message: 'Certificado digital válido y cifrado robusto verificado.'
+      message: isHttps ? 'Cifrado de transporte activo.' : 'Canal de transporte vulnerable (HTTP plano).'
     };
   }
 

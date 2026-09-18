@@ -3,18 +3,18 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Auditoría de Hardening y Conformidad | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900 print:bg-white print:py-0">
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900 print:bg-white print:text-slate-900 print:py-0">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <header class="report-header flex items-center justify-between pb-4 border-b border-slate-300 print:mb-6">
+      <!-- Encabezado de Impresión y Pantalla -->
+      <header class="report-header flex items-center justify-between pb-4 border-b border-slate-300 print:border-slate-400 print:mb-6">
         <div class="flex items-center gap-3">
           <div class="flex flex-col">
-            <span class="font-black text-xl tracking-wider text-slate-900">SYSARMOR <span class="text-amber-500">TECH</span></span>
-            <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">Infraestructura & Ciberseguridad</span>
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-widest print:text-slate-800">Infraestructura & Ciberseguridad</span>
           </div>
         </div>
         <div class="text-right hidden sm:block print:block">
-          <span class="text-xs font-semibold text-slate-700">Reporte Técnico de Diagnóstico</span>
+          <span class="text-xs font-semibold text-slate-700 print:text-slate-800">Reporte Técnico de Diagnóstico</span>
         </div>
       </header>
 
@@ -28,14 +28,15 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <div class="space-y-2 text-center max-w-3xl mx-auto print:mb-6">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide print:text-black">
           Auditoría de Hardening y Conformidad de Infraestructura
         </h1>
-        <p class="text-slate-700 font-medium text-base">
+        <p class="text-slate-700 font-medium text-base print:text-slate-700">
           Motor de diagnóstico integral para evaluar la postura de seguridad perimetral, cifrado de transporte y políticas de cabeceras en entornos de producción.
         </p>
       </div>
 
+      <!-- Input de búsqueda (Oculto en impresión) -->
       <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 print:hidden">
         <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div class="w-full sm:w-2/3">
@@ -59,24 +60,26 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
+      <!-- Contenedor del Reporte -->
       <div id="reportContainer" class="hidden space-y-6">
         
-        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+        <!-- Tarjeta de Calificación Global -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl flex items-center justify-between print:bg-slate-100 print:border-slate-300 print:break-inside-avoid">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Evaluación General de Infraestructura</span>
-            <h2 id="reportTarget" class="text-xl font-bold text-white"></h2>
-            <p id="reportTimestamp" class="text-xs text-slate-400 mt-1 font-mono"></p>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block print:text-slate-700">Evaluación General de Infraestructura</span>
+            <h2 id="reportTarget" class="text-xl font-bold text-white print:text-slate-950"></h2>
+            <p id="reportTimestamp" class="text-xs text-slate-400 mt-1 font-mono print:text-slate-600"></p>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-sm font-bold text-slate-300">Calificación Global:</span>
+            <span class="text-sm font-bold text-slate-300 print:text-slate-800">Calificación Global:</span>
             <div id="globalBadge" class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-slate-950 shadow-sm">
               -
             </div>
           </div>
         </div>
 
-        <div class="space-y-4">
-          <h3 class="text-xl font-bold text-slate-950">Resumen de Hallazgos y Evaluaciones</h3>
+        <div class="space-y-4 print:space-y-6">
+          <h3 class="text-xl font-bold text-slate-950 print:text-black print:break-after-avoid">Resumen de Hallazgos y Evaluaciones</h3>
           <div id="modulesList" class="space-y-6"></div>
         </div>
 
@@ -104,17 +107,59 @@ import Layout from '../../layouts/Layout.astro';
   @media print {
     @page {
       size: letter;
-      margin: 1.2cm;
+      margin: 1.5cm 1.2cm;
     }
     .print\:hidden {
       display: none !important;
     }
+    body, main {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      display: block !important;
+    }
     .report-header {
       display: flex !important;
+      break-after: avoid;
+      page-break-after: avoid;
+      border-bottom: 2px solid #cbd5e1 !important;
     }
+
+    #reportContainer, #modulesList {
+      display: block !important;
+    }
+    
     #modulesList > div {
-      break-inside: avoid;
-      page-break-inside: avoid;
+      display: block !important;
+      background-color: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      margin-bottom: 2rem;
+      box-shadow: none !important;
+    }
+
+    #modulesList div[class*="bg-slate-900"],
+    #modulesList div[class*="bg-slate-950"],
+    #modulesList div[class*="bg-amber-950"] {
+      background-color: #f8fafc !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #0f172a !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    #modulesList span, #modulesList p, #modulesList h4 {
+      color: #0f172a !important;
+    }
+    .text-slate-400, .text-slate-300 {
+      color: #334155 !important;
+    }
+    .text-amber-400, .text-amber-300 {
+      color: #b45309 !important;
+    }
+    .text-emerald-400 {
+      color: #047857 !important;
     }
   }
 </style>
@@ -156,7 +201,7 @@ import Layout from '../../layouts/Layout.astro';
       if (globalBadge) {
         globalBadge.textContent = data.globalRating;
         globalBadge.className = `w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-black text-slate-950 shadow-sm ${
-          data.globalRating === 'A' ? 'bg-emerald-500' : 'bg-red-500'
+          data.globalRating === 'A' ? 'bg-emerald-500 text-slate-950' : 'bg-red-500 text-white'
         }`;
       }
 
@@ -166,13 +211,35 @@ import Layout from '../../layouts/Layout.astro';
           let rawHeadersHtml = '';
           if (audit.details.rawHeaders) {
             rawHeadersHtml = `
-              <div class="mt-4 pt-4 border-t border-slate-800 space-y-2">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Cabeceras HTTP en Bruto (Raw Headers) - Detalle Completo</span>
-                <div class="bg-slate-900 text-slate-200 p-4 rounded-xl space-y-1 shadow-inner border border-slate-800">
+              <div class="mt-4 pt-4 border-t border-slate-800 print:border-slate-200 space-y-2">
+                <span class="text-xs font-bold text-slate-400 print:text-slate-700 uppercase tracking-wider block">Cabeceras HTTP en Bruto (Raw Headers) - Detalle Completo</span>
+                <div class="bg-slate-900 print:bg-slate-100 text-slate-200 print:text-slate-900 p-4 rounded-xl space-y-1 shadow-inner border border-slate-800 print:border-slate-200">
                   ${Object.entries(audit.details.rawHeaders).map(([k, v]) => `
-                    <div class="flex flex-col sm:flex-row text-xs font-mono py-1 border-b border-slate-800">
-                      <span class="w-1/3 font-bold text-amber-400">${k}</span>
-                      <span class="w-2/3 text-slate-300 break-all">${v}</span>
+                    <div class="flex flex-col sm:flex-row text-xs font-mono py-1 border-b border-slate-800 print:border-slate-200">
+                      <span class="w-1/3 font-bold text-amber-400 print:text-amber-800">${k}</span>
+                      <span class="w-2/3 text-slate-300 print:text-slate-800 break-all">${v}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+
+          let remediationOptionsHtml = '';
+          if (audit.details.remediationOptions && audit.details.remediationOptions.length > 0) {
+            remediationOptionsHtml = `
+              <div class="mt-4 pt-3 border-t border-amber-900/30 print:border-amber-200 space-y-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-300 print:text-amber-800 block">
+                  Cabeceras y Valores Sugeridos para Remediación:
+                </span>
+                <div class="grid gap-2.5">
+                  ${audit.details.remediationOptions.map((opt: any) => `
+                    <div class="bg-slate-950 print:bg-white p-3 rounded-xl border border-slate-800 print:border-slate-300 text-xs space-y-1.5">
+                      <div class="font-bold text-slate-200 print:text-slate-950">${opt.header}</div>
+                      <div class="text-slate-400 print:text-slate-700">${opt.purpose}</div>
+                      <div class="mt-1 font-mono text-emerald-400 print:text-emerald-800 bg-slate-900 print:bg-slate-100 p-2 rounded-lg border border-slate-800 print:border-slate-200 select-all">
+                        <span class="text-slate-500 print:text-slate-600 select-none">Valor sugerido: </span>${opt.genericValue}
+                      </div>
                     </div>
                   `).join('')}
                 </div>
@@ -181,31 +248,32 @@ import Layout from '../../layouts/Layout.astro';
           }
 
           const item = document.createElement('div');
-          item.className = 'bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4';
+          item.className = 'bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 print:bg-white print:border-slate-300 print:shadow-none';
           item.innerHTML = `
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h4 class="font-bold text-white text-lg">${audit.module}</h4>
+            <div class="flex items-center justify-between border-b border-slate-800 print:border-slate-300 pb-3">
+              <h4 class="font-bold text-white print:text-slate-950 text-lg">${audit.module}</h4>
               <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${
-                audit.status === 'SUCCESS' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-red-950 text-red-300 border border-red-800'
+                audit.status === 'SUCCESS' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800 print:bg-emerald-100 print:text-emerald-900 print:border-emerald-300' : 'bg-red-950 text-red-300 border border-red-800 print:bg-red-100 print:text-red-900 print:border-red-300'
               }">
                 Estado: ${audit.status} — Calificación: ${audit.score || 'N/A'}
               </span>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Componente Evaluado</span>
-                <p class="font-bold text-white">${audit.details.component}</p>
+              <div class="bg-slate-900 print:bg-slate-50 p-4 rounded-xl border border-slate-800 print:border-slate-200 space-y-1 shadow-inner">
+                <span class="text-xs font-bold text-slate-400 print:text-slate-700 uppercase tracking-wider block">Componente Evaluado</span>
+                <p class="font-bold text-white print:text-slate-900">${audit.details.component}</p>
               </div>
-              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-1 shadow-inner">
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Hallazgo Principal</span>
-                <p class="font-medium text-slate-200">${audit.details.finding}</p>
+              <div class="bg-slate-900 print:bg-slate-50 p-4 rounded-xl border border-slate-800 print:border-slate-200 space-y-1 shadow-inner">
+                <span class="text-xs font-bold text-slate-400 print:text-slate-700 uppercase tracking-wider block">Hallazgo Principal</span>
+                <p class="font-medium text-slate-200 print:text-slate-800">${audit.details.finding}</p>
               </div>
             </div>
 
-            <div class="bg-amber-950/40 p-4 rounded-xl border border-amber-900/60 text-sm space-y-1">
-              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">Recomendación Técnica</span>
-              <p class="font-medium text-amber-200">${audit.details.recommendation}</p>
+            <div class="bg-amber-950/40 print:bg-amber-50/60 p-4 rounded-xl border border-amber-900/60 print:border-amber-200 text-sm space-y-1">
+              <span class="text-xs font-bold text-amber-400 print:text-amber-800 uppercase tracking-wider block">Recomendación Técnica</span>
+              <p class="font-medium text-amber-200 print:text-amber-950">${audit.details.recommendation}</p>
+              ${remediationOptionsHtml}
             </div>
 
             ${rawHeadersHtml}
