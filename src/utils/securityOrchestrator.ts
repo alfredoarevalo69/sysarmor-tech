@@ -14,8 +14,9 @@ export interface AuditResult {
     component: string;
     finding: string;
     recommendation: string;
-    remediationOptions?: RemediationOption[]; // Opciones genéricas estructuradas
+    remediationOptions?: RemediationOption[];
     rawHeaders?: Record<string, string>;
+    compliancePercentage?: number;
     [key: string]: any;
   };
   message: string;
@@ -58,10 +59,12 @@ export class SecurityOrchestrator {
   private async auditHttpHeaders(): Promise<AuditResult> {
     try {
       const response = await fetch(this.target, {
-        method: 'HEAD',
+        method: 'GET',
         redirect: 'follow',
         headers: {
-          'User-Agent': 'SysArmor-Global-Security-Scanner/1.0'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Accept-Language': 'es-ES,es;q=0.9'
         }
       });
 
@@ -70,44 +73,80 @@ export class SecurityOrchestrator {
         rawHeadersRecord[key] = value;
       });
 
-      const hasCSP = rawHeadersRecord['content-security-policy'] !== undefined;
-      const hasHSTS = rawHeadersRecord['strict-transport-security'] !== undefined;
-      const hasXFrame = rawHeadersRecord['x-frame-options'] !== undefined;
+      // Extracción de cabeceras relevantes para análisis inteligente
+      const cspHeader = rawHeadersRecord['content-security-policy'] || '';
+      const hasHsts = rawHeadersRecord['strict-transport-security'] !== undefined;
+      const hasCsp = cspHeader.length > 0;
       const hasContentTypeOptions = rawHeadersRecord['x-content-type-options'] !== undefined;
+      
+      // Validación inteligente de Clickjacking: acepta X-Frame-Options o la directiva moderna frame-ancestors en CSP
+      const hasXFrameHeader = rawHeadersRecord['x-frame-options'] !== undefined;
+      const hasFrameAncestors = cspHeader.includes('frame-ancestors');
+      const hasClickjackingProtection = hasXFrameHeader || hasFrameAncestors;
 
-      const isSecure = hasCSP && hasHSTS && hasXFrame && hasContentTypeOptions;
-      const score = isSecure ? 'A' : 'F';
-      const status = isSecure ? 'SUCCESS' : 'FAILED';
+      // Definición de controles críticos con su peso ponderado
+      const evaluatedControls = [
+        { name: 'Content-Security-Policy (CSP)', passed: hasCsp, weight: 35, key: 'content-security-policy' },
+        { name: 'Strict-Transport-Security (HSTS)', passed: hasHsts, weight: 35, key: 'strict-transport-security' },
+        { name: 'Protección Clickjacking (X-Frame-Options / frame-ancestors)', passed: hasClickjackingProtection, weight: 15, key: 'x-frame-options' },
+        { name: 'X-Content-Type-Options', passed: hasContentTypeOptions, weight: 15, key: 'x-content-type-options' }
+      ];
 
-      // Banco de opciones de remediación genéricas por cada cabecera crítica
+      let earnedPoints = 0;
+      const remediationOptions: RemediationOption[] = [];
+
       const allRemediations: Record<string, RemediationOption> = {
-        csp: {
+        'content-security-policy': {
           header: 'Content-Security-Policy (CSP)',
-          purpose: 'Mitiga ataques de Cross-Site Scripting (XSS) y inyección de código malicioso.',
+          purpose: 'Mitiga ataques de Cross-Site Scripting (XSS) y envenenamiento de contenido.',
           genericValue: "default-src 'self'; script-src 'self'; object-src 'none';"
         },
-        hsts: {
+        'strict-transport-security': {
           header: 'Strict-Transport-Security (HSTS)',
-          purpose: 'Obliga a los navegadores a comunicarse exclusivamente mediante canales cifrados (HTTPS).',
+          purpose: 'Obliga a los navegadores a utilizar exclusivamente conexiones cifradas (HTTPS).',
           genericValue: 'max-age=31536000; includeSubDomains; preload'
         },
-        xframe: {
-          header: 'X-Frame-Options',
+        'x-frame-options': {
+          header: 'X-Frame-Options / frame-ancestors',
           purpose: 'Protege contra ataques de enmarcado malicioso (Clickjacking).',
-          genericValue: 'DENY (o SAMEORIGIN)'
+          genericValue: "frame-ancestors 'self' (en CSP) o X-Frame-Options: DENY"
         },
-        contentType: {
+        'x-content-type-options': {
           header: 'X-Content-Type-Options',
           purpose: 'Evita que el navegador realice una autodetección incorrecta del tipo MIME.',
           genericValue: 'nosniff'
         }
       };
 
-      const remediationOptions: RemediationOption[] = [];
-      if (!hasCSP) remediationOptions.push(allRemediations.csp);
-      if (!hasHSTS) remediationOptions.push(allRemediations.hsts);
-      if (!hasXFrame) remediationOptions.push(allRemediations.xframe);
-      if (!hasContentTypeOptions) remediationOptions.push(allRemediations.contentType);
+      evaluatedControls.forEach(control => {
+        if (control.passed) {
+          earnedPoints += control.weight;
+        } else {
+          if (allRemediations[control.key]) {
+            remediationOptions.push(allRemediations[control.key]);
+          }
+        }
+      });
+
+      // Asignación de calificación basada en escala analítica y porcentual
+      let score = 'F';
+      let status: 'SUCCESS' | 'WARNING' | 'FAILED' = 'FAILED';
+
+      if (earnedPoints >= 90) {
+        score = 'A';
+        status = 'SUCCESS';
+      } else if (earnedPoints >= 70) {
+        score = 'B';
+        status = 'WARNING';
+      } else if (earnedPoints >= 50) {
+        score = 'C';
+        status = 'WARNING';
+      } else {
+        score = 'F';
+        status = 'FAILED';
+      }
+
+      const isOptimal = earnedPoints === 100;
 
       return {
         module: 'Seguridad de Cabeceras HTTP / HTTPS',
@@ -115,16 +154,17 @@ export class SecurityOrchestrator {
         score,
         details: {
           component: 'Políticas de Hardening Perimetral',
-          finding: isSecure 
-            ? 'El servidor implementa correctamente todas las directivas de seguridad para navegadores.' 
-            : 'Se identificó la ausencia de cabeceras de control perimetral esenciales en la respuesta HTTP.',
-          recommendation: isSecure 
+          finding: isOptimal 
+            ? 'El servidor implementa el 100% de las directivas de seguridad recomendadas (incluyendo estándares modernos).' 
+            : `Postura de hardening parcial (${earnedPoints}% de cumplimiento). Se detectaron controles ausentes.`,
+          recommendation: isOptimal 
             ? 'Mantener la configuración actual de seguridad en el servidor de borde.' 
-            : 'Configurar el servidor web o CDN para inyectar las cabeceras estándar especificadas en el reporte.',
-          remediationOptions: isSecure ? undefined : remediationOptions,
-          rawHeaders: rawHeadersRecord
+            : 'Integrar los controles faltantes listados abajo para elevar la calificación a nivel óptimo (A).',
+          remediationOptions: remediationOptions.length > 0 ? remediationOptions : undefined,
+          rawHeaders: rawHeadersRecord,
+          compliancePercentage: earnedPoints
         },
-        message: isSecure ? 'Hardening perimetral verificado.' : 'Brechas de seguridad perimetral detectadas. Requiere aplicación de directivas.'
+        message: `Hardening evaluado con ${earnedPoints}% de efectividad.`
       };
     } catch (error) {
       return {
@@ -147,7 +187,7 @@ export class SecurityOrchestrator {
     const remediationOptions: RemediationOption[] = !isHttps ? [{
       header: 'Cifrado de Transporte (HTTPS / TLS)',
       purpose: 'Garantiza la confidencialidad e integridad de los datos en tránsito mediante criptografía asimétrica.',
-      genericValue: 'Instalar certificado SSL/TLS válido (ej. Let\'s Encrypt) y habilitar redirección 301 del puerto 80 al 443.'
+      genericValue: "Instalar certificado SSL/TLS válido (ej. Let's Encrypt) y habilitar redirección 301 del puerto 80 al 443."
     }] : [];
 
     return {
@@ -169,8 +209,10 @@ export class SecurityOrchestrator {
   }
 
   private calculateGlobalScore(audits: AuditResult[]): string {
-    const hasFailures = audits.some(a => a.status === 'FAILED');
-    if (hasFailures) return 'F';
+    const scores = audits.map(a => a.score || 'F');
+    if (scores.includes('F')) return 'F';
+    if (scores.includes('C')) return 'C';
+    if (scores.includes('B')) return 'B';
     return 'A';
   }
 }
