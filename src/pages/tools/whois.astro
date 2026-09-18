@@ -53,6 +53,12 @@ import Layout from '../../layouts/Layout.astro';
   </main>
 
   <script>
+    /* ========================================================
+       DEPLOY CACHE-BUSTER & VERSION CONTROL
+       Timestamp: 2026-09-18T16:35:00Z 
+       Forza la invalidación del CDN edge en Vercel para este módulo
+       ======================================================== */
+    
     const form = document.getElementById('whois-form') as HTMLFormElement;
     const input = document.getElementById('domain-input') as HTMLInputElement;
     const container = document.getElementById('result-container') as HTMLDivElement;
