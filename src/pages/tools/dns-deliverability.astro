@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro'; // Ajusta según tu layout general
+---
+
+<Layout title="SysArmor Tech - WHOIS y Verificador PTR (rDNS)">
+    <main class="max-w-7xl mx-auto px-4 py-10">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-100">Entregabilidad y Diagnóstico de Red</h1>
+            <p class="text-slate-400 mt-2">Herramientas perimetrales para la validación de dominios y reputación IP.</p>
+        </div>
+
+        <!-- Grid simétrico: WHOIS + PTR -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- WHOIS Section -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-blue-400 mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                        Consulta WHOIS
+                    </h2>
+                    <p class="text-sm text-slate-400 mb-4">Inspecciona el estado de registro y fechas de dominios.</p>
+                    
+                    <div class="space-y-4">
+                        <input type="text" id="whois-input" placeholder="dominio.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500 font-mono text-sm" />
+                        <button id="whois-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors">Consultar WHOIS</button>
+                    </div>
+                </div>
+                <div id="whois-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 hidden max-h-60 overflow-y-auto"></div>
+            </div>
+
+            <!-- PTR / rDNS Section -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-emerald-400 mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                        Verificador PTR (rDNS)
+                    </h2>
+                    <p class="text-sm text-slate-400 mb-4">Verifica el DNS inverso de IPs de correo para evitar bloqueos anti-spam.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Dirección IP (Servidor SMTP)</label>
+                            <input type="text" id="ptr-input" placeholder="192.0.2.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-sm" />
+                        </div>
+                        <button id="ptr-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition-colors">Verificar rDNS</button>
+                    </div>
+                </div>
+
+                <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 hidden max-h-60 overflow-y-auto"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Lógica de cliente para PTR
+        const ptrBtn = document.getElementById('ptr-btn');
+        const ptrInput = document.getElementById('ptr-input') as HTMLInputElement;
+        const ptrResult = document.getElementById('ptr-result');
+
+        ptrBtn?.addEventListener('click', async () => {
+            const ip = ptrInput?.value.trim();
+            if (!ip || !ptrResult) return;
+
+            ptrResult.classList.remove('hidden');
+            ptrResult.innerHTML = '<span class="text-slate-400 animate-pulse">Resolviendo registros inversos (PTR)...</span>';
+
+            try {
+                const response = await fetch('/api/check-ptr', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error || 'Error al consultar el servicio');
+
+                if (data.isValid) {
+                    ptrResult.innerHTML = `
+                        <div class="text-emerald-400 font-bold mb-2 flex items-center gap-1">✓ Registro PTR Válido</div>
+                        <div class="text-slate-400 mb-1">Hostnames mapeados:</div>
+                        <ul class="list-disc pl-4 text-slate-200 space-y-1">
+                            ${data.hostnames.map((h: string) => `<li>${h}</li>`).join('')}
+                        </ul>
+                    `;
+                } else {
+                    ptrResult.innerHTML = `
+                        <div class="text-amber-400 font-bold mb-1">⚠ Alerta de Configuración rDNS</div>
+                        <div class="text-red-400">${data.error}</div>
+                    `;
+                }
+            } catch (err: any) {
+                ptrResult.innerHTML = `<div class="text-red-500">Error crítico: ${err.message}</div>`;
+            }
+        });
+    </script>
+</Layout>

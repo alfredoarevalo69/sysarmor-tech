@@ -158,6 +158,13 @@ const whoisTools = [
     href: "/tools/whois",
     badge: "Redes & DNS",
     svgIcon: "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-4 h-4 text-white group-hover:text-zinc-200 transition-colors\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z\" /></svg>"
+  },
+  {
+    title: "Verificador de Registros PTR (rDNS)",
+    description: "Valida el DNS inverso de IPs de envío SMTP para prevenir bloqueos de correo y asegurar la entregabilidad.",
+    href: "/tools/ptr-checker",
+    badge: "Correo & rDNS",
+    svgIcon: "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-4 h-4 text-white group-hover:text-zinc-200 transition-colors\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4\" /></svg>"
   }
 ];
 
@@ -235,10 +242,10 @@ const renderCards = (toolsList: typeof redTools) => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1" set:html={renderCards(securityWebTools)} />
       </section>
 
-      <!-- SECCIÓN 4: Búsqueda y Registros WHOIS -->
+      <!-- SECCIÓN 4: DNS Inverso y Registros WHOIS -->
       <section class="space-y-6">
         <h2 class="text-xl font-display font-bold text-neutral-900 uppercase tracking-wide border-l-4 border-blue-600 pl-3">
-          Buscadores de Dominios y WHOIS
+          DNS Inverso y Registros WHOIS
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1" set:html={renderCards(whoisTools)} />
       </section>
