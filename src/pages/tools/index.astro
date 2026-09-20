@@ -54,6 +54,16 @@ const redTools = [
   }
 ];
 
+const cloudTools = [
+  {
+    title: "Matriz de Equivalencias Multi-Cloud",
+    description: "Traducción directa de arquitecturas, servicios de red, cómputo y ciberseguridad entre Microsoft Azure, AWS y GCP.",
+    href: "/tools/cloud-matrix",
+    badge: "Arquitectura Cloud",
+    svgIcon: "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-4 h-4 text-white group-hover:text-zinc-200 transition-colors\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-width=\"2\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z\" /></svg>"
+  }
+];
+
 const emailTools = [
   {
     title: "Auditoría de Salud DNS y Correo",
@@ -224,6 +234,14 @@ const renderCards = (toolsList: typeof redTools) => {
           Redes e Infraestructura IP
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1" set:html={renderCards(redTools)} />
+      </section>
+
+      <!-- SECCIÓN NUEVA: Arquitectura Cloud e Infraestructura Híbrida -->
+      <section class="space-y-6">
+        <h2 class="text-xl font-display font-bold text-neutral-900 uppercase tracking-wide border-l-4 border-blue-600 pl-3">
+          Arquitectura Cloud e Infraestructura Híbrida
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1" set:html={renderCards(cloudTools)} />
       </section>
 
       <!-- SECCIÓN 2: Correo Electrónico y Autenticación -->

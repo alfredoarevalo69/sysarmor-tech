@@ -1,0 +1,345 @@
+---
+// src/pages/tools/cloud-matrix.astro
+import Layout from '../../layouts/Layout.astro';
+import { cloudData } from '../../data/cloudData.js';
+---
+
+<Layout 
+    title="Matriz de Equivalencias Cloud (Azure, AWS & GCP) | SysArmor Tech" 
+    description="Herramienta interactiva para arquitectos de sistemas e infraestructura. Mapeo directo y migración de servicios entre Azure, AWS y GCP."
+>
+    <!-- FontAwesome CDN para iconos limpios -->
+    <Fragment slot="head">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </Fragment>
+
+    <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
+        <div class="max-w-7xl mx-auto space-y-8">
+            
+            <!-- Botón Volver -->
+            <div>
+                <a 
+                    href="/tools" 
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
+                >
+                    <span>←</span> Volver a Herramientas
+                </a>
+            </div>
+
+            <!-- Encabezado descriptivo -->
+            <div class="space-y-3 text-center">
+                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 flex items-center justify-center gap-3">
+                    Matriz de Equivalencias Multi-Cloud
+                </h1>
+                <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+                    Traducción directa de arquitecturas, servicios de red, cómputo y ciberseguridad entre Microsoft Azure, AWS y Google Cloud Platform.
+                </p>
+            </div>
+
+            <!-- Controls Hub Card -->
+            <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                    <!-- Search Bar -->
+                    <div class="lg:col-span-5 relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="search-input" placeholder="Buscar por VNet, Entra ID, S3, RDS, Transit Gateway..." 
+                               class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-slate-100 placeholder-slate-500 transition-all">
+                    </div>
+
+                    <!-- Column Visibility Checkboxes -->
+                    <div class="lg:col-span-7 flex flex-wrap items-center justify-start lg:justify-end gap-3 text-sm">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Columnas:</span>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
+                            <input type="checkbox" id="col-aws" checked class="rounded border-slate-700 bg-slate-900 text-orange-500 focus:ring-0">
+                            <span class="text-slate-300 font-medium">AWS (Target)</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
+                            <input type="checkbox" id="col-azure" checked class="rounded border-slate-700 bg-slate-900 text-blue-500 focus:ring-0">
+                            <span class="text-slate-300 font-medium">Azure (Origen)</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
+                            <input type="checkbox" id="col-gcp" checked class="rounded border-slate-700 bg-slate-900 text-red-500 focus:ring-0">
+                            <span class="text-slate-300 font-medium">GCP</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
+                            <input type="checkbox" id="col-desc" checked class="rounded border-slate-700 bg-slate-900 text-slate-400 focus:ring-0">
+                            <span class="text-slate-300 font-medium">Propósito</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Category Quick Filters -->
+                <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider shrink-0">Filtrar por Dominio:</span>
+                        <div id="category-filters" class="flex flex-wrap items-center gap-2"></div>
+                    </div>
+                    
+                    <!-- Global Export Markdown Button -->
+                    <button type="button" id="export-btn" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shrink-0 cursor-pointer uppercase tracking-wider">
+                        <i class="fa-solid fa-copy"></i> Copiar Hoja en Markdown
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Table Card -->
+            <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-4 bg-slate-950/80 border-b border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                    <span>Matriz multicloud estructurada bajo principios de alta disponibilidad.</span>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span><strong id="service-count" class="text-white">0</strong> mapeos activos</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse" id="cloud-table">
+                        <thead>
+                            <tr class="bg-slate-950 text-slate-400 uppercase text-xs tracking-wider border-b border-slate-800">
+                                <th class="py-4 px-5 font-semibold w-1/4 col-header-aws text-orange-400">
+                                    <i class="fa-brands fa-aws mr-1.5 text-base"></i> AWS (Destino)
+                                </th>
+                                <th class="py-4 px-5 font-semibold w-1/4 col-header-azure text-blue-400">
+                                    <i class="fa-brands fa-microsoft mr-1.5 text-base"></i> Azure (Tu Base)
+                                </th>
+                                <th class="py-4 px-5 font-semibold w-1/4 col-header-gcp text-red-400">
+                                    <i class="fa-brands fa-google mr-1.5 text-base"></i> GCP
+                                </th>
+                                <th class="py-4 px-5 font-semibold w-2/5 col-header-desc text-slate-300">
+                                    <i class="fa-solid fa-circle-info mr-1.5"></i> Propósito Principal & Guía de Migración
+                                </th>
+                                <th class="py-4 px-4 font-semibold text-center w-16">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-slate-800/60 text-sm"></tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden py-16 text-center space-y-3">
+                    <div class="text-slate-600 text-4xl">
+                        <i class="fa-solid fa-cloud-slash"></i>
+                    </div>
+                    <h3 class="text-base font-medium text-slate-300">No se encontraron servicios coincidentes</h3>
+                    <p class="text-xs text-slate-500">Prueba ajustando los términos de búsqueda o cambiando el filtro de dominio.</p>
+                </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+                <div id="toast-icon" class="text-emerald-400 text-lg">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <p id="toast-title" class="font-semibold text-xs text-white">Copiado con éxito</p>
+                    <p id="toast-msg" class="text-xs text-slate-300">Fila copiada en formato Markdown.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script define:vars={{ cloudDataJson: JSON.stringify(cloudData) }}>
+    const cloudData = JSON.parse(cloudDataJson);
+    let activeCategory = 'ALL';
+
+    const searchInput = document.getElementById('search-input');
+    const colAws = document.getElementById('col-aws');
+    const colAzure = document.getElementById('col-azure');
+    const colGcp = document.getElementById('col-gcp');
+    const colDesc = document.getElementById('col-desc');
+    const exportBtn = document.getElementById('export-btn');
+
+    // Declaración temprana de funciones globales para eventos en línea
+    window.filterByCategory = function(category) {
+        activeCategory = category;
+        renderCategoryFilters();
+        filterServices();
+    };
+
+    window.copyRowMarkdown = function(index) {
+        const item = cloudData[index];
+        const md = `| ${item.aws} | ${item.azure} | ${item.gcp} | ${item.desc} |`;
+        copyToClipboard(md, "Fila copiada", "La fila seleccionada se copió en formato Markdown.");
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCategoryFilters();
+        renderTable(cloudData);
+        updateServiceCount(cloudData.length);
+    });
+
+    searchInput?.addEventListener('input', () => filterServices());
+    colAws?.addEventListener('change', () => applyColumnVisibility());
+    colAzure?.addEventListener('change', () => applyColumnVisibility());
+    colGcp?.addEventListener('change', () => applyColumnVisibility());
+    colDesc?.addEventListener('change', () => applyColumnVisibility());
+    exportBtn?.addEventListener('click', () => exportFullMarkdown());
+
+    function renderCategoryFilters() {
+        const container = document.getElementById('category-filters');
+        if (!container) return;
+        const categories = ['ALL', ...new Set(cloudData.map(item => item.category))];
+        
+        container.innerHTML = categories.map(cat => {
+            const isActive = cat === activeCategory;
+            const activeClass = isActive 
+                ? 'bg-[#D4AF37] text-slate-950 font-bold border-[#D4AF37] shadow-md' 
+                : 'bg-slate-950 text-slate-300 border-slate-700 hover:border-slate-500 hover:text-white';
+            
+            const displayName = cat === 'ALL' ? 'Todos los Dominios' : cat;
+            return `<button type="button" onclick="window.filterByCategory('${cat}')" class="px-3 py-1.5 text-xs rounded-xl border transition ${activeClass} cursor-pointer">${displayName}</button>`;
+        }).join('');
+    }
+
+    function filterServices() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        
+        const filtered = cloudData.filter(item => {
+            const matchesCategory = activeCategory === 'ALL' || item.category === activeCategory;
+            const matchesQuery = !query || 
+                item.aws.toLowerCase().includes(query) ||
+                item.azure.toLowerCase().includes(query) ||
+                item.gcp.toLowerCase().includes(query) ||
+                item.category.toLowerCase().includes(query) ||
+                item.desc.toLowerCase().includes(query);
+            
+            return matchesCategory && matchesQuery;
+        });
+
+        renderTable(filtered);
+        updateServiceCount(filtered.length);
+    }
+
+    function updateServiceCount(count) {
+        const counter = document.getElementById('service-count');
+        if (counter) counter.innerText = count;
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('table-body');
+        const emptyState = document.getElementById('empty-state');
+        if (!tbody || !emptyState) return;
+
+        if (data.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+
+        tbody.innerHTML = data.map((item) => {
+            const realIndex = cloudData.findIndex(d => d.aws === item.aws && d.azure === item.azure);
+            return `
+                <tr class="hover:bg-slate-800/40 transition group">
+                    <td class="py-3.5 px-5 align-top col-aws text-orange-300 font-medium">${item.aws}</td>
+                    <td class="py-3.5 px-5 align-top col-azure text-blue-300 font-medium">${item.azure}</td>
+                    <td class="py-3.5 px-5 align-top col-gcp text-red-300 font-medium">${item.gcp}</td>
+                    <td class="py-3.5 px-5 align-top col-desc text-slate-300 text-xs leading-relaxed">
+                        <span class="inline-block px-2 py-0.5 bg-slate-950 border border-slate-700 text-slate-300 font-medium text-[10px] rounded-md mb-1.5">${item.category}</span><br>
+                        ${item.desc}
+                    </td>
+                    <td class="py-3.5 px-4 align-top text-center">
+                        <button type="button" onclick="window.copyRowMarkdown(${realIndex})" title="Copiar fila en Markdown" class="p-2 bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 rounded-xl transition opacity-60 group-hover:opacity-100 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-copy text-xs"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        applyColumnVisibility();
+    }
+
+    function applyColumnVisibility() {
+        if (!colAws || !colAzure || !colGcp || !colDesc) return;
+        toggleElements('col-aws', colAws.checked);
+        toggleElements('col-azure', colAzure.checked);
+        toggleElements('col-gcp', colGcp.checked);
+        toggleElements('col-desc', colDesc.checked);
+    }
+
+    function toggleElements(className, show) {
+        const elements = document.querySelectorAll(`.${className}, .col-header-${className.replace('col-', '')}`);
+        elements.forEach(el => {
+            if (show) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+    }
+
+    function exportFullMarkdown() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const filtered = cloudData.filter(item => {
+            const matchesCategory = activeCategory === 'ALL' || item.category === activeCategory;
+            const matchesQuery = !query || 
+                item.aws.toLowerCase().includes(query) ||
+                item.azure.toLowerCase().includes(query) ||
+                item.gcp.toLowerCase().includes(query) ||
+                item.category.toLowerCase().includes(query) ||
+                item.desc.toLowerCase().includes(query);
+            return matchesCategory && matchesQuery;
+        });
+
+        if (filtered.length === 0) {
+            showToast("Sin datos", "No hay filas visibles para exportar.", "text-yellow-400");
+            return;
+        }
+
+        let md = `# Hoja de Ruta: Azure a AWS (Roadmap)\n\n`;
+        md += `| AWS (Destino) | Azure (Origen) | GCP | Propósito Principal |\n`;
+        md += `| :--- | :--- | :--- | :--- |\n`;
+        
+        filtered.forEach(item => {
+            md += `| ${item.aws} | ${item.azure} | ${item.gcp} | ${item.desc} |\n`;
+        });
+
+        copyToClipboard(md, "Hoja exportada", `Se copiaron ${filtered.length} servicios en formato Markdown.`);
+    }
+
+    function copyToClipboard(text, title, msg) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(title, msg);
+            }).catch(() => {
+                fallbackCopy(text, title, msg);
+            });
+        } else {
+            fallbackCopy(text, title, msg);
+        }
+    }
+
+    function fallbackCopy(text, title, msg) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast(title, msg);
+        } catch (err) {
+            showToast("Error", "No se pudo copiar al portapapeles.", "text-red-400");
+        }
+        document.body.removeChild(textarea);
+    }
+
+    function showToast(title, msg, iconColor = "text-emerald-400") {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        document.getElementById('toast-title').innerText = title;
+        document.getElementById('toast-msg').innerText = msg;
+        document.getElementById('toast-icon').className = `${iconColor} text-lg`;
+
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+            toast.classList.add('translate-y-20', 'opacity-0');
+        }, 3000);
+    }
+</script>
