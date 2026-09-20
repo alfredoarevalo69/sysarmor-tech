@@ -1,7 +1,6 @@
 ---
 // src/pages/tools/vlsm.astro
 import Layout from '../../layouts/Layout.astro';
-import VlsmCalculator from '../../components/VlsmCalculator';
 ---
 
 <Layout title="Calculadora VLSM (IPv4) | SysArmor Tech">
@@ -25,9 +24,344 @@ import VlsmCalculator from '../../components/VlsmCalculator';
         </p>
       </div>
 
-      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
-        <VlsmCalculator client:only="preact" />
+      <!-- Contenedor Principal de la Calculadora -->
+      <div class="bg-white border border-slate-300 rounded-2xl p-6 shadow-xl text-black">
+        <div class="space-y-6">
+          
+          <!-- Indicador de Pasos -->
+          <div class="flex items-center justify-between bg-slate-100 p-3 rounded-xl border border-slate-300 text-xs font-bold text-neutral-700">
+            <span id="step-badge-1" class="px-3 py-1 rounded-lg bg-[#0b0f19] text-white">Paso 1: Red Base</span>
+            <span id="step-badge-2" class="px-3 py-1 rounded-lg text-slate-500">Paso 2: Subredes</span>
+            <span id="step-badge-3" class="px-3 py-1 rounded-lg text-slate-500">Paso 3: Resultados</span>
+          </div>
+
+          <div id="error-box" class="hidden bg-red-50 border border-red-300 text-red-800 p-3 rounded-lg text-xs font-semibold"></div>
+
+          <!-- PASO 1 -->
+          <div id="step-1-container" class="space-y-4">
+            <div class="bg-slate-50 p-5 rounded-xl border border-slate-300 space-y-4">
+              <h3 class="text-sm font-bold text-neutral-900 uppercase tracking-wider">Asistente IPv4 - Red Principal</h3>
+              <div class="space-y-1">
+                <label class="block text-xs font-semibold text-neutral-700">Bloque IPv4 CIDR Base</label>
+                <input
+                  type="text"
+                  id="base-ip-input"
+                  value="192.168.1.0/24"
+                  class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
+                />
+              </div>
+              <button
+                type="button"
+                id="btn-next-1"
+                class="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors shadow-sm"
+              >
+                Siguiente: Agregar Requerimientos &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- PASO 2 -->
+          <div id="step-2-container" class="hidden space-y-6">
+            <div class="bg-slate-50 p-5 rounded-xl border border-slate-300 space-y-4">
+              <h3 class="text-sm font-bold text-neutral-900 uppercase tracking-wider">Añadir Subred o Departamento</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-neutral-600 mb-1">Nombre de la Red</label>
+                  <input
+                    type="text"
+                    id="net-name-input"
+                    placeholder="Ej: VLAN-Gerencia"
+                    class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-neutral-600 mb-1">Hosts Máximos Necesarios</label>
+                  <input
+                    type="number"
+                    id="hosts-input"
+                    min="1"
+                    value="30"
+                    class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#0b0f19]"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                id="btn-add-req"
+                class="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-2.5 rounded-lg text-sm cursor-pointer transition-colors shadow-sm"
+              >
+                Añadir a la lista VLSM
+              </button>
+            </div>
+
+            <div class="space-y-2">
+              <h4 id="requirements-title" class="text-xs font-bold uppercase tracking-wider text-neutral-600">Subredes Planificadas (0)</h4>
+              <div id="requirements-list" class="space-y-2">
+                <p class="text-xs text-slate-500 italic">No hay subredes configuradas en este asistente.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                type="button"
+                id="btn-back-1"
+                class="w-1/3 bg-slate-200 hover:bg-slate-300 text-neutral-800 font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors"
+              >
+                &larr; Volver
+              </button>
+              <button
+                type="button"
+                id="btn-calculate"
+                class="hidden w-2/3 bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer shadow-md transition-colors"
+              >
+                Calcular Distribución IPv4 VLSM
+              </button>
+            </div>
+          </div>
+
+          <!-- PASO 3 -->
+          <div id="step-3-container" class="hidden space-y-6">
+            <div class="bg-emerald-50 border border-emerald-300 p-4 rounded-xl text-sm text-emerald-900 flex justify-between items-center">
+              <h4 class="font-bold">Cálculo IPv4 Exitoso</h4>
+              <span id="results-count" class="text-xs font-semibold">0 subredes generadas</span>
+            </div>
+
+            <div id="results-list" class="space-y-4"></div>
+
+            <button
+              type="button"
+              id="btn-restart"
+              class="w-full bg-[#0b0f19] hover:bg-neutral-800 text-white font-bold py-3 rounded-xl text-sm cursor-pointer transition-colors shadow-sm"
+            >
+              Reiniciar Asistente IPv4
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
   </main>
+
+  <!-- Script Nativo de Control e Interacción -->
+  <script>
+    interface Requirement {
+      id: string;
+      name: string;
+      hostsNeeded: number;
+    }
+
+    let requirements: Requirement[] = [];
+    let currentStep = 1;
+
+    const ipToInt = (ip: string) => ip.split('.').reduce((acc, octet) => ((acc << 8) + parseInt(octet, 10)) >>> 0, 0);
+    const intToIp = (int: number) => [
+      (int >>> 24) & 255,
+      (int >>> 16) & 255,
+      (int >>> 8) & 255,
+      int & 255
+    ].join('.');
+
+    const showError = (msg: string | null) => {
+      const box = document.getElementById('error-box');
+      if (!box) return;
+      if (!msg) {
+        box.classList.add('hidden');
+        box.textContent = '';
+      } else {
+        box.textContent = msg;
+        box.classList.remove('hidden');
+      }
+    };
+
+    const updateView = () => {
+      document.getElementById('step-1-container')?.classList.toggle('hidden', currentStep !== 1);
+      document.getElementById('step-2-container')?.classList.toggle('hidden', currentStep !== 2);
+      document.getElementById('step-3-container')?.classList.toggle('hidden', currentStep !== 3);
+
+      const b1 = document.getElementById('step-badge-1');
+      const b2 = document.getElementById('step-badge-2');
+      const b3 = document.getElementById('step-badge-3');
+
+      if (b1) b1.className = `px-3 py-1 rounded-lg ${currentStep === 1 ? 'bg-[#0b0f19] text-white' : 'text-slate-500'}`;
+      if (b2) b2.className = `px-3 py-1 rounded-lg ${currentStep === 2 ? 'bg-[#0b0f19] text-white' : 'text-slate-500'}`;
+      if (b3) b3.className = `px-3 py-1 rounded-lg ${currentStep === 3 ? 'bg-emerald-700 text-white' : 'text-slate-500'}`;
+    };
+
+    const renderRequirements = () => {
+      const listEl = document.getElementById('requirements-list');
+      const titleEl = document.getElementById('requirements-title');
+      const btnCalc = document.getElementById('btn-calculate');
+      if (!listEl || !titleEl || !btnCalc) return;
+
+      titleEl.textContent = `Subredes Planificadas (${requirements.length})`;
+      btnCalc.classList.toggle('hidden', requirements.length === 0);
+
+      if (requirements.length === 0) {
+        listEl.innerHTML = `<p class="text-xs text-slate-500 italic">No hay subredes configuradas en este asistente.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = requirements.map(req => `
+        <div class="flex justify-between items-center bg-white border border-slate-200 px-4 py-3 rounded-lg shadow-sm">
+          <span class="font-mono text-sm">
+            <strong class="text-neutral-900">${req.name}</strong> <span class="text-slate-500">(${req.hostsNeeded} hosts requeridos)</span>
+          </span>
+          <button
+            type="button"
+            data-id="${req.id}"
+            class="delete-req-btn text-red-600 hover:text-red-800 p-2 bg-red-50 hover:bg-red-100 rounded-lg cursor-pointer transition-colors text-xs font-bold"
+          >
+            Eliminar
+          </button>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.delete-req-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).getAttribute('data-id');
+          requirements = requirements.filter(r => r.id !== id);
+          renderRequirements();
+        });
+      });
+    };
+
+    // Eventos de Navegación
+    document.getElementById('btn-next-1')?.addEventListener('click', () => {
+      const baseIp = (document.getElementById('base-ip-input') as HTMLInputElement)?.value.trim();
+      if (!baseIp || !baseIp.includes('/')) {
+        showError('La red base debe incluir notación CIDR (ej: 192.168.1.0/24).');
+        return;
+      }
+      showError(null);
+      currentStep = 2;
+      updateView();
+    });
+
+    document.getElementById('btn-back-1')?.addEventListener('click', () => {
+      showError(null);
+      currentStep = 1;
+      updateView();
+    });
+
+    document.getElementById('btn-add-req')?.addEventListener('click', () => {
+      showError(null);
+      const nameInput = document.getElementById('net-name-input') as HTMLInputElement;
+      const hostsInput = document.getElementById('hosts-input') as HTMLInputElement;
+      
+      const name = nameInput?.value.trim();
+      const hosts = parseInt(hostsInput?.value || '0', 10);
+
+      if (!name || isNaN(hosts) || hosts <= 0) {
+        showError('Ingresa un nombre de red válido y una cantidad de hosts mayor a 0.');
+        return;
+      }
+
+      requirements.push({
+        id: Math.random().toString(36).substring(2, 9),
+        name,
+        hostsNeeded: hosts
+      });
+
+      nameInput.value = '';
+      hostsInput.value = '30';
+      renderRequirements();
+    });
+
+    document.getElementById('btn-calculate')?.addEventListener('click', () => {
+      showError(null);
+      const baseIp = (document.getElementById('base-ip-input') as HTMLInputElement)?.value.trim();
+      if (!baseIp || !baseIp.includes('/')) {
+        showError('La red base es inválida.');
+        return;
+      }
+
+      try {
+        const [cleanIp] = baseIp.split('/');
+        let currentIpInt = ipToInt(cleanIp);
+        const sorted = [...requirements].sort((a, b) => b.hostsNeeded - a.hostsNeeded);
+
+        const results = sorted.map(req => {
+          const totalHostsNeeded = req.hostsNeeded + 2;
+          const hostBits = Math.ceil(Math.log2(totalHostsNeeded));
+          const cidrBits = 32 - hostBits;
+          const blockSize = Math.pow(2, hostBits);
+          
+          const networkAddress = intToIp(currentIpInt);
+          const broadcastInt = currentIpInt + blockSize - 1;
+          const broadcastAddress = intToIp(broadcastInt);
+          
+          const usableStart = intToIp(currentIpInt + 1);
+          const usableEnd = intToIp(broadcastInt - 1);
+          
+          const maskInt = (0xFFFFFFFF << hostBits) >>> 0;
+          const subnetMask = intToIp(maskInt);
+
+          const resObj = {
+            name: req.name,
+            networkAddress,
+            cidr: `/${cidrBits}`,
+            subnetMask,
+            usableRange: req.hostsNeeded === 1 ? `${usableStart} - ${usableStart}` : `${usableStart} - ${usableEnd}`,
+            broadcastAddress,
+            hostsRequested: req.hostsNeeded,
+            hostsAllocated: blockSize - 2
+          };
+
+          currentIpInt += blockSize;
+          return resObj;
+        });
+
+        // Renderizar Resultados
+        const resultsList = document.getElementById('results-list');
+        const resultsCount = document.getElementById('results-count');
+        if (resultsCount) resultsCount.textContent = `${results.length} subredes generadas`;
+        if (resultsList) {
+          resultsList.innerHTML = results.map(res => `
+            <div class="bg-white border-2 border-slate-300 rounded-xl overflow-hidden shadow-sm">
+              <div class="bg-slate-100 px-4 py-2.5 border-b-2 border-slate-300">
+                <span class="font-bold text-sm text-neutral-900">Subred: ${res.name}</span>
+              </div>
+              <table class="w-full text-left border-collapse text-xs font-mono">
+                <tbody>
+                  <tr class="border-b border-slate-300">
+                    <td class="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300 w-1/3">Network CIDR:</td>
+                    <td class="p-3 text-neutral-900">${res.networkAddress}${res.cidr}</td>
+                  </tr>
+                  <tr class="border-b border-slate-300">
+                    <td class="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Subnet Mask:</td>
+                    <td class="p-3 text-neutral-900">${res.subnetMask}</td>
+                  </tr>
+                  <tr class="border-b border-slate-300">
+                    <td class="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Usable Range:</td>
+                    <td class="p-3 text-neutral-900 break-all">${res.usableRange}</td>
+                  </tr>
+                  <tr class="border-b border-slate-300">
+                    <td class="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Broadcast:</td>
+                    <td class="p-3 text-neutral-900">${res.broadcastAddress}</td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-semibold text-right text-neutral-800 bg-slate-100 border-r border-slate-300">Hosts (Req/Alloc):</td>
+                    <td class="p-3 text-neutral-900">${res.hostsRequested} / ${res.hostsAllocated}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          `).join('');
+        }
+
+        currentStep = 3;
+        updateView();
+      } catch (err: any) {
+        showError('Ocurrió un error al calcular las subredes: ' + (err.message || 'Error desconocido'));
+      }
+    });
+
+    document.getElementById('btn-restart')?.addEventListener('click', () => {
+      requirements = [];
+      currentStep = 1;
+      showError(null);
+      renderRequirements();
+      updateView();
+    });
+  </script>
 </Layout>

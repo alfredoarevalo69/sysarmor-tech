@@ -36,39 +36,90 @@ export default function CalculatorIPv6() {
     setRequirements(requirements.filter((req) => req.id !== id));
   };
 
-  const updateRequirement = (id: string, field: keyof IPv6Requirement, value: any) => {
+  const updateRequirement = (id: string, field: keyof IPv6Requirement, value: string) => {
     setRequirements(
       requirements.map((req) => (req.id === id ? { ...req, [field]: value } : req))
     );
   };
 
+  function parseIPv6ToBigInt(ip: string): bigint {
+    const [addrPart] = ip.split('/');
+    let fullIp = addrPart;
+    if (fullIp.includes('::')) {
+      const parts = fullIp.split('::');
+      const left = parts[0] ? parts[0].split(':') : [];
+      const right = parts[1] ? parts[1].split(':') : [];
+      const missing = 8 - (left.length + right.length);
+      const middle = Array(missing).fill('0');
+      fullIp = [...left, ...middle, ...right].join(':');
+    }
+    const groups = fullIp.split(':').map((g) => (g === '' ? 0 : parseInt(g, 16)));
+    let result = 0n;
+    for (const g of groups) {
+      result = (result << 16n) + BigInt(g);
+    }
+    return result;
+  }
+
+  function bigIntToIPv6(bits: bigint): string {
+    const groups: string[] = [];
+    for (let i = 0; i < 8; i++) {
+      const shift = BigInt((7 - i) * 16);
+      const val = Number((bits >> shift) & 0xffffn);
+      groups.push(val.toString(16));
+    }
+    return groups.join(':').replace(/(^|:)0(:0)+:0(:|$)/, '::').replace(/:{2,}/, '::');
+  }
+
+  function bigIntToFullIPv6(bits: bigint): string {
+    const groups: string[] = [];
+    for (let i = 0; i < 8; i++) {
+      const shift = BigInt((7 - i) * 16);
+      const val = Number((bits >> shift) & 0xffffn);
+      groups.push(val.toString(16).padStart(4, '0'));
+    }
+    return groups.join(':');
+  }
+
   const handleCalculate = (e: Event) => {
     e.preventDefault();
-    const [baseIp] = basePrefix.split('/');
-    let currentSubnetIndex = 0;
+    try {
+      const [baseIpStr] = basePrefix.split('/');
+      let currentIpBigInt = parseIPv6ToBigInt(baseIpStr || '2001:db8::');
 
-    const calculated = requirements.map((req) => {
-      const hexBlock = currentSubnetIndex.toString(16).padStart(4, '0');
-      currentSubnetIndex++;
+      const calculated = requirements.map((req) => {
+        const subnetPrefixLen = 64;
+        const shiftBits = 128 - subnetPrefixLen;
+        const blockSize = 1n << BigInt(shiftBits);
 
-      const cleanBase = baseIp.replace(/::$/, '').replace(/:$/, '');
-      const subIp = `${cleanBase}:${hexBlock}::`;
-      const fullIp = `2001:0db8:cafe:0000:0000:0000:0000:${hexBlock.padStart(4, '0')}`;
-      const rangeStart = `2001:0db8:cafe:0000:0000:0000:0000:0000`;
-      const rangeEnd = `2001:0db8:cafe:ffff:ffff:ffff:ffff:ffff`;
+        const mask = ~((1n << BigInt(128 - subnetPrefixLen)) - 1n);
+        currentIpBigInt = (currentIpBigInt + blockSize - 1n) & mask;
 
-      return {
-        name: req.name,
-        ipAddress: `${subIp}/48`,
-        fullIpAddress: fullIp,
-        totalIpAddresses: '1,208,925,819,614,629,174,706,176',
-        total64Networks: '65,536',
-        network: subIp,
-        ipRange: `${rangeStart} - ${rangeEnd}`,
-      };
-    });
+        const networkBigInt = currentIpBigInt;
+        const lastAddressBigInt = currentIpBigInt + blockSize - 1n;
 
-    setResults(calculated);
+        const networkAddress = bigIntToIPv6(networkBigInt);
+        const fullIp = bigIntToFullIPv6(networkBigInt);
+        const rangeStart = bigIntToFullIPv6(networkBigInt);
+        const rangeEnd = bigIntToFullIPv6(lastAddressBigInt);
+
+        currentIpBigInt += blockSize;
+
+        return {
+          name: req.name,
+          ipAddress: `${networkAddress}/${subnetPrefixLen}`,
+          fullIpAddress: fullIp,
+          totalIpAddresses: '18,446,744,073,709,551,616',
+          total64Networks: '1',
+          network: networkAddress,
+          ipRange: `${rangeStart} - ${rangeEnd}`,
+        };
+      });
+
+      setResults(calculated);
+    } catch (err) {
+      console.error("Error al calcular subredes IPv6:", err);
+    }
   };
 
   return (
@@ -226,11 +277,9 @@ export default function CalculatorIPv6() {
         </div>
       )}
 
-      {/* MODAL INTEGRADO PARA VER EL MANUAL SIN SALIR DEL PORTAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
           <div className="bg-white w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-300">
-            {/* Cabecera del Modal */}
             <div className="flex justify-between items-center px-6 py-4 bg-[#0b0f19] text-white">
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,7 +296,6 @@ export default function CalculatorIPv6() {
               </button>
             </div>
 
-            {/* Contenido del PDF dentro del Portal */}
             <div className="flex-1 bg-slate-100 p-2">
               <iframe
                 src="/docs/Guia_Subnetting_IPv6.pdf"

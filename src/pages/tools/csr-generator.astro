@@ -8,12 +8,22 @@ import GeneradorCSR from '../../components/GeneradorCSR.astro';
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-zinc-200 text-neutral-900 border-t-2 border-zinc-300">
     <div class="max-w-4xl mx-auto space-y-8">
       
+      <!-- Botón de retorno a herramientas -->
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+      
       <div class="space-y-3 text-center">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide uppercase">
-          Generador de Solicitudes CSR
+          Generador de Solicitudes CSR y Claves SSL/TLS
         </h1>
         <p class="text-zinc-700 font-medium text-base sm:text-lg leading-relaxed font-sans">
-          Genera un par de claves criptográficas y un archivo CSR X.509 de forma local y segura en tu navegador.
+          Genera un par de claves criptográficas y una solicitud de firma de certificado X.509 (CSR) de forma local y segura en tu navegador.
         </p>
 
         <div class="bg-amber-100 border-2 border-amber-400 text-amber-950 py-3 px-4 rounded-lg shadow-sm inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-wide">

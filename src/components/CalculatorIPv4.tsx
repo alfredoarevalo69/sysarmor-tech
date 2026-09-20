@@ -1,6 +1,75 @@
 // @ts-check
 import { useState } from 'preact/hooks';
-import { calculateIPv4Subnets, type CalculatedIPv4Subnet, type IPv4Requirement } from '../utils/ipv4Engine';
+
+interface IPv4Requirement {
+  id: string;
+  name: string;
+  hostsNeeded: number;
+}
+
+interface CalculatedIPv4Subnet {
+  name: string;
+  networkAddress: string;
+  cidr: string;
+  subnetMask: string;
+  usableRange: string;
+  broadcastAddress: string;
+  hostsRequested: number;
+  hostsAllocated: number;
+}
+
+function ipToInt(ip: string): number {
+  return ip.split('.').reduce((acc, octet) => ((acc << 8) + parseInt(octet, 10)) >>> 0, 0);
+}
+
+function intToIp(int: number): string {
+  return [
+    (int >>> 24) & 255,
+    (int >>> 16) & 255,
+    (int >>> 8) & 255,
+    int & 255
+  ].join('.');
+}
+
+function calculateSubnets(baseIpInput: string, requirements: IPv4Requirement[]): CalculatedIPv4Subnet[] {
+  const [cleanIp] = baseIpInput.split('/');
+  let currentIpInt = ipToInt(cleanIp);
+
+  const sorted = [...requirements].sort((a, b) => b.hostsNeeded - a.hostsNeeded);
+  
+  return sorted.map((req) => {
+    const totalHostsNeeded = req.hostsNeeded + 2;
+    const hostBits = Math.ceil(Math.log2(totalHostsNeeded));
+    const cidrBits = 32 - hostBits;
+    const blockSize = Math.pow(2, hostBits);
+    
+    const networkAddress = intToIp(currentIpInt);
+    const broadcastInt = currentIpInt + blockSize - 1;
+    const broadcastAddress = intToIp(broadcastInt);
+    
+    const usableStart = intToIp(currentIpInt + 1);
+    const usableEnd = intToIp(broadcastInt - 1);
+    
+    const maskInt = (0xFFFFFFFF << hostBits) >>> 0;
+    const subnetMask = intToIp(maskInt);
+
+    const allocatedSubnet: CalculatedIPv4Subnet = {
+      name: req.name,
+      networkAddress: networkAddress,
+      cidr: `/${cidrBits}`,
+      subnetMask: subnetMask,
+      usableRange: req.hostsNeeded === 1 
+        ? `${usableStart} - ${usableStart}` 
+        : `${usableStart} - ${usableEnd}`,
+      broadcastAddress: broadcastAddress,
+      hostsRequested: req.hostsNeeded,
+      hostsAllocated: blockSize - 2,
+    };
+
+    currentIpInt += blockSize;
+    return allocatedSubnet;
+  });
+}
 
 export default function CalculatorIPv4() {
   const [step, setStep] = useState<number>(1);
@@ -55,7 +124,7 @@ export default function CalculatorIPv4() {
       return;
     }
     try {
-      const res = calculateIPv4Subnets(baseIp, requirements);
+      const res = calculateSubnets(baseIp, requirements);
       setResults(res);
       setStep(3);
     } catch (err: any) {
@@ -64,7 +133,7 @@ export default function CalculatorIPv4() {
   };
 
   return (
-    <div className="space-y-6 text-black">
+    <div className="space-y-6 text-black bg-white p-6 rounded-xl shadow-md">
       {/* Indicador de Pasos del Asistente */}
       <div className="flex items-center justify-between bg-slate-100 p-3 rounded-xl border border-slate-300 text-xs font-bold text-neutral-700">
         <span className={`px-3 py-1 rounded-lg ${step === 1 ? 'bg-[#0b0f19] text-white' : 'text-slate-500'}`}>
@@ -89,9 +158,6 @@ export default function CalculatorIPv4() {
         <div className="space-y-4">
           <div className="bg-slate-50 p-5 rounded-xl border border-slate-300 space-y-4">
             <h3 className="text-sm font-bold text-neutral-900 uppercase tracking-wider">Asistente IPv4 - Red Principal</h3>
-            <p className="text-xs text-slate-600">
-              Define la dirección de red troncal que deseas fragmentar mediante VLSM.
-            </p>
             <div className="space-y-1">
               <label className="block text-xs font-semibold text-neutral-700">Bloque IPv4 CIDR Base</label>
               <input
@@ -109,21 +175,6 @@ export default function CalculatorIPv4() {
             >
               Siguiente: Agregar Requerimientos &rarr;
             </button>
-          </div>
-
-          <div className="bg-slate-50 border border-slate-300 rounded-xl p-4 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-800">Documentación y Teoría VLSM</h4>
-            <p className="text-xs text-slate-600">
-              Consulta el artículo completo en el blog técnico para repasar los fundamentos del cálculo de subredes IPv4.
-            </p>
-            <a
-              href="/blog/manual-subnetting-ipv4"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-100 text-neutral-900 font-semibold px-4 py-2 rounded-lg text-xs transition-colors shadow-sm"
-            >
-              <span>🌐 Leer Manual Subnetting IPv4 (Blog)</span>
-            </a>
           </div>
         </div>
       )}
@@ -179,11 +230,8 @@ export default function CalculatorIPv4() {
                     type="button"
                     onClick={() => handleRemove(req.id)}
                     className="text-red-600 hover:text-red-800 p-2 bg-red-50 hover:bg-red-100 rounded-lg cursor-pointer transition-colors"
-                    title="Eliminar subred"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
+                    Eliminar
                   </button>
                 </div>
               ))
