@@ -1,12 +1,21 @@
 ---
 // src/pages/tools/certificate-validator.astro
 import Layout from '../../layouts/Layout.astro';
+
+// Metadatos optimizados para SEO y transparencia técnica
+const toolMeta = {
+  title: "Validador y Decodificador de Certificados X.509 SSL/TLS | SysArmor Tech",
+  description: "Analiza la validez, vigencia, emisor y propiedades criptográficas de certificados SSL/TLS de forma local y segura. Inspecciona claves públicas, algoritmos de firma y fechas de expiración en formato PEM.",
+  lastUpdated: "2026-09-15",
+  version: "1.2.0"
+};
 ---
 
-<Layout title="Validador de Certificados X.509 | SysArmor Tech">
+<Layout title={toolMeta.title}>
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-neutral-900">
     <div class="max-w-5xl mx-auto space-y-8">
 
+      <!-- Navegación de Retorno -->
       <div>
         <a 
           href="/tools" 
@@ -16,14 +25,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
-          Validador de Certificados X.509
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Analiza la validez, vigencia, emisor y propiedades criptográficas de certificados SSL/TLS de forma local y segura.
-        </p>
-      </div>
+      <!-- Encabezado Semántico con tono gris intermedio suave -->
+      <header class="space-y-4 max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 border-b border-slate-300 pb-4">
+          <span class="bg-indigo-100 text-indigo-800 font-medium px-2.5 py-1 rounded-full border border-indigo-200">
+            Seguridad SSL / TLS
+          </span>
+          <div class="flex items-center gap-4 font-mono text-slate-600">
+            <span>Actualizado: <time datetime="2026-09-15">15 Sept, 2026</time></span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-center">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+            Validador de Certificados X.509
+          </h1>
+          <p class="text-neutral-700 font-medium text-base leading-relaxed">
+            Analiza la validez, vigencia, emisor y propiedades criptográficas de certificados SSL/TLS de forma local y segura. Inspecciona claves públicas, algoritmos de firma y fechas de expiración en formato PEM.
+          </p>
+        </div>
+      </header>
 
       <!-- Tarjeta Principal de Entrada -->
       <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
@@ -130,6 +152,19 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
       </div>
+
+      <!-- SECCIÓN INFORMATIVA TÉCNICA (Clave para SEO semántico) -->
+      <section class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-300 space-y-4 text-slate-700">
+        <h2 class="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3">
+          ¿Por qué es importante validar tus certificados X.509?
+        </h2>
+        <p class="text-sm leading-relaxed">
+          Los certificados digitales basados en el estándar <strong>X.509</strong> son el pilar fundamental de la seguridad en infraestructuras web y corporativas (HTTPS, LDAPS, M365). Un certificado mal configurado, expirado o con algoritmos de firma obsoletos puede provocar caídas de servicios críticos o alertas de seguridad en los navegadores y sistemas operativos de los clientes.
+        </p>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600">
+          <strong>Privacidad y Seguridad Garantizada:</strong> El análisis del bloque PEM se procesa íntegramente del lado del cliente mediante bibliotecas criptográficas seguras. Ninguna clave privada ni información confidencial es transmitida o almacenada en nuestros servidores.
+        </div>
+      </section>
 
     </div>
   </main>

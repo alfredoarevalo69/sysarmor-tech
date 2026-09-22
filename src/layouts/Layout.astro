@@ -9,10 +9,13 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
-  variant?: 'home' | 'legal';
+  variant?: 'home' | 'legal' | 'tool';
   ogImage?: string;
   bgColor?: string;
   lcpImage?: string;
+  toolCategory?: string;
+  toolLastUpdated?: string;
+  toolVersion?: string;
 }
 
 const { 
@@ -20,7 +23,11 @@ const {
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
   bgColor = '#f1f5f9',
-  lcpImage
+  lcpImage,
+  variant,
+  toolCategory,
+  toolLastUpdated,
+  toolVersion
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
@@ -150,6 +157,39 @@ const schemaOrgData = {
     <Navbar />
     
     <main class="flex-grow w-full">
+      {variant === 'tool' && (
+        <div class="max-w-5xl mx-auto pt-12 px-4 sm:px-6">
+          <div class="mb-6">
+            <a href="/tools" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs">
+              <span>←</span> Volver a Herramientas
+            </a>
+          </div>
+
+          <header class="space-y-4 max-w-3xl mx-auto bg-slate-200 border-2 border-slate-400 p-6 sm:p-8 rounded-2xl shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 border-b border-slate-300 pb-4">
+              {toolCategory && (
+                <span class="bg-indigo-100 text-indigo-800 font-medium px-2.5 py-1 rounded-full border border-indigo-200">
+                  {toolCategory}
+                </span>
+              )}
+              <div class="flex items-center gap-4 font-mono text-slate-600 ml-auto">
+                {toolLastUpdated && <span>Actualizado: <time datetime={toolLastUpdated}>{toolLastUpdated}</time></span>}
+                {toolVersion && <span>Versión: {toolVersion}</span>}
+              </div>
+            </div>
+
+            <div class="space-y-2 text-center">
+              <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+                {title.split('|')[0]}
+              </h1>
+              <p class="text-neutral-700 font-medium text-base leading-relaxed">
+                {description}
+              </p>
+            </div>
+          </header>
+        </div>
+      )}
+
       <slot />
     </main>
     
