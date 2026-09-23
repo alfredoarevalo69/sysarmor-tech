@@ -46,59 +46,56 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmor
             
             <!-- Enlace de retorno -->
             <div>
-                <a href="/tools" class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md">
+                <a href="/tools" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs uppercase tracking-wider transition-colors shadow-sm">
                     <span>←</span> Volver a Herramientas
                 </a>
             </div>
 
-            <!-- Cuadro Contenedor Superior -->
-            <div class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-lg space-y-4 text-slate-900">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300">
-                        Infraestructura, Redes & Multi-Cloud
-                    </span>
-                    <div class="text-xs font-mono text-slate-500">
-                        Actualizado: 23 Sept, 2026 &bull; Versión: 1.6.0
+            <!-- Cuadro Contenedor Superior (Cabecera SEO unificada) -->
+            <div class="bg-slate-200 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-600 border-b border-slate-300 pb-3">
+                    <span class="px-3 py-1 bg-amber-300/80 text-neutral-900 font-bold rounded-md uppercase tracking-wider">Infraestructura, Redes & Multi-Cloud</span>
+                    <div class="flex items-center gap-4">
+                        <span>Actualizado: 23 Sept, 2026</span>
+                        <span>Versión: 1.6.0</span>
                     </div>
                 </div>
 
-                <hr class="border-slate-200 my-2" />
-                
-                <div class="space-y-3 text-center sm:text-left">
-                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 uppercase">
+                <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+                    <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
                         Verificador de Registros PTR (rDNS)
                     </h1>
-                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                    <p class="text-slate-700 font-medium text-base">
                         Traducción inversa de direcciones IP (IPv4 e IPv6) a nombres de host canónicos para la validación perimetral de servidores SMTP y prevención de bloqueos anti-spam.
                     </p>
                 </div>
             </div>
 
-            <!-- Componente Interactivo de la Herramienta -->
-            <div class="bg-slate-900 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4 text-slate-100">
+            <!-- Componente Interactivo de la Herramienta (Fondo oscuro equilibrado) -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-4">
                 <form id="ptr-form" class="flex flex-col sm:flex-row gap-3">
                     <input 
                         type="text" 
                         id="ptr-input" 
                         placeholder="Ej. 8.8.8.8 o 2001:4860:4860::8888" 
                         required
-                        class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 font-mono text-sm transition-all" 
+                        class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono text-base focus:outline-none focus:border-amber-500 shadow-inner placeholder-slate-500" 
                     />
                     <button 
                         type="submit"
                         id="ptr-btn" 
-                        class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer whitespace-nowrap">
+                        class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-colors shadow-sm cursor-pointer whitespace-nowrap">
                         Consultar rDNS
                     </button>
                 </form>
 
                 <!-- Contenedor de Resultados -->
-                <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-300 hidden max-h-80 overflow-y-auto"></div>
+                <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-900 p-4 rounded-xl border border-slate-800 text-slate-300 hidden max-h-80 overflow-y-auto"></div>
             </div>
 
             <!-- Bloque de Documentación Inferior -->
-            <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-lg space-y-6 text-slate-900">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-neutral-800">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-200 pb-3">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300">
                         Documentación Técnica & SEO
                     </span>
@@ -107,13 +104,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmor
                     </div>
                 </div>
 
-                <hr class="border-slate-200 my-2" />
-
-                <div class="space-y-2">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight uppercase">
+                <div class="space-y-4 text-sm sm:text-base leading-relaxed text-neutral-700">
+                    <h2 class="text-2xl font-display font-bold text-neutral-900">
                         Estructura y Fundamentos de Registros DNS PTR
                     </h2>
-                    <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                    <p>
                         Los registros PTR (Pointer records o registros DNS inversos) permiten asociar una dirección IP a un nombre de dominio canónico. Su correcta configuración es vital para la validación perimetral de servidores de correo electrónico y la mitigación de políticas anti-spam.
                     </p>
                 </div>
@@ -124,7 +119,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmor
                     <!-- Columna IPv4 -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 shadow-sm">
                         <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Ejemplo de Registro PTR (IPv4)</h3>
-                        <p class="text-xs text-slate-600">Estructura típica para bloques de red IPv4 en zonas <code class="font-mono text-amber-800">in-addr.arpa</code>:</p>
+                        <p class="text-xs text-slate-600">Estructura típica para bloques de red IPv4 en zonas <code class="font-mono text-amber-700">in-addr.arpa</code>:</p>
                         <div class="bg-slate-950 text-amber-300 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] overflow-x-auto">
                             1.2.168.192.in-addr.arpa. | PTR | example.com | 3600
                         </div>
@@ -138,7 +133,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmor
                     <!-- Columna IPv6 -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 shadow-sm">
                         <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Ejemplo de Registro PTR (IPv6)</h3>
-                        <p class="text-xs text-slate-600">Estructura de nibbles invertidos para rutas IPv6 en zonas <code class="font-mono text-amber-800">ip6.arpa</code>:</p>
+                        <p class="text-xs text-slate-600">Estructura de nibbles invertidos para rutas IPv6 en zonas <code class="font-mono text-amber-700">ip6.arpa</code>:</p>
                         <div class="bg-slate-950 text-amber-300 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] overflow-x-auto break-all">
                             1.0.0.0...8.e.f.ip6.arpa. | PTR | example.com | 3600
                         </div>
@@ -156,12 +151,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmor
     </main>
 
     <script>
-        /* ========================================================
-            DEPLOY CACHE-BUSTER & VERSION CONTROL
-            Timestamp: 2026-09-23T05:50:00Z 
-            Forza la invalidación del CDN edge en Vercel para este módulo
-            ======================================================== */
-
         const ptrForm = document.getElementById('ptr-form') as HTMLFormElement;
         const ptrInput = document.getElementById('ptr-input') as HTMLInputElement;
         const ptrResult = document.getElementById('ptr-result');

@@ -1,298 +1,348 @@
 ---
 // src/pages/tools/redirect-chain.astro
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Analizador de Cadena de Redirecciones | SysArmor Tech";
+const pageDescription = "Audita cadenas de redirección HTTP, códigos de estado final, tiempos de latencia y cabeceras de seguridad para optimización SEO e infraestructura perimetral.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmortech.com').toString();
 ---
 
-<Layout title="Analizador de Cadena de Redirecciones | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
-      <!-- Botón de Retorno -->
-      <div>
-        <a 
-          href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
-        >
-          <span>←</span> Volver a Herramientas
-        </a>
-      </div>
-
-      <!-- Títulos y Descripción -->
-      <div class="space-y-3 text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-          Analizador de Cadena de Redirecciones
-        </h1>
-        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
-          Audita cadenas de redirección HTTP, códigos de estado final, tiempos de latencia y cabeceras de seguridad.
-        </p>
-      </div>
-
-      <!-- Tarjeta del Formulario -->
-      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <form id="redirect-form" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="url-input" 
-            placeholder="ej. sysarmortech.com o https://ejemplo.com" 
-            required
-            class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-sm transition-all"
-          />
-          <button 
-            type="submit" 
-            id="submit-btn"
-            class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer"
-          >
-            Analizar URL
-          </button>
-        </form>
-      </div>
-
-      <!-- Contenedor de Resultados Dinámicos -->
-      <div id="result-container" class="hidden space-y-6"></div>
-
-      <!-- DOCUMENTACIÓN Y GUÍA TÉCNICA INTEGRADA -->
-      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-8">
-        
-        <!-- ¿Qué es una redirección HTTP? -->
-        <div class="space-y-3">
-          <h2 class="text-xl font-bold text-[#D4AF37] flex items-center gap-2">
-            <span>📖</span> ¿Qué es una redirección HTTP?
-          </h2>
-          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            Una redirección HTTP indica al navegador (o al crawler) que el recurso solicitado se encuentra en otra dirección. El servidor responde con un código de estado <code class="text-amber-400">3xx</code> y un header <code class="text-amber-400">Location</code> que contiene la nueva URL. El cliente sigue automáticamente esta indicación.
-          </p>
-        </div>
-
-        <!-- Tabla de Códigos HTTP -->
-        <div class="space-y-3">
-          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Códigos de Estado y su Impacto SEO</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-700 text-slate-400">
-                  <th class="py-2.5 px-3">Código</th>
-                  <th class="py-2.5 px-3">Tipo</th>
-                  <th class="py-2.5 px-3">Transferencia SEO</th>
-                  <th class="py-2.5 px-3">Caso de uso</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-800 text-slate-300 font-mono">
-                <tr>
-                  <td class="py-2.5 px-3 text-emerald-400 font-bold">301</td>
-                  <td class="py-2.5 px-3 text-slate-200">Permanente</td>
-                  <td class="py-2.5 px-3 text-emerald-300">Sí (total)</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-400">Migración de dominio, cambio de URL definitivo</td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 text-amber-400 font-bold">302</td>
-                  <td class="py-2.5 px-3 text-slate-200">Temporal</td>
-                  <td class="py-2.5 px-3 text-rose-400">No</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-400">A/B testing, mantenimiento temporal</td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 text-amber-400 font-bold">307</td>
-                  <td class="py-2.5 px-3 text-slate-200">Temporal estricto</td>
-                  <td class="py-2.5 px-3 text-rose-400">No</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-400">Preserva el método HTTP (POST sigue siendo POST)</td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 text-emerald-400 font-bold">308</td>
-                  <td class="py-2.5 px-3 text-slate-200">Permanente estricto</td>
-                  <td class="py-2.5 px-3 text-emerald-300">Sí (total)</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-400">Migración definitiva preservando el método HTTP</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Otros mecanismos -->
-        <div class="space-y-3 pt-2 border-t border-slate-800">
-          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Otros mecanismos de redirección</h3>
-          <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-slate-300">
-            <li><strong class="text-white">Meta refresh:</strong> Etiqueta <code class="text-amber-400 text-xs">&lt;meta http-equiv="refresh" content="0;url=..."&gt;</code> en el HTML. Menos fiable, no recomendada para el SEO.</li>
-            <li><strong class="text-white">JavaScript:</strong> <code class="text-amber-400 text-xs">window.location.href = "..."</code> o <code class="text-amber-400 text-xs">document.location.replace(...)</code>. Invisible para los crawlers que no ejecutan JavaScript.</li>
-          </ul>
-        </div>
-
-        <!-- ¿Qué analiza exactamente la herramienta? -->
-        <div class="space-y-3 pt-2 border-t border-slate-800">
-          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">¿Qué analiza exactamente la herramienta?</h3>
-          <p class="text-xs text-slate-400">Para cada hop de la cadena, el analizador recopila y audita los siguientes elementos:</p>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-700 text-slate-400">
-                  <th class="py-2.5 px-3">Elemento</th>
-                  <th class="py-2.5 px-3">Descripción</th>
-                  <th class="py-2.5 px-3">Resultado</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-800 text-slate-300">
-                <tr>
-                  <td class="py-2.5 px-3 font-mono text-[#D4AF37] font-semibold">Código de estado</td>
-                  <td class="py-2.5 px-3">Código HTTP de la respuesta (301, 302, 307, 308, 200)</td>
-                  <td class="py-2.5 px-3 text-slate-400">Tipo de redirección y finalidad</td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 font-mono text-[#D4AF37] font-semibold">Headers</td>
-                  <td class="py-2.5 px-3">Location, Cache-Control, HSTS, X-Robots-Tag</td>
-                  <td class="py-2.5 px-3 text-slate-400">Política de caché y directivas SEO</td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 font-mono text-[#D4AF37] font-semibold">Tiempo de respuesta</td>
-                  <td class="py-2.5 px-3">Latencia del hop en milisegundos</td>
-                  <td class="py-2.5 px-3 text-slate-400">Impacto acumulado en el rendimiento</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </main>
-
-  <script>
-    const form = document.getElementById('redirect-form') as HTMLFormElement;
-    const input = document.getElementById('url-input') as HTMLInputElement;
-    const container = document.getElementById('result-container') as HTMLDivElement;
-    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const urlValue = input.value.trim();
-      if (!urlValue) return;
-
-      btn.textContent = 'Analizando...';
-      btn.setAttribute('disabled', 'true');
-      container.classList.add('hidden');
-      container.innerHTML = '';
-
-      try {
-        const response = await fetch('/api/redirect-checker', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: urlValue }),
-        });
-        
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Error al procesar la solicitud');
-
-        const hops = result.hops || [];
-        const finalHop = hops[hops.length - 1];
-        const redirectCount = Math.max(0, hops.length - 1);
-        const totalTime = hops.reduce((acc: number, curr: any) => acc + (curr.responseTime || 0), 0);
-
-        let htmlContent = '';
-
-        // 1. Tarjeta de Resumen Superior
-        if (finalHop) {
-          htmlContent += `
-            <div class="bg-slate-900 border border-emerald-500/40 p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl text-white">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg">✓</div>
-                <div>
-                  <h4 class="font-bold text-white text-base">Cadena resuelta con éxito</h4>
-                  <div class="text-xs text-slate-300 flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                    <span>Estado final: <strong class="text-emerald-400 font-mono">${finalHop.status}</strong></span>
-                    <span>Redirecciones: <strong class="text-white">${redirectCount}</strong></span>
-                    <span>Tiempo total: <strong class="text-white">${totalTime} ms</strong></span>
-                  </div>
-                </div>
-              </div>
-              <div class="text-xs text-slate-300 truncate max-w-xs bg-slate-950 px-3 py-2 rounded-lg border border-slate-800">
-                Destino: <a href="${finalHop.url}" target="_blank" rel="noopener noreferrer" class="underline text-[#D4AF37] font-medium hover:text-[#c29d31]">${finalHop.url}</a>
-              </div>
-            </div>
-          `;
-        }
-
-        // 2. Bloque de Saltos HTTP
-        htmlContent += `
-          <div class="bg-slate-900 text-slate-100 border border-slate-700/80 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6">
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              HTTP &bull; ${redirectCount} redirecciones en la cadena
-            </div>
-            <div class="space-y-4">
-        `;
-
-        hops.forEach((hop: any, index: number) => {
-          const isLast = index === hops.length - 1;
-          const headersEntries = hop.headers ? Object.entries(hop.headers) : [];
-
-          htmlContent += `
-            <div class="relative pl-6 border-l-2 border-[#D4AF37]/50 space-y-3">
-              <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#D4AF37] text-slate-950 text-[10px] font-bold flex items-center justify-center">
-                ${index + 1}
-              </div>
-              <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
-                <div class="text-[#D4AF37] font-mono text-sm break-all font-semibold">
-                  ${hop.url}
-                </div>
-                <div class="flex flex-wrap items-center gap-3 text-xs">
-                  <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded border border-emerald-500/30">
-                    ${hop.status} ${hop.statusText || ''}
-                  </span>
-                  <span class="text-slate-200 font-medium">
-                    ${isLast ? 'Destino final de la petición' : 'Salto de Redirección'}
-                  </span>
-                  <span class="text-slate-400">Latencia: <strong class="text-slate-200">${hop.responseTime} ms</strong></span>
-                </div>
-          `;
-
-          if (headersEntries.length > 0) {
-            htmlContent += `
-              <div class="pt-2">
-                <button 
-                  type="button" 
-                  class="toggle-headers-btn text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 font-medium cursor-pointer"
-                  data-index="${index}"
-                >
-                  <span class="label-text">Mostrar headers (${headersEntries.length})</span>
-                  <span>▼</span>
-                </button>
-                <div id="headers-box-${index}" class="hidden mt-3 bg-[#020617] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-1.5 overflow-x-auto">
-                  ${headersEntries.map(([k, v]) => `<div class="flex justify-between gap-4"><span class="text-slate-400">${k}</span><span class="text-slate-100 text-right">${v}</span></div>`).join('')}
-                </div>
-              </div>
-            `;
-          }
-
-          htmlContent += `</div></div>`;
-        });
-
-        htmlContent += `</div></div>`;
-
-        container.innerHTML = htmlContent;
-        container.classList.remove('hidden');
-
-        document.querySelectorAll('.toggle-headers-btn').forEach((btnEl) => {
-          btnEl.addEventListener('click', (ev) => {
-            const idx = (ev.currentTarget as HTMLElement).getAttribute('data-index');
-            const box = document.getElementById(`headers-box-${idx}`);
-            const label = (ev.currentTarget as HTMLElement).querySelector('.label-text');
-            if (box) {
-              const isHidden = box.classList.contains('hidden');
-              if (isHidden) {
-                box.classList.remove('hidden');
-                if (label) label.textContent = 'Ocultar headers';
-              } else {
-                box.classList.add('hidden');
-                if (label) label.textContent = `Mostrar headers`;
+<Layout 
+    title={pageTitle}
+    description={pageDescription}
+    canonical={canonicalURL}
+>
+    <!-- Datos estructurados SEO (Schema.org WebApplication) -->
+    <slot slot="head">
+        <meta name="keywords" content="redirección HTTP, cadena de redirecciones, 301, 302, SEO técnico, latencia HTTP, SysArmor Tech" />
+        <meta name="author" content="SysArmor Tech Infrastructure Team" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalURL} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Analizador de Cadena de Redirecciones - SysArmor Tech",
+              "url": "https://sysarmortech.com/tools/redirect-chain",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "All",
+              "description": "Herramienta de diagnóstico de infraestructura para auditar redirecciones HTTP y códigos de estado en servidores web.",
+              "author": {
+                "@type": "Organization",
+                "name": "SysArmor Tech"
               }
             }
-          });
-        });
+        </script>
+    </slot>
 
-      } catch (err: any) {
-        container.innerHTML = `<div class="bg-rose-950/40 border border-rose-500/40 text-rose-200 p-4 rounded-xl text-sm font-medium">Error: ${err.message || 'Error de conexión con el servidor.'}</div>`;
-        container.classList.remove('hidden');
-      } finally {
-        btn.textContent = 'Analizar URL';
-        btn.removeAttribute('disabled');
-      }
-    });
-  </script>
+    <!-- Fondo real unificado (#cbd5e1) -->
+    <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
+        <div class="max-w-4xl mx-auto space-y-8">
+            
+            <!-- Enlace de retorno -->
+            <div>
+                <a href="/tools" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs uppercase tracking-wider transition-colors shadow-sm">
+                    <span>←</span> Volver a Herramientas
+                </a>
+            </div>
+
+            <!-- Cuadro Contenedor Superior (Cabecera SEO unificada) -->
+            <div class="bg-slate-200 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-600 border-b border-slate-300 pb-3">
+                    <span class="px-3 py-1 bg-amber-300/80 text-neutral-900 font-bold rounded-md uppercase tracking-wider">Infraestructura Web & SEO Técnico</span>
+                    <div class="flex items-center gap-4">
+                        <span>Actualizado: 23 Sept, 2026</span>
+                        <span>Versión: 1.6.0</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+                    <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
+                        Analizador de Cadena de Redirecciones
+                    </h1>
+                    <p class="text-slate-700 font-medium text-base">
+                        Audita cadenas de redirección HTTP, códigos de estado final, tiempos de latencia y cabeceras de seguridad para prevenir bucles y pérdida de autoridad SEO.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Componente Interactivo de la Herramienta (Fondo oscuro equilibrado) -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-4">
+                <form id="redirect-form" class="flex flex-col sm:flex-row gap-3">
+                    <input 
+                        type="text" 
+                        id="url-input" 
+                        placeholder="ej. sysarmortech.com o https://ejemplo.com" 
+                        required
+                        class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono text-base focus:outline-none focus:border-amber-500 shadow-inner placeholder-slate-500" 
+                    />
+                    <button 
+                        type="submit"
+                        id="submit-btn" 
+                        class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-colors shadow-sm cursor-pointer whitespace-nowrap">
+                        Analizar URL
+                    </button>
+                </form>
+
+                <!-- Contenedor de Resultados Dinámicos -->
+                <div id="result-container" class="hidden space-y-6 pt-4"></div>
+            </div>
+
+            <!-- Bloque de Documentación Inferior -->
+            <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-neutral-800">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-200 pb-3">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300">
+                        Documentación Técnica & Guía SEO
+                    </span>
+                    <div class="text-xs font-mono text-slate-500">
+                        Estándar RFC 7231 / HTTP Status Codes
+                    </div>
+                </div>
+
+                <!-- ¿Qué es una redirección HTTP? -->
+                <div class="space-y-3">
+                    <h2 class="text-xl font-display font-bold text-neutral-900 flex items-center gap-2">
+                        <span>📖</span> ¿Qué es una redirección HTTP?
+                    </h2>
+                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                        Una redirección HTTP indica al navegador (o al crawler) que el recurso solicitado se encuentra en otra dirección. El servidor responde con un código de estado <code class="font-mono text-amber-700">3xx</code> y un header <code class="font-mono text-amber-700">Location</code> que contiene la nueva URL. El cliente sigue automáticamente esta indicación.
+                    </p>
+                </div>
+
+                <!-- Tabla de Códigos HTTP -->
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Códigos de Estado y su Impacto SEO</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-300 text-slate-600">
+                                    <th class="py-2.5 px-3">Código</th>
+                                    <th class="py-2.5 px-3">Tipo</th>
+                                    <th class="py-2.5 px-3">Transferencia SEO</th>
+                                    <th class="py-2.5 px-3">Caso de uso</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-700 font-mono">
+                                <tr>
+                                    <td class="py-2.5 px-3 text-emerald-600 font-bold">301</td>
+                                    <td class="py-2.5 px-3 text-slate-900">Permanente</td>
+                                    <td class="py-2.5 px-3 text-emerald-600 font-semibold">Sí (total)</td>
+                                    <td class="py-2.5 px-3 font-sans text-slate-600">Migración de dominio, cambio de URL definitivo</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 text-amber-600 font-bold">302</td>
+                                    <td class="py-2.5 px-3 text-slate-900">Temporal</td>
+                                    <td class="py-2.5 px-3 text-rose-600 font-semibold">No</td>
+                                    <td class="py-2.5 px-3 font-sans text-slate-600">A/B testing, mantenimiento temporal</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 text-amber-600 font-bold">307</td>
+                                    <td class="py-2.5 px-3 text-slate-900">Temporal estricto</td>
+                                    <td class="py-2.5 px-3 text-rose-600 font-semibold">No</td>
+                                    <td class="py-2.5 px-3 font-sans text-slate-600">Preserva el método HTTP (POST sigue siendo POST)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 text-emerald-600 font-bold">308</td>
+                                    <td class="py-2.5 px-3 text-slate-900">Permanente estricto</td>
+                                    <td class="py-2.5 px-3 text-emerald-600 font-semibold">Sí (total)</td>
+                                    <td class="py-2.5 px-3 font-sans text-slate-600">Migración definitiva preservando el método HTTP</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Otros mecanismos -->
+                <div class="space-y-3 pt-4 border-t border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Otros mecanismos de redirección</h3>
+                    <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-slate-700">
+                        <li><strong class="text-slate-900">Meta refresh:</strong> Etiqueta <code class="font-mono text-amber-700 text-xs">&lt;meta http-equiv="refresh" content="0;url=..."&gt;</code> en el HTML. Menos fiable, no recomendada para el SEO.</li>
+                        <li><strong class="text-slate-900">JavaScript:</strong> <code class="font-mono text-amber-700 text-xs">window.location.href = "..."</code> o <code class="font-mono text-amber-700 text-xs">document.location.replace(...)</code>. Invisible para los crawlers que no ejecutan JavaScript.</li>
+                    </ul>
+                </div>
+
+                <!-- ¿Qué analiza exactamente la herramienta? -->
+                <div class="space-y-3 pt-4 border-t border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">¿Qué analiza exactamente la herramienta?</h3>
+                    <p class="text-xs text-slate-600">Para cada salto (hop) de la cadena, el analizador recopila y audita los siguientes elementos:</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-300 text-slate-600">
+                                    <th class="py-2.5 px-3">Elemento</th>
+                                    <th class="py-2.5 px-3">Descripción</th>
+                                    <th class="py-2.5 px-3">Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-700">
+                                <tr>
+                                    <td class="py-2.5 px-3 font-mono text-amber-700 font-semibold">Código de estado</td>
+                                    <td class="py-2.5 px-3">Código HTTP de la respuesta (301, 302, 307, 308, 200)</td>
+                                    <td class="py-2.5 px-3 text-slate-600">Tipo de redirección y finalidad</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 font-mono text-amber-700 font-semibold">Headers</td>
+                                    <td class="py-2.5 px-3">Location, Cache-Control, HSTS, X-Robots-Tag</td>
+                                    <td class="py-2.5 px-3 text-slate-600">Política de caché y directivas SEO</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 font-mono text-amber-700 font-semibold">Tiempo de respuesta</td>
+                                    <td class="py-2.5 px-3">Latencia del hop en milisegundos</td>
+                                    <td class="py-2.5 px-3 text-slate-600">Impacto acumulado en el rendimiento</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const form = document.getElementById('redirect-form') as HTMLFormElement;
+        const input = document.getElementById('url-input') as HTMLInputElement;
+        const container = document.getElementById('result-container') as HTMLDivElement;
+        const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const urlValue = input.value.trim();
+            if (!urlValue) return;
+
+            btn.textContent = 'Analizando...';
+            btn.setAttribute('disabled', 'true');
+            container.classList.add('hidden');
+            container.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/redirect-checker', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlValue }),
+                });
+                
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Error al procesar la solicitud');
+
+                const hops = result.hops || [];
+                const finalHop = hops[hops.length - 1];
+                const redirectCount = Math.max(0, hops.length - 1);
+                const totalTime = hops.reduce((acc: number, curr: any) => acc + (curr.responseTime || 0), 0);
+
+                let htmlContent = '';
+
+                // 1. Tarjeta de Resumen Superior
+                if (finalHop) {
+                    htmlContent += `
+                        <div class="bg-slate-900 border border-emerald-500/40 p-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg">✓</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base">Cadena resuelta con éxito</h4>
+                                    <div class="text-xs text-slate-300 flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                                        <span>Estado final: <strong class="text-emerald-400 font-mono">${finalHop.status}</strong></span>
+                                        <span>Redirecciones: <strong class="text-white">${redirectCount}</strong></span>
+                                        <span>Tiempo total: <strong class="text-white">${totalTime} ms</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-300 truncate max-w-xs bg-slate-950 px-3 py-2 rounded-lg border border-slate-800">
+                                Destino: <a href="${finalHop.url}" target="_blank" rel="noopener noreferrer" class="underline text-amber-400 font-medium hover:text-amber-300">${finalHop.url}</a>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 2. Bloque de Saltos HTTP
+                htmlContent += `
+                    <div class="bg-slate-900 text-slate-100 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            HTTP &bull; ${redirectCount} redirecciones en la cadena
+                        </div>
+                        <div class="space-y-4">
+                `;
+
+                hops.forEach((hop: any, index: number) => {
+                    const isLast = index === hops.length - 1;
+                    const headersEntries = hop.headers ? Object.entries(hop.headers) : [];
+
+                    htmlContent += `
+                        <div class="relative pl-6 border-l-2 border-amber-500/50 space-y-3">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500 text-slate-950 text-[10px] font-bold flex items-center justify-center">
+                                ${index + 1}
+                            </div>
+                            <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
+                                <div class="text-amber-400 font-mono text-sm break-all font-semibold">
+                                    ${hop.url}
+                                </div>
+                                <div class="flex flex-wrap items-center gap-3 text-xs">
+                                    <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 font-bold rounded border border-emerald-500/30">
+                                        ${hop.status} ${hop.statusText || ''}
+                                    </span>
+                                    <span class="text-slate-200 font-medium">
+                                        ${isLast ? 'Destino final de la petición' : 'Salto de Redirección'}
+                                    </span>
+                                    <span class="text-slate-400">Latencia: <strong class="text-slate-200">${hop.responseTime} ms</strong></span>
+                                </div>
+                    `;
+
+                    if (headersEntries.length > 0) {
+                        htmlContent += `
+                            <div class="pt-2">
+                                <button 
+                                    type="button" 
+                                    class="toggle-headers-btn text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 font-medium cursor-pointer"
+                                    data-index="${index}"
+                                >
+                                    <span class="label-text">Mostrar headers (${headersEntries.length})</span>
+                                    <span>▼</span>
+                                </button>
+                                <div id="headers-box-${index}" class="hidden mt-3 bg-[#020617] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-1.5 overflow-x-auto">
+                                    ${headersEntries.map(([k, v]) => `<div class="flex justify-between gap-4"><span class="text-slate-400">${k}</span><span class="text-slate-100 text-right">${v}</span></div>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    htmlContent += `</div></div>`;
+                });
+
+                htmlContent += `</div></div>`;
+
+                container.innerHTML = htmlContent;
+                container.classList.remove('hidden');
+
+                document.querySelectorAll('.toggle-headers-btn').forEach((btnEl) => {
+                    btnEl.addEventListener('click', (ev) => {
+                        const idx = (ev.currentTarget as HTMLElement).getAttribute('data-index');
+                        const box = document.getElementById(`headers-box-${idx}`);
+                        const label = (ev.currentTarget as HTMLElement).querySelector('.label-text');
+                        if (box) {
+                            const isHidden = box.classList.contains('hidden');
+                            if (isHidden) {
+                                box.classList.remove('hidden');
+                                if (label) label.textContent = 'Ocultar headers';
+                            } else {
+                                box.classList.add('hidden');
+                                if (label) label.textContent = `Mostrar headers`;
+                            }
+                        }
+                    });
+                });
+
+            } catch (err: any) {
+                container.innerHTML = `<div class="bg-rose-950/40 border border-rose-500/40 text-rose-200 p-4 rounded-xl text-sm font-medium">Error: ${err.message || 'Error de conexión con el servidor.'}</div>`;
+                container.classList.remove('hidden');
+            } finally {
+                btn.textContent = 'Analizar URL';
+                btn.removeAttribute('disabled');
+            }
+        });
+    </script>
 </Layout>

@@ -17,14 +17,24 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <!-- Encabezado -->
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
-          Comprobador de Puertos TCP
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Verifica la disponibilidad y el estado de puertos específicos (TCP Handshake) en hosts remotos o servidores.
-        </p>
+      <!-- Bloque de Cabecera SEO unificado -->
+      <div class="bg-slate-200 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-600 border-b border-slate-300 pb-3">
+          <span class="px-3 py-1 bg-amber-300/80 text-neutral-900 font-bold rounded-md uppercase tracking-wider">Diagnóstico de Red</span>
+          <div class="flex items-center gap-4">
+            <span>Actualizado: 22 Sept, 2026</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+            COMPROBADOR DE PUERTOS TCP
+          </h1>
+          <p class="text-neutral-700 font-medium text-base">
+            Verifica la disponibilidad y el estado de puertos específicos (TCP Handshake) en hosts remotos o servidores.
+          </p>
+        </div>
       </div>
 
       <!-- Buscador / Formulario -->
@@ -89,6 +99,42 @@ import Layout from '../../layouts/Layout.astro';
         </h2>
         <div id="results-content"></div>
       </div>
+
+      <!-- Bloque de Texto Técnico Inferior (SEO Semántico para Sysadmins) -->
+      <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-neutral-800">
+        <h2 class="text-2xl font-display font-bold text-neutral-900 border-b border-slate-200 pb-3">
+          Guía Técnica: Validación de Conectividad TCP y Resolución de Incidencias en Firewalls
+        </h2>
+
+        <div class="space-y-4 text-sm sm:text-base leading-relaxed text-neutral-700">
+          <p>
+            El establecimiento de un saludo de tres vías (<code class="bg-slate-100 px-1.5 py-0.5 rounded text-amber-700 font-mono text-xs">TCP Handshake</code>) a través de paquetes SYN, SYN-ACK y ACK constituye la base fundamental para verificar la disponibilidad real de un servicio en la infraestructura de red. Esta utilidad permite a los ingenieros de sistemas diagnosticar si un puerto específico se encuentra accesible o si está siendo bloqueado por firewalls perimetrales o reglas de seguridad a nivel de host.
+          </p>
+
+          <h3 class="text-lg font-bold text-neutral-900 pt-2">¿Cómo interpretar los estados Abierto, Cerrado o Filtrado?</h3>
+          <p>
+            Un puerto se reporta como <strong>Abierto</strong> cuando el servidor remoto responde satisfactoriamente al intento de conexión. Si la conexión expira (timeout) o se rechaza de inmediato, suele indicar políticas restrictivas de seguridad, reglas de NAT incorrectas o servicios inactivos en el sistema operativo de destino.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Buenas Prácticas de Sysadmins</h4>
+              <ul class="list-disc list-inside space-y-1 text-xs text-neutral-600">
+                <li>Validar reglas de reenvío de puertos (Port Forwarding) en firewalls perimetrales antes de escalar incidencias de red.</li>
+                <li>Comprobar servicios críticos corporativos como RDP (3389), LDAPS (636) o HTTPS (443) tras cambios de topología.</li>
+                <li>Asegurar que los servicios internos no expongan puertos administrativos innecesarios hacia redes públicas o DMZ no segmentadas.</li>
+              </ul>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Diagnóstico y Trazabilidad</h4>
+              <p class="text-xs text-neutral-600">
+                Las pruebas de puertos en tiempo real facilitan la resolución rápida de fallas de conectividad híbrida, túneles VPN y directivas de grupo que dependen de la comunicación constante con controladores de dominio y recursos compartidos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>

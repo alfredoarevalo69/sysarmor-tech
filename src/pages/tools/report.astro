@@ -1,8 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Auditoría de Hardening y Conformidad de Infraestructura | SysArmor Tech";
+const pageDescription = "Motor de diagnóstico integral en línea para evaluar la postura de seguridad perimetral, cifrado de transporte y políticas de cabeceras HTTP en entornos de producción.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title="Auditoría de Hardening y Conformidad | SysArmor Tech">
+<Layout 
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalURL}
+>
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900 print:bg-white print:text-slate-900 print:py-0">
     <div class="max-w-4xl mx-auto space-y-8">
       

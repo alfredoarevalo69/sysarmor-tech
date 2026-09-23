@@ -17,14 +17,24 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <!-- Encabezado -->
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
-          Validador de Registros MX
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
-          Verifica los servidores de correo electrónico configurados y su jerarquía de prioridad para cualquier dominio.
-        </p>
+      <!-- Bloque de Cabecera SEO unificado -->
+      <div class="bg-slate-200 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-600 border-b border-slate-300 pb-3">
+          <span class="px-3 py-1 bg-amber-300/80 text-neutral-900 font-bold rounded-md uppercase tracking-wider">Infraestructura de Correo</span>
+          <div class="flex items-center gap-4">
+            <span>Actualizado: 22 Sept, 2026</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
+            VALIDADOR DE REGISTROS MX
+          </h1>
+          <p class="text-slate-700 font-medium text-base">
+            Verifica los servidores de correo electrónico configurados y su jerarquía de prioridad para cualquier dominio.
+          </p>
+        </div>
       </div>
 
       <!-- Buscador -->
@@ -54,6 +64,42 @@ import Layout from '../../layouts/Layout.astro';
           Ingresa un dominio para consultar sus registros de correo.
         </div>
       </div>
+
+      <!-- Bloque de Texto Técnico Inferior (SEO Semántico para Sysadmins) -->
+      <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-neutral-800">
+        <h2 class="text-2xl font-display font-bold text-neutral-900 border-b border-slate-200 pb-3">
+          Guía Técnica: Diagnóstico de Registros MX y Enrutamiento de Correo Electrónico en DNS
+        </h2>
+
+        <div class="space-y-4 text-sm sm:text-base leading-relaxed text-neutral-700">
+          <p>
+            Los registros de intercambio de correo (<code class="bg-slate-100 px-1.5 py-0.5 rounded text-amber-700 font-mono text-xs">MX records</code>) constituyen un pilar fundamental en la infraestructura de red corporativa, determinando qué servidores están autorizados para recibir mensajes SMTP en nombre de un dominio. Una correcta jerarquía de prioridades asegura la alta disponibilidad y la entrega eficiente del correo electrónico empresarial.
+          </p>
+
+          <h3 class="text-lg font-bold text-neutral-900 pt-2">¿Cómo se evalúa la jerarquía de prioridad y resolución IP?</h3>
+          <p>
+            El sistema realiza una consulta directa a los servidores de nombres para extraer el valor de preferencia (donde los números menores indican mayor prioridad de enrutamiento) y resuelve de forma paralela las direcciones IP asociadas al hostname del servidor de correo, facilitando auditorías de conectividad y mitigación de fallos de entrega.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Buenas Prácticas de Sysadmins</h4>
+              <ul class="list-disc list-inside space-y-1 text-xs text-neutral-600">
+                <li>Configurar múltiples registros MX con prioridades escalonadas para garantizar redundancia ante caídas de servicio.</li>
+                <li>Validar la concordancia entre los registros MX y los registros inversos (PTR) para prevenir bloqueos por políticas antispam.</li>
+                <li>Monitorear de forma constante la vigencia y resolución de los servidores de correo principales (Primary MX).</li>
+              </ul>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Seguridad en Infraestructura DNS</h4>
+              <p class="text-xs text-neutral-600">
+                La correcta integración de registros MX debe complementarse con políticas estrictas de autenticación de correo como SPF, DKIM y DMARC para blindar el dominio contra la suplantación de identidad y el phishing corporativo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>

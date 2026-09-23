@@ -16,15 +16,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
-          Generador de Claves y Contraseñas
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Crea cadenas criptográficamente seguras, contraseñas robustas o secretos alfanuméricos usando la API de entropía del navegador.
-        </p>
+      <!-- Bloque de Cabecera SEO unificado (Fondo idéntico al contenedor principal) -->
+      <div class="bg-slate-200 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-600 border-b border-slate-300 pb-3">
+          <span class="px-3 py-1 bg-amber-300/80 text-neutral-900 font-bold rounded-md uppercase tracking-wider">Seguridad y Criptografía</span>
+          <div class="flex items-center gap-4">
+            <span>Actualizado: 22 Sept, 2026</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+            GENERADOR DE CLAVES Y CONTRASEÑAS
+          </h1>
+          <p class="text-neutral-700 font-medium text-base">
+            Crea cadenas criptográficamente seguras, contraseñas robustas o secretos alfanuméricos usando la API de entropía del navegador.
+          </p>
+        </div>
       </div>
 
+      <!-- Herramienta Interactiva -->
       <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
         
         <!-- Output Box -->
@@ -102,6 +114,42 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
       </div>
+
+      <!-- Bloque de Texto Técnico Inferior (SEO Semántico para Sysadmins) -->
+      <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-neutral-800">
+        <h2 class="text-2xl font-display font-bold text-neutral-900 border-b border-slate-200 pb-3">
+          Guía Técnica: Gestión de Entropía y Claves Criptográficas Seguras en Infraestructura TI
+        </h2>
+
+        <div class="space-y-4 text-sm sm:text-base leading-relaxed text-neutral-700">
+          <p>
+            En la administración de sistemas moderna, el establecimiento de contraseñas robustas, claves simétricas complejas y tokens de autenticación es una línea de defensa crítica contra ataques de fuerza bruta y compromiso de credenciales en Active Directory o servicios en la nube. Esta utilidad genera cadenas aleatorias aplicando los estándares criptográficos recomendados para ingenieros de sistemas.
+          </p>
+
+          <h3 class="text-lg font-bold text-neutral-900 pt-2">¿Cómo funciona la generación basada en la API de entropía del navegador?</h3>
+          <p>
+            A diferencia de funciones pseudoaleatorias estándar expuestas en lenguajes de scripting básicos, esta herramienta utiliza la interfaz nativa del navegador web <code class="bg-slate-100 px-1.5 py-0.5 rounded text-amber-700 font-mono text-xs">window.crypto.getRandomValues()</code> respaldada por fuentes de entropía a nivel de sistema operativo y hardware. Esto garantiza que las secuencias generadas sean impredecibles y aptas para su uso en producción.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Buenas Prácticas para Sysadmins</h4>
+              <ul class="list-disc list-inside space-y-1 text-xs text-neutral-600">
+                <li>Utilizar longitudes superiores a 16 caracteres para cuentas con privilegios elevados (Domain Admins).</li>
+                <li>Combinar obligatoriamente mayúsculas, minúsculas, dígitos numéricos y símbolos especiales.</li>
+                <li>Evitar patrones predecibles o reutilización de secretos en múltiples servidores o dominios de directorio activo.</li>
+              </ul>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+              <h4 class="font-bold text-neutral-900 text-sm uppercase tracking-wide">Privacidad del Cliente</h4>
+              <p class="text-xs text-neutral-600">
+                Todo el proceso de cálculo criptográfico ocurre de forma local en el navegador del cliente mediante JavaScript. Ninguna clave, contraseña o secreto generado es transmitido, almacenado o registrado en servidores externos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
