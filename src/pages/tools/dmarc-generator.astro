@@ -34,10 +34,63 @@ if (Astro.request.method === 'POST') {
     return new Response(JSON.stringify({ currentRecord: null }), { status: 200 });
   }
 }
+
+const seo = {
+  title: 'Generador y Validador de Políticas DMARC | SysArmor Tech',
+  description: 'Herramienta interactiva para construir, validar y auditar registros DNS TXT DMARC. Configura políticas de autenticación, reportes agregados RUA/RUF y alineación de correo electrónico.',
+  canonical: 'https://sysarmortech.com/tools/dmarc-generator',
+  keywords: 'generador dmarc, crear registro dmarc, validador dmarc, politicas dmarc dns, spf dkim dmarc, seguridad de correo electronico'
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Generador y Validador de Políticas DMARC",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "url": "https://sysarmortech.com/tools/dmarc-generator",
+      "description": "Herramienta online para generar registros DNS TXT DMARC personalizados para dominios corporativos.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cómo se configura un registro DMARC en el proveedor DNS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Se debe crear un registro de tipo TXT en la zona DNS del dominio. En el campo de nombre o host solo se ingresa '_dmarc' (o '_dmarc.tudominio.com' según el proveedor) y en el valor se pega la cadena generada que inicia con 'v=DMARC1;'."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué función cumplen los reportes rua y ruf en DMARC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El parámetro rua (Aggregate Reports) envía informes estadísticos diarios sobre el tráfico de correo del dominio, mientras que ruf (Forensic Reports) envía notificaciones detalladas e inmediatas cuando un correo falla las validaciones de SPF o DKIM."
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title="Generador y Validador de Políticas DMARC | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#EAEFF5] border-t border-neutral-300 text-neutral-900">
+<Layout title={seo.title} description={seo.description}>
+  <Fragment slot="head">
+    <link rel="canonical" href={seo.canonical} />
+    <meta name="keywords" content={seo.keywords} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-neutral-100 border-t border-neutral-300 text-neutral-900">
     <div class="max-w-6xl mx-auto space-y-8">
       
       <!-- Botón de retorno dinámico -->
@@ -45,40 +98,53 @@ if (Astro.request.method === 'POST') {
         <button 
           type="button"
           id="back-btn"
-          class="inline-flex items-center gap-2 px-4 py-2 bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md font-mono cursor-pointer"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-500 border border-amber-500 rounded-lg text-neutral-900 font-bold text-xs uppercase tracking-wider transition-colors shadow-xs cursor-pointer"
         >
-          ← VOLVER A HERRAMIENTAS
+          <span>←</span> Volver a Herramientas
         </button>
       </div>
 
-      <!-- Cabecera de la Herramienta -->
-      <div class="space-y-2">
-        <h1 class="text-3xl font-display font-bold text-neutral-900 tracking-wide uppercase">
-          Generador y Validador de Políticas DMARC
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Construye la política de autenticación, reportes y alineación de correo electrónico en formato DNS TXT estándar.
-        </p>
+      <!-- Cuadro Superior Estándar de Metadatos y Encabezado -->
+      <div class="bg-white border-2 border-neutral-300 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-4 text-xs font-semibold text-neutral-600">
+          <span class="inline-flex items-center px-3 py-1 bg-amber-200/70 border border-amber-300 text-neutral-900 rounded-full font-bold">
+            Seguridad de Correo & DNS
+          </span>
+          <div class="flex items-center gap-4 text-neutral-500">
+            <span>Actualizado: 23 Sept, 2026</span>
+            <span>•</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 text-center max-w-3xl mx-auto pt-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide uppercase">
+            Generador y Validador de Políticas DMARC
+          </h1>
+          <p class="text-neutral-700 font-medium text-base">
+            Construye, configura y valida la política de autenticación, reportes y alineación de correo electrónico en formato DNS TXT estándar para proteger tu infraestructura de dominio.
+          </p>
+        </div>
       </div>
 
       <!-- Grid Principal -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Columna Izquierda: Formulario de Configuración -->
-        <div class="lg:col-span-7 bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 sm:p-8 shadow-xl space-y-6">
-          <h2 class="text-xl font-bold text-neutral-900 border-b-2 border-slate-300 pb-3">
+        <div class="lg:col-span-7 bg-white border-2 border-neutral-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+          <h2 class="text-xl font-bold font-display uppercase tracking-wide text-neutral-900 border-b border-neutral-200 pb-3">
             Configuración de la Política DMARC
           </h2>
 
           <!-- Campo 0: Dominio Objetivo -->
-          <div class="space-y-2 bg-white p-4 rounded-lg border-2 border-slate-300 shadow-xs">
+          <div class="space-y-2 bg-neutral-50 p-4 rounded-xl border border-neutral-200 shadow-xs">
             <label for="domain" class="block text-sm font-bold text-neutral-900">
               Nombre de Dominio u Host:
             </label>
             <p class="text-xs text-neutral-600">
-              Introduce el dominio para consultar su registro actual y generar nuevas pautas.
+              Introduce el dominio para consultar su registro actual y generar nuevas pautas de seguridad.
             </p>
-            <div class="flex gap-2">
+            <div class="flex gap-2 pt-1">
               <input 
                 type="text" 
                 id="domain" 
@@ -88,7 +154,7 @@ if (Astro.request.method === 'POST') {
                 autocapitalize="off"
                 spellcheck="false"
                 placeholder="tudominio.com" 
-                class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
+                class="w-full p-2.5 bg-white border-2 border-neutral-300 rounded-lg text-neutral-900 font-medium focus:outline-none focus:border-amber-400 shadow-inner text-sm" 
               />
               <button 
                 id="fetch-dns-btn"
@@ -104,7 +170,7 @@ if (Astro.request.method === 'POST') {
             <label for="policy" class="block text-sm font-bold text-neutral-900">
               1. ¿Cómo deseas que el correo que falla DMARC sea tratado por el receptor?
             </label>
-            <select id="policy" autocomplete="off" class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs">
+            <select id="policy" autocomplete="off" class="w-full p-2.5 bg-white border-2 border-neutral-300 rounded-lg text-neutral-900 font-medium focus:outline-none focus:border-amber-400 shadow-xs text-sm">
               <option value="none">None (Monitoreo / Sin acción)</option>
               <option value="quarantine">Quarantine (Enviar a Spam/Cuarentena)</option>
               <option value="reject">Reject (Rechazar mensaje por completo)</option>
@@ -125,7 +191,7 @@ if (Astro.request.method === 'POST') {
               autocapitalize="off"
               spellcheck="false"
               placeholder="mailto:dmarc-reports@tudominio.com" 
-              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-mono text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
+              class="w-full p-2.5 bg-white border-2 border-neutral-300 rounded-lg text-neutral-900 font-mono text-sm focus:outline-none focus:border-amber-400 shadow-xs" 
             />
           </div>
 
@@ -143,7 +209,7 @@ if (Astro.request.method === 'POST') {
               autocapitalize="off"
               spellcheck="false"
               placeholder="mailto:dmarc-reports@tudominio.com" 
-              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-mono text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
+              class="w-full p-2.5 bg-white border-2 border-neutral-300 rounded-lg text-neutral-900 font-mono text-sm focus:outline-none focus:border-amber-400 shadow-xs" 
             />
           </div>
 
@@ -159,9 +225,9 @@ if (Astro.request.method === 'POST') {
               max="100" 
               value="100" 
               autocomplete="off"
-              class="w-full p-2.5 bg-white border-2 border-slate-300 rounded-lg text-neutral-900 font-medium focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-xs" 
+              class="w-full p-2.5 bg-white border-2 border-neutral-300 rounded-lg text-neutral-900 font-medium focus:outline-none focus:border-amber-400 shadow-xs text-sm" 
             />
-            <p class="text-xs text-neutral-700 bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
+            <p class="text-xs text-neutral-700 bg-neutral-50 p-3 rounded-xl border border-neutral-200">
               💡 <strong>Recomendación:</strong> Se aconseja mantenerlo siempre en <strong>100</strong> en producción. Reducir este valor (ej. 10 o 50) solo es útil para despliegues graduales de políticas restrictivas y evitar bloqueos masivos iniciales.
             </p>
           </div>
@@ -169,53 +235,64 @@ if (Astro.request.method === 'POST') {
 
         <!-- Columna Derecha: Salida y Registro Actual -->
         <div class="lg:col-span-5 space-y-6">
-          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 sm:p-8 shadow-xl space-y-5">
+          <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5 text-slate-100">
             <div class="space-y-1">
-              <h2 class="text-lg font-bold text-neutral-900">
+              <h2 class="text-lg font-bold text-slate-100">
                 Resultado del Registro Creado:
               </h2>
-              <p class="text-xs text-neutral-700">
-                El registro inferior se actualiza automáticamente a medida que modificas los campos de la izquierda.
+              <p class="text-xs text-slate-400">
+                El registro inferior se actualiza automáticamente a medida que modificas los parámetros del formulario.
               </p>
             </div>
 
             <!-- Bloque de Registro Estructurado -->
-            <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs space-y-2 border border-slate-800 shadow-inner">
+            <div class="bg-slate-950 text-slate-100 p-4 rounded-xl font-mono text-xs space-y-2 border-2 border-slate-800 shadow-inner">
               <div class="text-slate-400">
-                <span class="text-blue-400 font-bold">Tipo:</span> TXT
+                <span class="text-amber-400 font-bold">Tipo:</span> TXT
               </div>
               <div class="text-slate-400 break-all">
-                <span class="text-blue-400 font-bold">Host/Nombre:</span> <span id="dns-host" class="text-emerald-400">_dmarc.tudominio.com</span>
+                <span class="text-amber-400 font-bold">Host/Nombre:</span> <span id="dns-host" class="text-emerald-400">_dmarc.tudominio.com</span>
               </div>
               <div class="text-slate-400 break-all">
-                <span class="text-blue-400 font-bold">Valor:</span> <span id="dns-value" class="text-emerald-300">v=DMARC1; p=none;</span>
+                <span class="text-amber-400 font-bold">Valor:</span> <span id="dns-value" class="text-emerald-300">v=DMARC1; p=none;</span>
               </div>
             </div>
 
-            <p class="text-xs text-neutral-900 font-medium bg-white p-3 rounded-lg border-2 border-slate-300 shadow-xs">
-              💡 <strong>Nota Importante:</strong> En la mayoría de proveedores DNS (como Cloudflare o cPanel), solo debes introducir <code class="bg-slate-100 px-1 py-0.5 rounded font-bold text-blue-800 border border-slate-300">_dmarc</code> en el campo de Nombre/Host. La plataforma añadirá tu dominio automáticamente al guardarlo.
+            <p class="text-xs text-slate-300 bg-slate-950 p-3 rounded-xl border border-slate-800">
+              💡 <strong>Nota Importante:</strong> En la mayoría de proveedores DNS (como Cloudflare o cPanel), solo debes introducir <code class="bg-slate-900 px-1.5 py-0.5 rounded font-bold text-amber-400 border border-slate-700">_dmarc</code> en el campo de Nombre/Host. La plataforma añadirá tu dominio automáticamente al guardarlo.
             </p>
 
             <button 
               id="copy-btn" 
-              class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              class="w-full bg-amber-400 hover:bg-amber-500 text-neutral-900 font-bold py-3 px-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer text-sm"
             >
               Copiar Registro al Portapapeles
             </button>
           </div>
 
           <!-- Bloque: Current Record -->
-          <div class="bg-slate-200/70 border-2 border-slate-400 rounded-xl p-6 shadow-xl space-y-3">
+          <div class="bg-white border-2 border-neutral-300 rounded-2xl p-6 shadow-sm space-y-3">
             <h3 class="text-sm font-bold text-neutral-900 flex items-center gap-2">
-              Registro Actual en DNS: <span id="current-status-icon" class="text-slate-400">⚡</span>
+              Registro Actual en DNS: <span id="current-status-icon" class="text-neutral-400">⚡</span>
             </h3>
-            <div id="current-record-box" class="bg-white text-neutral-800 p-3 rounded-lg font-mono text-xs break-all border-2 border-slate-300 min-h-[48px] flex items-center shadow-xs">
+            <div id="current-record-box" class="bg-neutral-50 text-neutral-800 p-3 rounded-xl font-mono text-xs break-all border border-neutral-200 min-h-[48px] flex items-center">
               Sin consultar / No encontrado
             </div>
           </div>
         </div>
 
       </div>
+
+      <!-- Sección de Contenido SEO y Guía Técnica de Apoyo -->
+      <section class="bg-white border-2 border-neutral-300 rounded-2xl p-6 sm:p-8 space-y-4 text-neutral-800 shadow-sm">
+        <h2 class="text-xl font-bold font-display uppercase tracking-wide text-neutral-900 border-b border-neutral-200 pb-2">
+          Buenas prácticas para la implementación de registros DMARC
+        </h2>
+        <p class="text-sm leading-relaxed text-neutral-700">
+          Al configurar tu dominio con DMARC, se recomienda comenzar siempre con una política de monitoreo (<code class="font-mono text-xs bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200">p=none</code>) vinculada a una dirección de reportes agregados (<code class="font-mono text-xs bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200">rua</code>). Esto permite recopilar telemetría completa sobre los flujos de correo legítimos sin riesgo de bloquear mensajes importantes. Una vez analizados los reportes y corroborada la correcta alineación de SPF y DKIM, es aconsejable migrar progresivamente a políticas restrictivas de cuarentena o rechazo total.
+        </p>
+      </section>
+
     </div>
   </main>
 
@@ -239,7 +316,7 @@ if (Astro.request.method === 'POST') {
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        window.location.href = '/';
+        window.location.href = '/tools';
       }
     });
 

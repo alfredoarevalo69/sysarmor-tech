@@ -1,208 +1,217 @@
 ---
 // src/pages/tools/ptr-checker.astro
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Verificador de Registros PTR (rDNS) | SysArmor Tech";
+const pageDescription = "Herramienta avanzada para la validación y resolución inversa de direcciones IPv4 e IPv6 a nombres de host canónicos (rDNS) para servidores perimetrales.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://sysarmortech.com').toString();
 ---
 
-<Layout title="Verificador de Registros PTR (rDNS) | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
-      <div>
-        <a 
-          href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
-        >
-          <span>←</span> Volver a Herramientas
-        </a>
-      </div>
+<Layout 
+    title={pageTitle}
+    description={pageDescription}
+    canonical={canonicalURL}
+>
+    <!-- Datos estructurados SEO (Schema.org WebApplication) -->
+    <slot slot="head">
+        <meta name="keywords" content="rDNS, registro PTR, DNS inverso, IPv6 ip6.arpa, in-addr.arpa, seguridad perimetral, SysArmor Tech" />
+        <meta name="author" content="SysArmor Tech Infrastructure Team" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalURL} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              "name": "Verificador de Registros PTR (rDNS) - SysArmor Tech",
+              "url": "https://sysarmortech.com/tools/ptr-checker",
+              "applicationCategory": "DeveloperApplication",
+              "operatingSystem": "All",
+              "description": "Herramienta de diagnóstico de infraestructura para la resolución de DNS inverso en bloques IPv4 e IPv6.",
+              "author": {
+                "@type": "Organization",
+                "name": "SysArmor Tech"
+              }
+            }
+        </script>
+    </slot>
 
-      <div class="space-y-3 text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-          Verificador de Registros PTR (rDNS)
-        </h1>
-      </div>
+    <!-- Fondo real unificado (#cbd5e1) -->
+    <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
+        <div class="max-w-4xl mx-auto space-y-8">
+            
+            <!-- Enlace de retorno -->
+            <div>
+                <a href="/tools" class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md">
+                    <span>←</span> Volver a Herramientas
+                </a>
+            </div>
 
-      <!-- Tarjeta de Búsqueda (Arriba para acción inmediata) -->
-      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <form id="ptr-form" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="ip-input" 
-            placeholder="Ej. 8.8.8.8 o 2606:4700:20::681a:8ad" 
-            required
-            class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-sm font-mono transition-all"
-          />
-          <button 
-            type="submit" 
-            id="submit-btn"
-            class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer whitespace-nowrap"
-          >
-            Consultar rDNS
-          </button>
-        </form>
-      </div>
+            <!-- Cuadro Contenedor Superior -->
+            <div class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-lg space-y-4 text-slate-900">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300">
+                        Infraestructura, Redes & Multi-Cloud
+                    </span>
+                    <div class="text-xs font-mono text-slate-500">
+                        Actualizado: 23 Sept, 2026 &bull; Versión: 1.6.0
+                    </div>
+                </div>
 
-      <!-- Contenedor de Resultados -->
-      <div id="result-container" class="hidden bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <h2 class="text-lg font-bold text-white border-b border-slate-800 pb-3">Resultados de la Resolución Inversa</h2>
-        <div id="result-content" class="overflow-x-auto"></div>
-      </div>
+                <hr class="border-slate-200 my-2" />
+                
+                <div class="space-y-3 text-center sm:text-left">
+                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 uppercase">
+                        Verificador de Registros PTR (rDNS)
+                    </h1>
+                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+                        Traducción inversa de direcciones IP (IPv4 e IPv6) a nombres de host canónicos para la validación perimetral de servidores SMTP y prevención de bloqueos anti-spam.
+                    </p>
+                </div>
+            </div>
 
-      <!-- Sección de Documentación Técnica y Referencia (Ubicada Abajo) -->
-      <div class="bg-slate-900 text-slate-300 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 text-xs sm:text-sm leading-relaxed font-sans">
-        
-        <h2 class="text-base font-bold text-white border-b border-slate-800 pb-3 flex items-center gap-2">
-          <span>📖</span> Documentación y Estructura de Registros DNS PTR
-        </h2>
+            <!-- Componente Interactivo de la Herramienta -->
+            <div class="bg-slate-900 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4 text-slate-100">
+                <form id="ptr-form" class="flex flex-col sm:flex-row gap-3">
+                    <input 
+                        type="text" 
+                        id="ptr-input" 
+                        placeholder="Ej. 8.8.8.8 o 2001:4860:4860::8888" 
+                        required
+                        class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 font-mono text-sm transition-all" 
+                    />
+                    <button 
+                        type="submit"
+                        id="ptr-btn" 
+                        class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer whitespace-nowrap">
+                        Consultar rDNS
+                    </button>
+                </form>
 
-        <div class="space-y-3">
-          <p>
-            Los registros PTR (Pointer records o registros DNS inversos) se utilizan para almacenar el nombre de dominio asociado a una dirección IP. Son el equivalente inverso de los registros <strong>A</strong> para direcciones IPv4 y de los registros <strong>AAAA</strong> para direcciones IPv6.
-          </p>
-          <p>
-            Internamente, los registros PTR se estructuran dividiendo la dirección IP en segmentos, invirtiendo su orden y añadiendo el sufijo <code class="bg-slate-950 px-1.5 py-0.5 rounded text-[#D4AF37] font-mono">.in-addr.arpa.</code> (para IPv4) o <code class="bg-slate-950 px-1.5 py-0.5 rounded text-[#D4AF37] font-mono">.ip6.arpa.</code> (para IPv6). Por ejemplo, la dirección IP <code class="text-slate-200 font-mono">192.168.2.1</code> se almacena bajo <code class="text-slate-200 font-mono">1.2.168.192.in-addr.arpa.</code>.
-          </p>
+                <!-- Contenedor de Resultados -->
+                <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-300 hidden max-h-80 overflow-y-auto"></div>
+            </div>
+
+            <!-- Bloque de Documentación Inferior -->
+            <section class="bg-white border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-lg space-y-6 text-slate-900">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300">
+                        Documentación Técnica & SEO
+                    </span>
+                    <div class="text-xs font-mono text-slate-500">
+                        Estándar RFC 1033 / RFC 3596
+                    </div>
+                </div>
+
+                <hr class="border-slate-200 my-2" />
+
+                <div class="space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight uppercase">
+                        Estructura y Fundamentos de Registros DNS PTR
+                    </h2>
+                    <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                        Los registros PTR (Pointer records o registros DNS inversos) permiten asociar una dirección IP a un nombre de dominio canónico. Su correcta configuración es vital para la validación perimetral de servidores de correo electrónico y la mitigación de políticas anti-spam.
+                    </p>
+                </div>
+
+                <!-- Grid de Ejemplos -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-200">
+                    
+                    <!-- Columna IPv4 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Ejemplo de Registro PTR (IPv4)</h3>
+                        <p class="text-xs text-slate-600">Estructura típica para bloques de red IPv4 en zonas <code class="font-mono text-amber-800">in-addr.arpa</code>:</p>
+                        <div class="bg-slate-950 text-amber-300 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] overflow-x-auto">
+                            1.2.168.192.in-addr.arpa. | PTR | example.com | 3600
+                        </div>
+                        <ul class="space-y-1.5 text-xs text-slate-700 pt-1">
+                            <li><strong class="text-slate-900">1.2.168.192.in-addr.arpa.:</strong> Segmento IP invertido con sufijo de zona raíz.</li>
+                            <li><strong class="text-slate-900">PTR:</strong> Indicador de tipo de puntero DNS.</li>
+                            <li><strong class="text-slate-900">example.com:</strong> Hostname FQDN de destino resuelto.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna IPv6 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Ejemplo de Registro PTR (IPv6)</h3>
+                        <p class="text-xs text-slate-600">Estructura de nibbles invertidos para rutas IPv6 en zonas <code class="font-mono text-amber-800">ip6.arpa</code>:</p>
+                        <div class="bg-slate-950 text-amber-300 p-2.5 rounded-lg border border-slate-800 font-mono text-[11px] overflow-x-auto break-all">
+                            1.0.0.0...8.e.f.ip6.arpa. | PTR | example.com | 3600
+                        </div>
+                        <ul class="space-y-1.5 text-xs text-slate-700 pt-1">
+                            <li><strong class="text-slate-900">ip6.arpa.:</strong> Espacio de nombres jerárquico expandido por nibbles.</li>
+                            <li><strong class="text-slate-900">PTR:</strong> Puntero de asignación inversa.</li>
+                            <li><strong class="text-slate-900">example.com:</strong> Nombre canónico asociado al nodo.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+
         </div>
+    </main>
 
-        <!-- Ejemplo IPv4 -->
-        <div class="space-y-3 pt-2 border-t border-slate-800">
-          <h3 class="font-bold text-white text-sm">Ejemplo de Registro PTR (IPv4)</h3>
-          <p class="text-slate-400">Un registro PTR típico para IPv4 se compone de la siguiente manera:</p>
-          
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs overflow-x-auto text-slate-200 space-y-1">
-            <div class="text-[#D4AF37] font-bold">1.2.168.192.in-addr.arpa. | PTR | example.com | 3600</div>
-          </div>
+    <script>
+        /* ========================================================
+            DEPLOY CACHE-BUSTER & VERSION CONTROL
+            Timestamp: 2026-09-23T05:50:00Z 
+            Forza la invalidación del CDN edge en Vercel para este módulo
+            ======================================================== */
 
-          <ul class="list-disc pl-5 space-y-1 text-slate-300">
-            <li><code class="text-slate-200 font-mono">1.2.168.192.in-addr.arpa.</code>: Identificador o nombre del registro inverso para la IP <code class="text-slate-200 font-mono">192.168.2.1</code>.</li>
-            <li><code class="text-slate-200 font-mono">PTR</code>: Tipo de registro DNS.</li>
-            <li><code class="text-slate-200 font-mono">example.com</code>: Valor o hostname asignado.</li>
-            <li><code class="text-slate-200 font-mono">3600</code>: Tiempo de vida (TTL) en segundos (equivalente a 1 hora), indicando el tiempo que los resolvers almacenan la caché del registro.</li>
-          </ul>
-        </div>
+        const ptrForm = document.getElementById('ptr-form') as HTMLFormElement;
+        const ptrInput = document.getElementById('ptr-input') as HTMLInputElement;
+        const ptrResult = document.getElementById('ptr-result');
+        const ptrBtn = document.getElementById('ptr-btn') as HTMLButtonElement;
 
-        <!-- Ejemplo IPv6 -->
-        <div class="space-y-3 pt-2 border-t border-slate-800">
-          <h3 class="font-bold text-white text-sm">Ejemplo de Registro PTR (IPv6)</h3>
-          <p class="text-slate-400">Para redes de nueva generación bajo IPv6, la estructura de nibbles invertidos luce así:</p>
-          
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs overflow-x-auto text-slate-200 space-y-1">
-            <div class="text-[#D4AF37] font-bold">1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.e.f.ip6.arpa. | PTR | example.com | 3600</div>
-          </div>
+        ptrForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const ip = ptrInput?.value.trim();
+            if (!ip || !ptrResult) return;
 
-          <ul class="list-disc pl-5 space-y-1 text-slate-300">
-            <li><code class="text-slate-200 font-mono">1.0.0.0...8.e.f.ip6.arpa.</code>: Nombre de dominio expandido e invertido para la dirección IPv6 <code class="text-slate-200 font-mono">fe80::1</code>.</li>
-            <li><code class="text-slate-200 font-mono">PTR</code>: Tipo de registro de puntero.</li>
-            <li><code class="text-slate-200 font-mono">example.com</code>: Hostname o dominio de destino.</li>
-            <li><code class="text-slate-200 font-mono">3600</code>: TTL de propagación en segundos.</li>
-          </ul>
-        </div>
+            ptrBtn.textContent = 'Consultando...';
+            ptrBtn.setAttribute('disabled', 'true');
+            ptrResult.classList.remove('hidden');
+            ptrResult.innerHTML = '<span class="text-slate-400 animate-pulse">Resolviendo registros inversos (rDNS)...</span>';
 
-      </div>
+            try {
+                const response = await fetch('/api/check-ptr', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip })
+                });
 
-    </div>
-  </main>
+                const data = await response.json();
 
-  <script>
-    const form = document.getElementById('ptr-form') as HTMLFormElement;
-    const input = document.getElementById('ip-input') as HTMLInputElement;
-    const container = document.getElementById('result-container') as HTMLDivElement;
-    const resultContent = document.getElementById('result-content') as HTMLDivElement;
-    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+                if (!response.ok) throw new Error(data.error || 'Error al consultar el servicio');
 
-    const renderTable = (rows: [string, string][]) => {
-      let tableHtml = `<table class="w-full text-left border-collapse bg-slate-950 rounded-xl overflow-hidden border border-slate-800 text-xs sm:text-sm font-mono shadow-inner"><tbody>`;
-      rows.forEach(([key, value], index) => {
-        const bgClass = index % 2 === 0 ? 'bg-slate-950' : 'bg-slate-900/50';
-        tableHtml += `
-          <tr class="${bgClass} border-b border-slate-800/80">
-            <td class="p-3 font-semibold text-slate-400 w-1/3 border-r border-slate-800/80 capitalize">${key.replace(/([A-Z])/g, ' $1').trim()}</td>
-            <td class="p-3 text-slate-200 w-2/3 break-all">${value}</td>
-          </tr>
-        `;
-      });
-      tableHtml += `</tbody></table>`;
-      return tableHtml;
-    };
+                const isSuccess = data.ptr && 
+                                  data.ptr !== 'No se encontró registro PTR' && 
+                                  data.ptr !== 'Formato de IP inválido' && 
+                                  data.ptr !== 'Error de red';
 
-    const getReverseIpQuery = (ip: string): string | null => {
-      if (ip.includes('.')) {
-        const parts = ip.split('.').reverse();
-        if (parts.length !== 4) return null;
-        return `${parts.join('.')}.in-addr.arpa`;
-      } else if (ip.includes(':')) {
-        try {
-          let fullIp = ip;
-          if (ip.includes('::')) {
-            const sides = ip.split('::');
-            const left = sides[0] ? sides[0].split(':') : [];
-            const right = sides[1] ? sides[1].split(':') : [];
-            const missing = 8 - (left.length + right.length);
-            const zeros = Array(missing).fill('0');
-            const expanded = [...left, ...zeros, ...right];
-            fullIp = expanded.map(o => o.padStart(4, '0')).join('');
-          } else {
-            fullIp = ip.split(':').map(o => o.padStart(4, '0')).join('');
-          }
-          const nibbles = fullIp.replace(/:/g, '').split('').reverse();
-          return `${nibbles.join('.')}.ip6.arpa`;
-        } catch {
-          return null;
-        }
-      }
-      return null;
-    };
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const ip = input.value.trim();
-      if (!ip) return;
-
-      btn.textContent = 'Consultando...';
-      btn.setAttribute('disabled', 'true');
-      container.classList.add('hidden');
-
-      try {
-        const reverseQuery = getReverseIpQuery(ip);
-        if (!reverseQuery) {
-          resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm">Error: La dirección IP no tiene un formato IPv4 o IPv6 válido.</p>`;
-          container.classList.remove('hidden');
-          return;
-        }
-
-        const dohUrl = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(reverseQuery)}&type=PTR`;
-        const response = await fetch(dohUrl, {
-          headers: { 'Accept': 'application/dns-json' }
+                if (isSuccess) {
+                    ptrResult.innerHTML = `
+                        <div class="text-emerald-400 font-bold mb-2 flex items-center gap-1">✓ Registro PTR Válido</div>
+                        <div class="text-slate-400 mb-1">Hostname mapeado:</div>
+                        <div class="text-slate-200 font-mono text-sm font-bold mb-2">${data.ptr}</div>
+                        <div class="text-xs text-slate-500">${data.status}</div>
+                    `;
+                } else {
+                    ptrResult.innerHTML = `
+                        <div class="text-amber-400 font-bold mb-1">⚠ Alerta de Configuración rDNS</div>
+                        <div class="text-red-400">${data.status || data.ptr}</div>
+                    `;
+                }
+            } catch (err: any) {
+                ptrResult.innerHTML = `<div class="text-red-500">Error crítico: ${err.message}</div>`;
+            } finally {
+                ptrBtn.textContent = 'Consultar rDNS';
+                ptrBtn.removeAttribute('disabled');
+            }
         });
-
-        const data = await response.json();
-        const rows: [string, string][] = [];
-
-        rows.push(['IP Consultada', ip]);
-
-        if (data.Answer && data.Answer.length > 0) {
-          const answerRecord = data.Answer.find((ans: any) => ans.type === 12) || data.Answer[0];
-          const rawPtr = answerRecord.data;
-          const cleanPtr = rawPtr.endsWith('.') ? rawPtr.slice(0, -1) : rawPtr;
-          
-          rows.push(['PTR / Hostname', cleanPtr]);
-          rows.push(['TTL', `${answerRecord.TTL} segundos`]);
-          rows.push(['Estado', 'Validado correctamente (Registro PTR activo)']);
-        } else {
-          rows.push(['PTR / Hostname', 'No se encontró registro PTR']);
-          rows.push(['TTL', 'N/A']);
-          rows.push(['Estado', 'Sin registro PTR configurado o sin rDNS público']);
-        }
-
-        resultContent.innerHTML = renderTable(rows);
-        container.classList.remove('hidden');
-      } catch (err: any) {
-        resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm">Error de conexión con el servicio: ${err.message || 'Desconocido'}</p>`;
-        container.classList.remove('hidden');
-      } finally {
-        btn.textContent = 'Consultar rDNS';
-        btn.removeAttribute('disabled');
-      }
-    });
-  </script>
+    </script>
 </Layout>

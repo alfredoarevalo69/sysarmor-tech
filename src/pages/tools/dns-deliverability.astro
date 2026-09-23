@@ -1,60 +1,87 @@
 ---
-import Layout from '../../layouts/Layout.astro'; // Ajusta según tu layout general
+// src/pages/tools/ptr-checker.astro
+import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="SysArmor Tech - WHOIS y Verificador PTR (rDNS)">
-    <main class="max-w-7xl mx-auto px-4 py-10">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-slate-100">Entregabilidad y Diagnóstico de Red</h1>
-            <p class="text-slate-400 mt-2">Herramientas perimetrales para la validación de dominios y reputación IP.</p>
+<Layout title="Verificador de Registros PTR (rDNS) | SysArmor Tech">
+    <main class="max-w-4xl mx-auto px-4 py-10">
+        
+        <!-- Enlace de retorno -->
+        <div class="mb-6">
+            <a href="/herramientas" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-sm transition-colors shadow-md">
+                ← VOLVER A HERRAMIENTAS
+            </a>
         </div>
 
-        <!-- Grid simétrico: WHOIS + PTR -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Cuadro Contenedor Superior -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    Infraestructura & Redes
+                </span>
+                <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+                    <time datetime="2026-09-23">Actualizado: 23 Sept, 2026</time>
+                    <span class="text-slate-600">|</span>
+                    <span>Versión: 1.0.0</span>
+                </div>
+            </div>
+
+            <hr class="border-slate-800 my-4" />
             
-            <!-- WHOIS Section -->
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-blue-400 mb-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
-                        Consulta WHOIS
-                    </h2>
-                    <p class="text-sm text-slate-400 mb-4">Inspecciona el estado de registro y fechas de dominios.</p>
-                    
-                    <div class="space-y-4">
-                        <input type="text" id="whois-input" placeholder="dominio.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500 font-mono text-sm" />
-                        <button id="whois-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors">Consultar WHOIS</button>
-                    </div>
-                </div>
-                <div id="whois-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 hidden max-h-60 overflow-y-auto"></div>
-            </div>
-
-            <!-- PTR / rDNS Section -->
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-emerald-400 mb-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                        Verificador PTR (rDNS)
-                    </h2>
-                    <p class="text-sm text-slate-400 mb-4">Verifica el DNS inverso de IPs de correo para evitar bloqueos anti-spam.</p>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Dirección IP (Servidor SMTP)</label>
-                            <input type="text" id="ptr-input" placeholder="192.0.2.1" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500 font-mono text-sm" />
-                        </div>
-                        <button id="ptr-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition-colors">Verificar rDNS</button>
-                    </div>
-                </div>
-
-                <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 hidden max-h-60 overflow-y-auto"></div>
-            </div>
-
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-100 tracking-tight mb-2">
+                Verificador de Registros PTR (rDNS)
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+                Traducción inversa de direcciones IP (IPv4 e IPv6) a nombres de host canónicos para la validación perimetral de servidores SMTP y prevención de bloqueos anti-spam.
+            </p>
         </div>
+
+        <!-- Componente Interactivo de la Herramienta -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl mb-12">
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4">
+                <input 
+                    type="text" 
+                    id="ptr-input" 
+                    placeholder="Ej. 8.8.8.8 o 2606:4700:20::681a:8ad" 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-slate-200 focus:outline-none focus:border-amber-500 font-mono text-sm" 
+                />
+                <button 
+                    id="ptr-btn" 
+                    class="w-full md:w-auto whitespace-nowrap bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg transition-colors shadow-md cursor-pointer">
+                    Consultar rDNS
+                </button>
+            </div>
+
+            <!-- Contenedor de Resultados -->
+            <div id="ptr-result" class="mt-6 text-xs font-mono bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 hidden max-h-80 overflow-y-auto"></div>
+        </div>
+
+        <!-- Bloque Técnico Inferior -->
+        <section class="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 md:p-8 space-y-6 text-slate-300">
+            <h2 class="text-xl font-bold text-slate-100 border-b border-slate-800 pb-3">
+                Fundamentos Técnicos del DNS Inverso y Registros PTR
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-amber-400">¿Qué valida esta herramienta?</h3>
+                    <p>
+                        Consulta los registros de nombres de dominio inverso (rDNS) utilizando los espacios de nombres <code>in-addr.arpa</code> (IPv4) e <code>ip6.arpa</code> (IPv6). Permite comprobar si la dirección IP de salida de un servidor posee un FQDN debidamente asociado.
+                    </p>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-amber-400">Impacto en la Entregabilidad de Correo</h3>
+                    <p>
+                        Los filtros anti-spam corporativos y proveedores de servicios de correo exigen que el servidor SMTP emisor cuente con un registro PTR válido que coincida con el dominio del remitente. La ausencia de este mapeo es causa común de rechazo de mensajes.
+                    </p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script>
-        // Lógica de cliente para PTR
         const ptrBtn = document.getElementById('ptr-btn');
         const ptrInput = document.getElementById('ptr-input') as HTMLInputElement;
         const ptrResult = document.getElementById('ptr-result');
@@ -64,7 +91,7 @@ import Layout from '../../layouts/Layout.astro'; // Ajusta según tu layout gene
             if (!ip || !ptrResult) return;
 
             ptrResult.classList.remove('hidden');
-            ptrResult.innerHTML = '<span class="text-slate-400 animate-pulse">Resolviendo registros inversos (PTR)...</span>';
+            ptrResult.innerHTML = '<span class="text-slate-400 animate-pulse">Resolviendo registros inversos (rDNS)...</span>';
 
             try {
                 const response = await fetch('/api/check-ptr', {

@@ -31,30 +31,30 @@ const getReverseIpQuery = (ip: string): string | null => {
   return null;
 };
 
-export const GET: APIRoute = async ({ request }) => {
-  const url = new URL(request.url);
-  const ip = url.searchParams.get('ip')?.trim();
-
-  if (!ip) {
-    return new Response(JSON.stringify({ error: 'Falta el parámetro IP' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  const reverseQuery = getReverseIpQuery(ip);
-  if (!reverseQuery) {
-    return new Response(JSON.stringify({
-      ip,
-      ptr: 'Formato de IP inválido',
-      status: 'Error: La dirección IP no tiene un formato IPv4 o IPv6 válido.'
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
+export const POST: APIRoute = async ({ request }) => {
   try {
+    const body = await request.json();
+    const ip = body?.ip?.trim();
+
+    if (!ip) {
+      return new Response(JSON.stringify({ error: 'Falta el parámetro IP' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const reverseQuery = getReverseIpQuery(ip);
+    if (!reverseQuery) {
+      return new Response(JSON.stringify({
+        ip,
+        ptr: 'Formato de IP inválido',
+        status: 'Error: La dirección IP no tiene un formato IPv4 o IPv6 válido.'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     // Consulta segura mediante HTTPS a Cloudflare DNS over HTTPS (DoH)
     const dohUrl = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(reverseQuery)}&type=PTR`;
     const response = await fetch(dohUrl, {
@@ -82,7 +82,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   } catch (error: any) {
     return new Response(JSON.stringify({
-      ip,
+      ip: 'N/A',
       ptr: 'Error de red',
       status: `No se pudo conectar con el servicio de resolución: ${error.message || 'Desconocido'}`
     }), {

@@ -16,14 +16,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
-          Validador de Registros DKIM y Selector DNS
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
-          Comprueba la clave pública y la integridad de los registros DKIM bajo selectores personalizados para asegurar el correo saliente.
-        </p>
-      </div>
+      <!-- Cabecera ajustada al estándar visual de SysArmor Tech -->
+      <header class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-slate-300">
+          <span class="inline-flex items-center px-3 py-1 bg-amber-200 text-amber-900 text-xs font-bold rounded-full shadow-sm w-fit">
+            Seguridad de Correo & DNS
+          </span>
+          <div class="flex items-center gap-4 text-xs font-medium text-slate-600">
+            <time datetime="2026-09-23">Actualizado: 23 Sept, 2026</time>
+            <span>•</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+        <div class="space-y-2 text-center max-w-2xl mx-auto pt-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
+            Validador de Registros DKIM y Selector DNS
+          </h1>
+          <p class="text-slate-700 font-medium text-base">
+            Herramienta avanzada para administradores de sistemas e infraestructura TI. Comprueba la clave pública, la sintaxis y la integridad de los registros DomainKeys Identified Mail (DKIM) bajo selectores personalizados para asegurar el correo saliente corporativo.
+          </p>
+        </div>
+      </header>
 
       <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6">
         <form id="dkim-form" class="space-y-4">
@@ -72,6 +85,32 @@ import Layout from '../../layouts/Layout.astro';
           <!-- Inyectado por JS -->
         </div>
       </div>
+
+      <!-- Bloque de Contenido Técnico y Semántico Inferior (SEO Crawlers) -->
+      <section class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl text-slate-300 space-y-6">
+        <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3">
+          Guía Técnica: ¿Cómo Funciona la Validación de Registros DKIM?
+        </h2>
+        
+        <div class="space-y-4 text-sm leading-relaxed text-slate-300">
+          <p>
+            El protocolo <strong>DKIM (DomainKeys Identified Mail)</strong> es un estándar de autenticación de correo electrónico diseñado para detectar la suplantación de identidad (spoofing) mediante la incorporación de una firma digital cifrada en las cabeceras del mensaje. Esta herramienta interactúa directamente con los servidores de nombres de dominio (DNS) para consultar el registro TXT asociado al selector específico dentro del subdominio de correo (<code class="text-amber-400 font-mono">selector._domainkey.dominio.com</code>).
+          </p>
+
+          <h3 class="text-base font-bold text-white pt-2">Parámetros Críticos Analizados en el Registro TXT</h3>
+          <ul class="list-disc pl-5 space-y-2 text-slate-300">
+            <li><strong class="text-amber-400 font-mono">v (Version):</strong> Especifica la versión del protocolo DKIM utilizada (habitualmente <code class="font-mono">DKIM1</code>). Debe ser obligatoriamente el primer parámetro de la cadena.</li>
+            <li><strong class="text-amber-400 font-mono">k (Key Type):</strong> Define el algoritmo criptográfico empleado para generar la clave pública, siendo <code class="font-mono">rsa</code> el estándar más extendido en la industria de servidores de correo corporativo.</li>
+            <li><strong class="text-amber-400 font-mono">p (Public Key):</strong> Contiene la llave pública codificada en formato Base64. Los MTA (Mail Transfer Agents) receptores utilizan esta clave para descifrar y validar la firma criptográfica de los correos salientes. Si este valor está vacío, el registro se considera revocado o inválido.</li>
+            <li><strong class="text-amber-400 font-mono">h (Hash Algorithm):</strong> Indica las funciones hash permitidas para procesar el mensaje (ej. <code class="font-mono">sha256</code>).</li>
+          </ul>
+
+          <h3 class="text-base font-bold text-white pt-2">Buenas Prácticas para Sysadmins y Seguridad de Infraestructura de Correo</h3>
+          <p>
+            Una correcta implementación de DKIM, combinada con políticas estrictas de <abbr title="Sender Policy Framework">SPF</abbr> y <abbr title="Domain-based Message Authentication, Reporting, and Conformance">DMARC</abbr>, previene que los correos corporativos sean clasificados como <em>Spam</em> o bloqueados por proveedores de servicios de internet (ISPs) como Google Workspace, Microsoft 365 o servidores postfix autohospedados. Se recomienda la rotación periódica de selectores y el uso de longitudes de clave RSA de al menos 2048 bits para garantizar la resiliencia criptográfica frente a ataques de fuerza bruta.
+          </p>
+        </div>
+      </section>
 
     </div>
   </main>
