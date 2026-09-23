@@ -2,38 +2,119 @@
 // src/pages/tools/csr-generator.astro
 import Layout from '../../layouts/Layout.astro';
 import GeneradorCSR from '../../components/GeneradorCSR.astro';
+
+// Metadatos optimizados para SEO y transparencia técnica
+const toolMeta = {
+  title: "Generador de Solicitudes CSR y Claves SSL/TLS | SysArmor Tech",
+  description: "Genera un par de claves criptográficas y una solicitud de firma de certificado X.509 (CSR) de forma local y segura en tu navegador.",
+  lastUpdated: "2026-09-15",
+  version: "1.2.0"
+};
 ---
 
-<Layout title="Generador de CSR y Llave Privada | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-zinc-200 text-neutral-900 border-t-2 border-zinc-300">
+<Layout title={toolMeta.title}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </Fragment>
+
+  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <!-- Botón de retorno a herramientas -->
+      <!-- Botón Volver -->
       <div>
         <a 
           href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
         >
           <span>←</span> Volver a Herramientas
         </a>
       </div>
-      
-      <div class="space-y-3 text-center">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide uppercase">
-          Generador de Solicitudes CSR y Claves SSL/TLS
-        </h1>
-        <p class="text-zinc-700 font-medium text-base sm:text-lg leading-relaxed font-sans">
-          Genera un par de claves criptográficas y una solicitud de firma de certificado X.509 (CSR) de forma local y segura en tu navegador.
-        </p>
 
-        <div class="bg-amber-100 border-2 border-amber-400 text-amber-950 py-3 px-4 rounded-lg shadow-sm inline-flex items-center gap-2.5 text-xs sm:text-sm font-semibold tracking-wide">
-          <span class="text-base shrink-0">🔒</span>
-          <span>La clave privada se genera localmente en tu cliente y nunca se transmite ni almacena en ningún servidor.</span>
+      <!-- Encabezado Semántico Integrado con el Cuadro de Aviso -->
+      <header class="space-y-4 max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 border-b border-slate-300 pb-4">
+          <span class="bg-amber-100 text-amber-900 font-medium px-2.5 py-1 rounded-full border border-amber-200">
+            Seguridad SSL / TLS
+          </span>
+          <div class="flex items-center gap-4 font-mono text-slate-600">
+            <span>Actualizado: <time datetime="2026-09-15">15 Sept, 2026</time></span>
+            <span>Versión: {toolMeta.version}</span>
+          </div>
         </div>
+
+        <div class="space-y-4 text-center">
+          <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            GENERADOR DE SOLICITUDES CSR Y CLAVES SSL/TLS
+          </h1>
+          <p class="text-slate-700 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+            Genera un par de claves criptográficas y una solicitud de firma de certificado X.509 (CSR) de forma local y segura en tu navegador.
+          </p>
+
+          <!-- Cuadro de aviso integrado dentro del bloque visual principal -->
+          <div class="bg-amber-100 border border-amber-300 text-amber-950 py-3 px-4 rounded-xl shadow-sm inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold tracking-wide w-full">
+            <span class="text-base shrink-0"><i class="fa-solid fa-lock text-amber-700"></i></span>
+            <span>La clave privada se genera localmente en tu cliente y nunca se transmite ni almacena en ningún servidor.</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Componente Interactivo Original (Inalterado) -->
+      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <GeneradorCSR />
       </div>
 
-      <!-- Componente interactivo del Generador CSR -->
-      <GeneradorCSR />
+      <!-- ================================================================= -->
+      <!-- BLOQUE DE CONTENIDO SEO TÉCNICO INFERIOR (Para Google y Bing)     -->
+      <!-- ================================================================= -->
+      <article class="max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6 text-neutral-800">
+        <section class="space-y-3">
+          <h2 class="text-2xl font-bold font-display text-neutral-900 tracking-wide">
+            ¿Qué es una Solicitud CSR y por qué se genera localmente?
+          </h2>
+          <p class="text-neutral-700 leading-relaxed text-sm sm:text-base">
+            En la administración de infraestructura de servidores web (IIS, Nginx, Apache), una <em class="font-mono text-amber-800">Certificate Signing Request</em> (CSR) es un bloque codificado en PEM que contiene la clave pública y los detalles de tu organización (Common Name, O, OU, C). Este generador procesa los algoritmos criptográficos directamente en el cliente mediante JavaScript, garantizando que tu clave privada nunca abandone tu entorno de trabajo.
+          </p>
+        </section>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-white/60 p-5 rounded-xl border border-slate-300 space-y-2">
+            <h3 class="font-bold text-neutral-900 text-sm flex items-center gap-2">
+              <span class="text-amber-600">■</span> Parámetros Técnicos Soportados
+            </h3>
+            <ul class="text-xs sm:text-sm text-neutral-700 space-y-1.5 list-disc list-inside">
+              <li>Longitudes de clave RSA (2048 y 4096 bits).</li>
+              <li>Estructura de nombres distinguidos (DN - Distinguished Name).</li>
+              <li>Codificación estándar PEM para autoridades certificadoras (CA).</li>
+              <li>Compatibilidad con certificados SSL/TLS empresariales.</li>
+            </ul>
+          </div>
+
+          <div class="bg-white/60 p-5 rounded-xl border border-slate-300 space-y-2">
+            <h3 class="font-bold text-neutral-900 text-sm flex items-center gap-2">
+              <span class="text-amber-600">■</span> Buenas Prácticas para SysAdmins
+            </h3>
+            <ul class="text-xs sm:text-sm text-neutral-700 space-y-1.5 list-disc list-inside">
+              <li>Resguardo seguro de claves privadas previas a la emisión.</li>
+              <li>Verificación de dominios mediante Subject Alternative Names (SAN).</li>
+              <li>Renovación oportuna antes de la expiración del certificado raíz.</li>
+              <li>Cumplimiento de normativas de cifrado en entornos de producción.</li>
+            </ul>
+          </div>
+        </div>
+
+        <section class="space-y-3 pt-2">
+          <h2 class="text-xl font-bold font-display text-neutral-900">Preguntas Frecuentes sobre CSR y Llaves SSL</h2>
+          <details class="group bg-white/60 border border-slate-300 rounded-xl p-4 cursor-pointer">
+            <summary class="font-semibold text-neutral-900 text-sm flex justify-between items-center">
+              ¿Qué hago con el código CSR y la clave privada generados?
+              <span class="transition group-open:rotate-180 text-xs">▼</span>
+            </summary>
+            <p class="mt-3 text-xs sm:text-sm text-neutral-700 leading-relaxed">
+              El texto del CSR debe ser copiado y entregado a tu Autoridad Certificadora (CA) de confianza para solicitar el certificado firmado. La clave privada correspondiente debe guardarse de forma segura y secreta en el servidor web de destino, ya que será indispensable para descifrar el tráfico HTTPS junto con el certificado final emitido.
+            </p>
+          </details>
+        </section>
+      </article>
 
     </div>
   </main>

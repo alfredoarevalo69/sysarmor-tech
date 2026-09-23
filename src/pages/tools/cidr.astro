@@ -1,9 +1,17 @@
 ---
 // src/pages/tools/cidr.astro
 import Layout from '../../layouts/Layout.astro';
+
+// Metadatos optimizados para SEO y transparencia técnica
+const toolMeta = {
+  title: "Calculadora de Bloques CIDR y Subneteo IPv4 | SysArmor Tech",
+  description: "Analiza prefijos de red, rangos de direcciones utilizables, máscaras de subred y capacidad de hosts de forma inmediata. Herramienta online para sysadmins y arquitectos de red.",
+  lastUpdated: "2026-09-22",
+  version: "1.2.0"
+};
 ---
 
-<Layout title="Calculadora CIDR | SysArmor Tech">
+<Layout title={toolMeta.title}>
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900">
     <div class="max-w-4xl mx-auto space-y-8">
       
@@ -16,14 +24,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
-          Calculadora de Bloques CIDR
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
-          Analiza prefijos de red, rangos de direcciones utilizables, máscaras de subred y capacidad de hosts de forma inmediata.
-        </p>
-      </div>
+      <!-- Encabezado Semántico -->
+      <header class="space-y-4 max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 border-b border-slate-300 pb-4">
+          <span class="bg-amber-100 text-amber-900 font-medium px-2.5 py-1 rounded-full border border-amber-200">
+            Infraestructura de Redes
+          </span>
+          <div class="flex items-center gap-4 font-mono text-slate-600">
+            <span>Actualizado: <time datetime="2026-09-22">22 Sept, 2026</time></span>
+            <span>Versión: {toolMeta.version}</span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-center">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
+            Calculadora de Bloques CIDR
+          </h1>
+          <p class="text-slate-700 font-medium text-base leading-relaxed">
+            Analiza prefijos de red, rangos de direcciones utilizables, máscaras de subred y capacidad de hosts de forma inmediata.
+          </p>
+        </div>
+      </header>
 
       <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
         <form id="cidr-form" class="flex flex-col sm:flex-row gap-3">
@@ -50,6 +71,59 @@ import Layout from '../../layouts/Layout.astro';
           Ingresa un bloque CIDR válido para ver su desglose técnico.
         </div>
       </div>
+
+      <!-- ================================================================= -->
+      <!-- BLOQUE DE CONTENIDO SEO TÉCNICO INFERIOR (Para Google y Bing)      -->
+      <!-- ================================================================= -->
+      <article class="max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6 text-neutral-800">
+        <section class="space-y-3">
+          <h2 class="text-2xl font-bold font-display text-slate-950 tracking-wide">
+            ¿Cómo funciona el cálculo de prefijos CIDR y Subneteo IPv4?
+          </h2>
+          <p class="text-neutral-700 leading-relaxed text-sm sm:text-base">
+            En la administración de redes empresariales y arquitecturas de sistemas, la correcta distribución del espacio de direccionamiento IP (<em class="font-mono text-amber-800">Classless Inter-Domain Routing</em>) previene el agotamiento de prefijos y optimiza los dominios de broadcast. Esta herramienta procesa la dirección de red base, el prefijo y calcula de forma precisa la máscara decimal, rangos utilizables y capacidad de nodos.
+          </p>
+        </section>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-white/60 p-5 rounded-xl border border-slate-300 space-y-2">
+            <h3 class="font-bold text-slate-950 text-sm flex items-center gap-2">
+              <span class="text-amber-600">■</span> Parámetros Calculados
+            </h3>
+            <ul class="text-xs sm:text-sm text-neutral-700 space-y-1.5 list-disc list-inside">
+              <li>Máscara de subred y notación decimal punteada.</li>
+              <li>Direcciones exactas de Red y Broadcast.</li>
+              <li>Rango utilizable de IPs para nodos y servidores.</li>
+              <li>Capacidad total de direcciones y hosts útiles.</li>
+            </ul>
+          </div>
+
+          <div class="bg-white/60 p-5 rounded-xl border border-slate-300 space-y-2">
+            <h3 class="font-bold text-slate-950 text-sm flex items-center gap-2">
+              <span class="text-amber-600">■</span> Aplicaciones en Infraestructura
+            </h3>
+            <ul class="text-xs sm:text-sm text-neutral-700 space-y-1.5 list-disc list-inside">
+              <li>Segmentación de VLANs en switches de distribución.</li>
+              <li>Definición de ámbitos en servidores DHCP corporativos.</li>
+              <li>Diseño de reglas de enrutamiento estático y BGP.</li>
+              <li>Planificación de despliegues en redes híbridas y cloud.</li>
+            </ul>
+          </div>
+        </div>
+
+        <section class="space-y-3 pt-2">
+          <h2 class="text-xl font-bold font-display text-slate-950">Preguntas Frecuentes sobre Subneteo</h2>
+          <details class="group bg-white/60 border border-slate-300 rounded-xl p-4 cursor-pointer">
+            <summary class="font-semibold text-slate-950 text-sm flex justify-between items-center">
+              ¿Cuál es la diferencia entre el total de IPs y los hosts útiles?
+              <span class="transition group-open:rotate-180 text-xs">▼</span>
+            </summary>
+            <p class="mt-3 text-xs sm:text-sm text-neutral-700 leading-relaxed">
+              De todas las direcciones contenidas en un bloque CIDR, siempre se reservan dos direcciones críticas que no pueden ser asignadas a dispositivos: la primera dirección identifica a la propia red (<em class="font-mono">Network IP</em>) y la última dirección se utiliza para la difusión general (<em class="font-mono">Broadcast IP</em>). Por lo tanto, los hosts útiles corresponden al total de IPs menos dos.
+            </p>
+          </details>
+        </section>
+      </article>
 
     </div>
   </main>

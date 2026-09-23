@@ -1,22 +1,268 @@
 ---
 // src/pages/tools/cloud-matrix.astro
 import Layout from '../../layouts/Layout.astro';
-import { cloudData } from '../../data/cloudData.js';
+
+const cloudData = [
+  // --- REDES Y CONECTIVIDAD ---
+  {
+    category: "Redes",
+    aws: "AWS Transit Gateway",
+    azure: "Azure Virtual WAN / Route Server",
+    gcp: "GCP Network Connectivity Center",
+    desc: "Hub centralizado de conectividad para interconectar múltiples VPCs, redes virtuales y oficinas locales mediante BGP a gran escala."
+  },
+  {
+    category: "Redes",
+    aws: "AWS Direct Connect (DX)",
+    azure: "Azure ExpressRoute",
+    gcp: "GCP Dedicated/Partner Interconnect",
+    desc: "Conexión dedicada de alta velocidad y baja latencia desde el Datacenter local o Carrier hacia la nube privada del proveedor."
+  },
+  {
+    category: "Redes",
+    aws: "AWS Site-to-Site VPN",
+    azure: "Azure VPN Gateway (Site-to-Site)",
+    gcp: "GCP Cloud VPN (HA VPN)",
+    desc: "Túneles IPsec cifrados redundantes para conectar redes locales corporativas con la infraestructura cloud de forma segura."
+  },
+  {
+    category: "Redes",
+    aws: "AWS Client VPN",
+    azure: "Azure VPN Gateway (Point-to-Site)",
+    gcp: "GCP Secure Web Proxy / Identity-Aware Proxy",
+    desc: "Acceso remoto seguro para usuarios individuales (teletrabajo o administradores) mediante clientes OpenVPN o certificados."
+  },
+  {
+    category: "Redes",
+    aws: "AWS Network Firewall",
+    azure: "Azure Firewall (Standard/Premium)",
+    gcp: "GCP Cloud Firewall Plus (NGFW)",
+    desc: "Firewall de próxima generación (NGFW) administrado para inspección profunda de paquetes (DPI), filtrado FQDN y reglas de capa 4 a 7."
+  },
+  {
+    category: "Redes",
+    aws: "AWS Route 53 Resolver",
+    azure: "Azure Private DNS Resolver",
+    gcp: "GCP Cloud DNS (Inbound/Outbound Policies)",
+    desc: "Servicios de resolución DNS híbrida bidireccional para consultar nombres locales desde la nube y viceversa."
+  },
+  {
+    category: "Redes",
+    aws: "Amazon VPC / Elastic IP",
+    azure: "Azure Virtual Network (VNet) / Public IP",
+    gcp: "GCP Virtual Private Cloud (VPC)",
+    desc: "Red lógica aislada en la nube con subredes públicas/privadas, tablas de rutas personalizadas y control de direcciones IP."
+  },
+  {
+    category: "Redes",
+    aws: "AWS VPC Peering / PrivateLink",
+    azure: "VNet Peering / Azure Private Link",
+    gcp: "VPC Network Peering / Private Service Connect",
+    desc: "Interconexión privada entre redes virtuales sin exponer el tráfico a la red pública de internet."
+  },
+  {
+    category: "Redes",
+    aws: "Application Load Balancer (ALB)",
+    azure: "Azure Application Gateway",
+    gcp: "GCP HTTPS Global External Load Balancer",
+    desc: "Balanceador de carga de Capa 7 con terminación SSL/TLS, balanceo basado en rutas URL y WAF integrado."
+  },
+  {
+    category: "Redes",
+    aws: "Network Load Balancer (NLB)",
+    azure: "Azure Load Balancer (Standard)",
+    gcp: "GCP TCP/UDP Network Load Balancer",
+    desc: "Balanceador de carga ultrarrápido de Capa 4 (TCP/UDP) para alto rendimiento y baja latencia."
+  },
+
+  // --- CÓMPUTO ---
+  {
+    category: "Cómputo",
+    aws: "Amazon EC2",
+    azure: "Azure Virtual Machines",
+    gcp: "Google Compute Engine (GCE)",
+    desc: "Instancias de máquinas virtuales escalables con soporte para sistemas operativos Windows Server y distribuciones Linux."
+  },
+  {
+    category: "Cómputo",
+    aws: "AWS Lambda",
+    azure: "Azure Functions",
+    gcp: "Google Cloud Functions / Cloud Run",
+    desc: "Plataforma de computación sin servidor (Serverless) para ejecutar código orientado a eventos sin gestionar servidores."
+  },
+  {
+    category: "Cómputo",
+    aws: "Amazon ECS / EKS",
+    azure: "Azure Kubernetes Service (AKS)",
+    gcp: "Google Kubernetes Engine (GKE)",
+    desc: "Orquestadores de contenedores basados en Kubernetes para despliegue, gestión y auto-escalado de microservicios."
+  },
+  {
+    category: "Cómputo",
+    aws: "AWS Elastic Beanstalk",
+    azure: "Azure App Service",
+    gcp: "Google App Engine",
+    desc: "Plataforma como Servicio (PaaS) para desplegar aplicaciones web y APIs rápidamente sin administrar infraestructura."
+  },
+  {
+    category: "Cómputo",
+    aws: "AWS Auto Scaling / EC2 Fleet",
+    azure: "Azure Virtual Machine Scale Sets (VMSS)",
+    gcp: "GCP Managed Instance Groups (MIGs)",
+    desc: "Grupos de instancias auto-escalables horizontalmente basados en métricas de rendimiento o políticas programadas."
+  },
+  {
+    category: "Cómputo",
+    aws: "AWS Batch",
+    azure: "Azure Batch",
+    gcp: "Google Batch",
+    desc: "Ejecución a escala de tareas de procesamiento por lotes (Batch Computing) y cargas de trabajo HPC de alto rendimiento."
+  },
+
+  // --- ALMACENAMIENTO ---
+  {
+    category: "Almacenamiento",
+    aws: "Amazon S3",
+    azure: "Azure Blob Storage",
+    gcp: "Google Cloud Storage (GCS)",
+    desc: "Almacenamiento de objetos altamente disponible y escalable para respaldos, archivos estáticos y lagos de datos."
+  },
+  {
+    category: "Almacenamiento",
+    aws: "Amazon EBS",
+    azure: "Azure Managed Disks",
+    gcp: "Google Persistent Disk",
+    desc: "Volúmenes de almacenamiento en bloque persistentes de alto rendimiento (SSD/HDD) para máquinas virtuales."
+  },
+  {
+    category: "Almacenamiento",
+    aws: "AWS Storage Gateway",
+    azure: "Azure Files / NetApp Files",
+    gcp: "Google Filestore",
+    desc: "Almacenamiento de archivos compartido basado en protocolos de red estándar (SMB / NFS)."
+  },
+  {
+    category: "Almacenamiento",
+    aws: "Amazon S3 Glacier",
+    azure: "Azure Archive Storage",
+    gcp: "Google Cloud Storage Archive",
+    desc: "Almacenamiento de bajo costo enfocado en el archivado a largo plazo y cumplimiento normativo de retención de datos."
+  },
+
+  // --- BASES DE DATOS ---
+  {
+    category: "Bases de Datos",
+    aws: "Amazon RDS",
+    azure: "Azure SQL Database / Database for PostgreSQL",
+    gcp: "Cloud SQL",
+    desc: "Bases de datos relacionales administradas (SQL Server, PostgreSQL, MySQL) con alta disponibilidad y parches automáticos."
+  },
+  {
+    category: "Bases de Datos",
+    aws: "Amazon Aurora",
+    azure: "Azure Cosmos DB (PostgreSQL API) / Hyperscale",
+    gcp: "Cloud Spanner",
+    desc: "Bases de datos relacionales distribuidas de escala empresarial con rendimiento cloud-native y alta disponibilidad global."
+  },
+  {
+    category: "Bases de Datos",
+    aws: "Amazon DynamoDB",
+    azure: "Azure Cosmos DB",
+    gcp: "Cloud Bigtable / Firestore",
+    desc: "Bases de datos NoSQL totalmente administradas, de alta velocidad y latencia de milisegundos a escala global."
+  },
+  {
+    category: "Bases de Datos",
+    aws: "Amazon ElastiCache",
+    azure: "Azure Cache for Redis",
+    gcp: "Memorystore for Redis",
+    desc: "Cachés en memoria de ultra baja latencia basados en Redis o Memcached para aceleración de aplicaciones y sesiones."
+  },
+  {
+    category: "Bases de Datos",
+    aws: "Amazon Redshift",
+    azure: "Azure Synapse Analytics",
+    gcp: "Google BigQuery",
+    desc: "Almacenes de datos analíticos (Data Warehouses) masivos para procesamiento de Big Data y consultas SQL ultrarrápidas."
+  },
+
+  // --- SEGURIDAD E IDENTIDAD ---
+  {
+    category: "Seguridad",
+    aws: "AWS IAM / AWS Organizations",
+    azure: "Microsoft Entra ID (Azure AD)",
+    gcp: "Google Cloud IAM / Resource Manager",
+    desc: "Gestión centralizada de identidades, control de accesos basado en roles (RBAC) y políticas de seguridad corporativa."
+  },
+  {
+    category: "Seguridad",
+    aws: "AWS Secrets Manager / KMS",
+    azure: "Azure Key Vault",
+    gcp: "Google Secret Manager / Cloud KMS",
+    desc: "Almacenamiento seguro de secretos, cadenas de conexión, certificados SSL y gestión centralizada de llaves de cifrado."
+  },
+  {
+    category: "Seguridad",
+    aws: "AWS GuardDuty / Security Hub",
+    azure: "Microsoft Defender for Cloud",
+    gcp: "Google Security Command Center",
+    desc: "Plataformas de detección de amenazas, evaluación de vulnerabilidades y monitoreo continuo del cumplimiento normativo."
+  },
+  {
+    category: "Seguridad",
+    aws: "AWS WAF / Shield",
+    azure: "Azure Web Application Firewall / DDoS Protection",
+    gcp: "Cloud Armor",
+    desc: "Protección perimetral avanzada contra ataques de denegación de servicio (DDoS) e inyecciones web (SQLi, XSS)."
+  },
+  {
+    category: "Seguridad",
+    aws: "AWS Certificate Manager (ACM)",
+    azure: "Azure App Service Certificates / Key Vault",
+    gcp: "Google Certificate Authority Service",
+    desc: "Emisión, aprovisionamiento y gestión automatizada de certificados SSL/TLS para cifrado de tráfico web."
+  },
+  {
+    category: "Seguridad",
+    aws: "AWS CloudTrail",
+    azure: "Azure Activity Log / Monitor",
+    gcp: "Google Cloud Audit Logs",
+    desc: "Auditoría, registro de llamadas a APIs y trazabilidad forense de todas las acciones administrativas ejecutadas en la nube."
+  },
+  {
+    category: "Seguridad",
+    aws: "Amazon Inspector",
+    azure: "Microsoft Defender for Servers / Vulnerability Assessment",
+    gcp: "Google Web Security Scanner / Container Analysis",
+    desc: "Análisis automatizado de vulnerabilidades en infraestructura, máquinas virtuales e imágenes de contenedores."
+  }
+];
+
+const toolMeta = {
+  title: "Matriz de Equivalencias Multi-Cloud y Redes (Azure, AWS & GCP) | SysArmor Tech",
+  description: "Herramienta interactiva para arquitectos de sistemas e infraestructura. Mapeo completo de redes virtuales, BGP, Transit Gateways, ExpressRoute, cómputo, almacenamiento, bases de datos y ciberseguridad.",
+  lastUpdated: "2026-09-22",
+  version: "1.6.0"
+};
 ---
 
-<Layout 
-    title="Matriz de Equivalencias Cloud (Azure, AWS & GCP) | SysArmor Tech" 
-    description="Herramienta interactiva para arquitectos de sistemas e infraestructura. Mapeo directo y migración de servicios entre Azure, AWS y GCP."
->
-    <!-- FontAwesome CDN para iconos limpios -->
+<Layout title={toolMeta.title} description={toolMeta.description}>
     <Fragment slot="head">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="SysArmor Tech" />
+        <link rel="canonical" href="https://sysarmortech.com/tools/cloud-matrix" />
+        <meta property="og:title" content={toolMeta.title} />
+        <meta property="og:description" content={toolMeta.description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://sysarmortech.com/tools/cloud-matrix" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={toolMeta.title} />
+        <meta name="twitter:description" content={toolMeta.description} />
     </Fragment>
 
     <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
         <div class="max-w-7xl mx-auto space-y-8">
-            
-            <!-- Botón Volver -->
             <div>
                 <a 
                     href="/tools" 
@@ -26,29 +272,37 @@ import { cloudData } from '../../data/cloudData.js';
                 </a>
             </div>
 
-            <!-- Encabezado descriptivo -->
-            <div class="space-y-3 text-center">
-                <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 flex items-center justify-center gap-3">
-                    Matriz de Equivalencias Multi-Cloud
-                </h1>
-                <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
-                    Traducción directa de arquitecturas, servicios de red, cómputo y ciberseguridad entre Microsoft Azure, AWS y Google Cloud Platform.
-                </p>
-            </div>
+            <header class="space-y-4 max-w-3xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm">
+                <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 border-b border-slate-300 pb-4">
+                    <span class="bg-amber-100 text-amber-900 font-medium px-2.5 py-1 rounded-full border border-amber-200">
+                        Infraestructura, Redes & Multi-Cloud
+                    </span>
+                    <div class="flex items-center gap-4 font-mono text-slate-600">
+                        <span>Actualizado: <time datetime="2026-09-22">22 Sept, 2026</time></span>
+                        <span>Versión: {toolMeta.version}</span>
+                    </div>
+                </div>
 
-            <!-- Controls Hub Card -->
+                <div class="space-y-2 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 flex items-center justify-center gap-3">
+                        Matriz de Equivalencias Multi-Cloud
+                    </h1>
+                    <p class="text-slate-700 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+                        Traducción directa de topologías de red avanzada, conectividad híbrida (ExpressRoute / Direct Connect), cómputo, almacenamiento, bases de datos y ciberseguridad entre Microsoft Azure, AWS y Google Cloud.
+                    </p>
+                </div>
+            </header>
+
             <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-5">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-                    <!-- Search Bar -->
                     <div class="lg:col-span-5 relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input type="text" id="search-input" placeholder="Buscar por VNet, Entra ID, S3, RDS, Transit Gateway..." 
+                        <input type="text" id="search-input" placeholder="Buscar por Transit Gateway, ExpressRoute, S3, IAM..." 
                                class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-slate-100 placeholder-slate-500 transition-all">
                     </div>
 
-                    <!-- Column Visibility Checkboxes -->
                     <div class="lg:col-span-7 flex flex-wrap items-center justify-start lg:justify-end gap-3 text-sm">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Columnas:</span>
                         <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
@@ -57,7 +311,7 @@ import { cloudData } from '../../data/cloudData.js';
                         </label>
                         <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
                             <input type="checkbox" id="col-azure" checked class="rounded border-slate-700 bg-slate-900 text-blue-500 focus:ring-0">
-                            <span class="text-slate-300 font-medium">Azure (Origen)</span>
+                            <span class="text-slate-300 font-medium">Azure (Tu Base)</span>
                         </label>
                         <label class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl cursor-pointer hover:border-slate-500 transition">
                             <input type="checkbox" id="col-gcp" checked class="rounded border-slate-700 bg-slate-900 text-red-500 focus:ring-0">
@@ -70,24 +324,21 @@ import { cloudData } from '../../data/cloudData.js';
                     </div>
                 </div>
 
-                <!-- Category Quick Filters -->
                 <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider shrink-0">Filtrar por Dominio:</span>
                         <div id="category-filters" class="flex flex-wrap items-center gap-2"></div>
                     </div>
                     
-                    <!-- Global Export Markdown Button -->
                     <button type="button" id="export-btn" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shrink-0 cursor-pointer uppercase tracking-wider">
                         <i class="fa-solid fa-copy"></i> Copiar Hoja en Markdown
                     </button>
                 </div>
             </div>
 
-            <!-- Main Table Card -->
             <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden">
                 <div class="p-4 bg-slate-950/80 border-b border-slate-800 flex justify-between items-center text-xs text-slate-400">
-                    <span>Matriz multicloud estructurada bajo principios de alta disponibilidad.</span>
+                    <span>Matriz multicloud completa con servicios e infraestructura de redes.</span>
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         <span><strong id="service-count" class="text-white">0</strong> mapeos activos</span>
@@ -108,7 +359,7 @@ import { cloudData } from '../../data/cloudData.js';
                                     <i class="fa-brands fa-google mr-1.5 text-base"></i> GCP
                                 </th>
                                 <th class="py-4 px-5 font-semibold w-2/5 col-header-desc text-slate-300">
-                                    <i class="fa-solid fa-circle-info mr-1.5"></i> Propósito Principal & Guía de Migración
+                                    <i class="fa-solid fa-circle-info mr-1.5"></i> Propósito Principal & Guía de Arquitectura
                                 </th>
                                 <th class="py-4 px-4 font-semibold text-center w-16">Acción</th>
                             </tr>
@@ -117,7 +368,6 @@ import { cloudData } from '../../data/cloudData.js';
                     </table>
                 </div>
 
-                <!-- Empty State -->
                 <div id="empty-state" class="hidden py-16 text-center space-y-3">
                     <div class="text-slate-600 text-4xl">
                         <i class="fa-solid fa-cloud-slash"></i>
@@ -127,7 +377,17 @@ import { cloudData } from '../../data/cloudData.js';
                 </div>
             </div>
 
-            <!-- Toast Notification -->
+            <article class="max-w-4xl mx-auto bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6 text-neutral-800">
+                <section class="space-y-3">
+                    <h2 class="text-2xl font-bold font-display text-slate-950 tracking-wide">
+                        Arquitectura Multi-Cloud y Estandarización de Infraestructura
+                    </h2>
+                    <p class="text-neutral-700 leading-relaxed text-sm sm:text-base">
+                        Para ingenieros de sistemas e infraestructura que gestionan entornos híbridos complejos, la equivalencia cruzada entre plataformas es vital. Esta matriz unifica tanto los servicios de red troncal (<em class="font-mono text-amber-800">Virtual WAN / Transit Gateway</em>, <em class="font-mono text-amber-800">ExpressRoute / Direct Connect</em>) como los bloques fundamentales de cómputo, almacenamiento persistente, bases de datos gestionadas y seguridad perimetral.
+                    </p>
+                </section>
+            </article>
+
             <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
                 <div id="toast-icon" class="text-emerald-400 text-lg">
                     <i class="fa-solid fa-circle-check"></i>
@@ -152,7 +412,6 @@ import { cloudData } from '../../data/cloudData.js';
     const colDesc = document.getElementById('col-desc');
     const exportBtn = document.getElementById('export-btn');
 
-    // Declaración temprana de funciones globales para eventos en línea
     window.filterByCategory = function(category) {
         activeCategory = category;
         renderCategoryFilters();
@@ -291,7 +550,7 @@ import { cloudData } from '../../data/cloudData.js';
             return;
         }
 
-        let md = `# Hoja de Ruta: Azure a AWS (Roadmap)\n\n`;
+        let md = `# Matriz de Equivalencias Multi-Cloud (Infraestructura y Redes)\n\n`;
         md += `| AWS (Destino) | Azure (Origen) | GCP | Propósito Principal |\n`;
         md += `| :--- | :--- | :--- | :--- |\n`;
         
