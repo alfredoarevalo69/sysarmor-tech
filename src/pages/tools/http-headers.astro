@@ -16,31 +16,44 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
-          Analizador de Cabeceras HTTP
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Inspecciona y audita las políticas de seguridad, cookies y cabeceras de respuesta de cualquier servidor web.
-        </p>
-      </div>
+      <!-- Cabecera Semántica SEO On-Page (Estilo Tarjeta) -->
+      <header class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-semibold text-slate-600">
+          <span class="inline-block px-3 py-1 bg-amber-200/70 border border-amber-300 text-amber-900 rounded-full w-fit">
+            Seguridad Web & Hardening HTTP
+          </span>
+          <div class="flex items-center gap-4 font-mono">
+            <span>Actualizado: 23 Sept, 2026</span>
+            <span>Versión: 2.1.1</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+            Analizador de Cabeceras HTTP & Auditoría Web
+          </h1>
+          <p class="text-neutral-700 font-medium text-base leading-relaxed">
+            Inspecciona y audita las políticas de seguridad en encabezados de respuesta (HTTP Response Headers), evaluando directivas de hardening esenciales como CSP, HSTS, X-Frame-Options y politicas de cookies en cualquier servidor web.
+          </p>
+        </div>
+      </header>
 
       <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
         <form id="header-form" autocomplete="off" class="space-y-4">
           <div class="space-y-2">
             <label for="target-url" class="block text-sm font-bold text-slate-100">
-              URL del Sitio Web o Servidor
+              URL o Dominio del Servidor
             </label>
             <div class="flex flex-col sm:flex-row gap-3">
               <input 
-                type="url" 
+                type="text" 
                 id="target-url" 
                 required 
                 autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"
                 spellcheck="false"
-                placeholder="https://ejemplo.com" 
+                placeholder="ejemplo.com o https://ejemplo.com" 
                 class="flex-1 bg-slate-900 border-2 border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono text-xs shadow-inner placeholder-slate-500"
               />
               <button 
@@ -80,7 +93,6 @@ import Layout from '../../layouts/Layout.astro';
           <!-- Todas las cabeceras devueltas -->
           <div class="space-y-3">
             <h3 class="text-sm uppercase tracking-wider text-slate-300 font-extrabold">Cabeceras de Respuesta HTTP del Servidor</h3>
-            <!-- Se removieron max-h-80, overflow-y-auto y overflow-x-auto; se agregó break-all y whitespace-pre-wrap -->
             <div id="results-content" class="bg-slate-900 border-2 border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-200 space-y-1.5 shadow-inner break-all whitespace-pre-wrap">
               <!-- Resultados dinámicos -->
             </div>
@@ -88,6 +100,59 @@ import Layout from '../../layouts/Layout.astro';
 
         </div>
       </div>
+
+      <!-- Sección de Contenido Técnico y Semántico para Motores de Búsqueda (Google & Bing) -->
+      <section class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-2xl font-bold text-slate-950 border-b border-slate-300 pb-3">
+          Guía Técnica: Endurecimiento (Hardening) de Cabeceras de Respuesta HTTP
+        </h2>
+        
+        <div class="space-y-4 text-sm leading-relaxed text-slate-700">
+          <p>
+            Las cabeceras de respuesta HTTP constituyen la primera línea de defensa en aplicaciones y servicios web. Una adecuada configuración de estos encabezados en servidores como <strong class="text-slate-900">Nginx, Apache HTTP Server o Microsoft IIS</strong> instruye explícitamente al navegador del cliente sobre las restricciones de ejecución, reduciendo drásticamente la superficie de ataque frente a vectores comunes en la OWASP Top 10.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6 pt-2">
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Content Security Policy (CSP)
+              </h3>
+              <p>
+                Mitiga eficientemente ataques de inyección como <strong class="text-slate-900">Cross-Site Scripting (XSS)</strong> y *Data Injection*. Establece una lista blanca explícita de orígenes seguros desde los cuales el navegador tiene permitido cargar scripts, estilos, recursos multimedia o marcos incrustados.
+              </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Strict-Transport-Security (HSTS)
+              </h3>
+              <p>
+                Garantiza que toda interacción con el dominio se realice únicamente a través de conexiones cifradas <strong class="text-slate-900">HTTPS</strong>. Previene ataques de degradación de protocolo (*Downgrade Attacks*) y secuestro de cookies mediante intercepción Man-in-the-Middle (MitM).
+              </p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6 pt-2">
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Protección de Enmarcado y MIME Sniffing
+              </h3>
+              <p>
+                <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">X-Frame-Options</code> restringe si un sitio puede ser incrustado en etiquetas <span class="italic">iframe</span>, previniendo ataques de <strong class="text-slate-900">Clickjacking</strong>. Por otro lado, <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">X-Content-Type-Options: nosniff</code> obliga al navegador a respetar estrictamente el tipo MIME declarado, evitando la ejecución accidental de scripts disfrazados de imágenes u otros activos.
+              </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Privacidad y Permisos (Referrer & Permissions)
+              </h3>
+              <p>
+                <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">Referrer-Policy</code> controla qué información contextual de la URL se transmite en las peticiones salientes. Asimismo, <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">Permissions-Policy</code> restringe el acceso de la aplicación a APIs sensibles del cliente como la cámara, micrófono o la geolocalización.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
@@ -122,14 +187,20 @@ import Layout from '../../layouts/Layout.astro';
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const url = inputUrl.value.trim();
-      if (!url) return;
+      let rawUrl = inputUrl.value.trim();
+      if (!rawUrl) return;
+
+      // Saneamiento automático: si no incluye protocolo, anteponemos https://
+      if (!/^https?:\/\//i.test(rawUrl)) {
+        rawUrl = 'https://' + rawUrl;
+        inputUrl.value = rawUrl; // Refleja el cambio amigablemente en el input
+      }
 
       submitBtn.textContent = 'Analizando...';
       submitBtn.setAttribute('disabled', 'true');
 
       try {
-        const res = await fetch(`/api/check-headers?url=${encodeURIComponent(url)}`);
+        const res = await fetch(`/api/check-headers?url=${encodeURIComponent(rawUrl)}`);
         const data = await res.json();
 
         resultsContainer?.classList.remove('hidden');

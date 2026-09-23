@@ -5,19 +5,32 @@ import Layout from '../../layouts/Layout.astro';
 
 <Layout title="Calculadora de Subredes (IPv6) | SysArmor Tech">
   <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-4xl mx-auto space-y-8">
       
-      <div class="space-y-4">
-        <div class="mb-2">
-          <a 
-            href="/tools" 
-            class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
-          >
-            <span>←</span> Volver a Herramientas
-          </a>
+      <!-- Navegación de retorno -->
+      <div>
+        <a 
+          href="/tools" 
+          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+        >
+          <span>←</span> Volver a Herramientas
+        </a>
+      </div>
+
+      <!-- Cuadro Superior de Metadatos y Encabezado (Estándar SysArmor Tech) -->
+      <div class="bg-slate-50 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-bold">
+          <span class="bg-amber-100 text-amber-800 border border-amber-300 px-3 py-1.5 rounded-full uppercase tracking-wider">
+            Infraestructura, Redes & Multi-Cloud
+          </span>
+          <div class="flex items-center gap-4 text-slate-500 font-mono">
+            <span>Actualizado: 23 Sept, 2026</span>
+            <span>Versión: 1.2.0</span>
+          </div>
         </div>
-        <div class="space-y-2">
-          <h1 class="text-3xl font-display font-bold text-slate-950 tracking-wide uppercase">
+
+        <div class="border-t border-slate-300 pt-6 space-y-2 text-center max-w-2xl mx-auto">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
             Calculadora de Subredes (IPv6)
           </h1>
           <p class="text-slate-700 font-medium text-base">
@@ -33,10 +46,10 @@ import Layout from '../../layouts/Layout.astro';
           <div class="flex justify-between items-start">
             <div>
               <h3 class="text-sm font-bold text-neutral-900 uppercase tracking-wider">
-                Calculadora de Subredes IPv6
+                Configuración de Bloque Base
               </h3>
               <p class="text-xs text-slate-600 mt-1">
-                Distribuye y planifica bloques jerárquicos de red IPv6 por requerimientos de subred o dispositivos.
+                Define el prefijo raíz asignado por tu proveedor o clúster para la distribución jerárquica.
               </p>
             </div>
             <button
@@ -119,6 +132,34 @@ import Layout from '../../layouts/Layout.astro';
         <div id="results-container" class="space-y-6"></div>
 
       </div>
+
+      <!-- Cuadro Técnico Informativo / SEO (Al pie de página) -->
+      <section class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 text-slate-300">
+        <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3 flex items-center gap-2">
+          <span class="text-amber-500">#</span> Planeación Jerárquica y Dimensionamiento de Subredes IPv6
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+          <div class="space-y-3">
+            <h3 class="font-bold text-white uppercase tracking-wider text-xs text-amber-400">Diseño de Asignación Jerárquica</h3>
+            <p>
+              La arquitectura de red moderna bajo RFC estándar recomienda estandarizar los bloques de subredes de usuario final en prefijos <strong class="text-white">/64</strong>. Esto permite garantizar el funcionamiento nativo de protocolos críticos de vecinos como NDP (*Neighbor Discovery Protocol*) y autoconfiguración SLAAC sin comprometer el espacio de direcciones globales.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="font-bold text-white uppercase tracking-wider text-xs text-amber-400">Flexibilidad de Agregación de Rutas</h3>
+            <p>
+              Realizar un subnetting estructurado a partir de prefijos padres (como <code class="text-amber-300 bg-slate-900 px-1.5 py-0.5 rounded font-mono">/48</code> o <code class="text-amber-300 bg-slate-900 px-1.5 py-0.5 rounded font-mono">/56</code>) facilita la sumarización de rutas en las tablas de enrutamiento BGP de borde, optimizando la convergencia y reduciendo el consumo de memoria en equipos de infraestructura crítica.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-800/80 pt-4 text-xs text-slate-400 space-y-2">
+          <p><strong class="text-slate-300">Buenas Prácticas de Ingeniería:</strong> Evite fragmentar innecesariamente los bloques por debajo de /64 en segmentos LAN tradicionales. Mantenga el diseño modular para facilitar auditorías de seguridad y despliegues con políticas de control de acceso distribuidas.</p>
+        </div>
+      </section>
+
     </div>
   </main>
 

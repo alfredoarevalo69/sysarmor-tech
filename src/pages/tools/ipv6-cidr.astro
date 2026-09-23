@@ -1,5 +1,4 @@
 ---
-// src/pages/tools/ipv6-cidr.astro
 import Layout from '../../layouts/Layout.astro';
 ---
 
@@ -17,14 +16,26 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <!-- Encabezado -->
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
-          Calculadora CIDR IPv6
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
-          Analiza prefijos IPv6, calcula la compresión de direcciones, rangos globales y capacidad de subredes.
-        </p>
+      <!-- Cuadro Superior de Metadatos y Encabezado (Estándar SysArmor Tech) -->
+      <div class="bg-slate-50 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 text-xs font-bold">
+          <span class="bg-amber-100 text-amber-800 border border-amber-300 px-3 py-1.5 rounded-full uppercase tracking-wider">
+            Infraestructura, Redes & Multi-Cloud
+          </span>
+          <div class="flex items-center gap-4 text-slate-500 font-mono">
+            <span>Actualizado: 23 Sept, 2026</span>
+            <span>Versión: 1.2.0</span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-300 pt-6 space-y-2 text-center max-w-2xl mx-auto">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
+            Calculadora CIDR IPv6
+          </h1>
+          <p class="text-slate-700 font-medium text-base">
+            Traducción y análisis avanzado de prefijos IPv6, compresión de direcciones, rangos globales y capacidad de subredes.
+          </p>
+        </div>
       </div>
 
       <!-- Tarjeta de Entrada -->
@@ -101,6 +112,33 @@ import Layout from '../../layouts/Layout.astro';
 
         </div>
       </div>
+
+      <!-- Cuadro Técnico Informativo / SEO (Al pie de página) -->
+      <section class="bg-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 text-slate-300">
+        <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3 flex items-center gap-2">
+          <span class="text-amber-500">#</span> Especificaciones y Guía Técnica de Direccionamiento IPv6
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-relaxed">
+          <div class="space-y-3">
+            <h3 class="font-bold text-white uppercase tracking-wider text-xs text-amber-400">Estructura de Bloques y Notación CIDR</h3>
+            <p>
+              A diferencia de IPv4, el direccionamiento IPv6 opera sobre un espacio de <strong class="text-white">128 bits</strong> representado mediante ocho bloques hexadecimales (hextetos) de 16 bits cada uno. La notación CIDR define el tamaño del prefijo de red enrutada, permitiendo dimensionar desde subredes locales hasta asignaciones globales para ISPs y grandes corporaciones.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="font-bold text-white uppercase tracking-wider text-xs text-amber-400">Reglas de Compresión de Ceros</h3>
+            <p>
+              La especificación estándar (RFC 5952) optimiza la legibilidad omitiendo bloques contiguos de ceros mediante doble dos puntos (<code class="text-amber-300 bg-slate-900 px-1.5 py-0.5 rounded font-mono">::</code>) y eliminando ceros a la izquierda (*leading zeros*) en cada hexteto activo para simplificar la administración en equipos de red.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-800/80 pt-4 text-xs text-slate-400 space-y-2">
+          <p><strong class="text-slate-300">Ámbitos Principales:</strong> Las direcciones <em class="text-slate-300">Global Unicast</em> (2000::/3) se emplean en tránsito global Internet, las <em class="text-slate-300">ULA</em> (FC00::/7) para redes privadas internas corporativas, y las <em class="text-slate-300">Link-Local</em> (FE80::/10) para comunicación obligatoria dentro del mismo enlace físico (NDP).</p>
+        </div>
+      </section>
 
     </div>
   </main>

@@ -16,14 +16,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide">
-          Auditoría de Salud DNS y Correo
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
-          Analiza de forma integral la salud general de tus servidores DNS (NS, MX) y configuraciones de seguridad de correo (SPF, DMARC) en un solo escaneo rápido.
-        </p>
-      </div>
+      <!-- Cabecera Semántica SEO On-Page (Estilo Tarjeta Solicitado) -->
+      <header class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-semibold text-slate-600">
+          <span class="inline-block px-3 py-1 bg-amber-200/70 border border-amber-300 text-amber-900 rounded-full w-fit">
+            Infraestructura, Seguridad & DNS
+          </span>
+          <div class="flex items-center gap-4 font-mono">
+            <span>Actualizado: 22 Sept, 2026</span>
+            <span>Versión: 2.1.0</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide">
+            Auditoría de Salud DNS y Correo
+          </h1>
+          <p class="text-slate-700 font-medium text-base leading-relaxed">
+            Analiza de forma integral la salud general de tus servidores de nombres (NS), registros de intercambio de correo (MX) y políticas de autenticación y seguridad de dominios (SPF, DMARC) bajo normativas RFC en un solo escaneo rápido.
+          </p>
+        </div>
+      </header>
 
       <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
         <form id="audit-form" class="flex flex-col sm:flex-row gap-3">
@@ -50,6 +63,48 @@ import Layout from '../../layouts/Layout.astro';
           Ingresa un dominio para ejecutar la auditoría integral en paralelo.
         </div>
       </div>
+
+      <!-- Sección de Contenido Técnico y Semántico para Motores de Búsqueda (Google & Bing) -->
+      <section class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-2xl font-bold text-slate-950 border-b border-slate-300 pb-3">
+          Guía Técnica: Diagnóstico de Servidores DNS y Seguridad de Correo Electrónico
+        </h2>
+        
+        <div class="space-y-4 text-sm leading-relaxed text-slate-700">
+          <p>
+            La infraestructura de nombres de dominio (<strong class="text-slate-900">DNS</strong>) y los protocolos de validación de correo electrónico son pilares fundamentales en la ciberseguridad corporativa. Una mala configuración en los registros autoritativos o la falta de endurecimiento en los mecanismos de autenticación expone a las organizaciones a ataques de suplantación de identidad (<span class="italic">spoofing</span>), fraude de CEO y la inclusión en listas negras de SPAM.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6 pt-2">
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Servidores NS y Registros MX
+              </h3>
+              <p>
+                Los registros <strong class="text-slate-900">NS (Name Server)</strong> determinan las rutas autoritativas de tu zona. Por su parte, los registros <strong class="text-slate-900">MX (Mail Exchange)</strong> junto con sus prioridades y resolución de direcciones IP aseguran que el flujo de correo electrónico corporativo hacia plataformas como Microsoft Exchange, Microsoft 365 o Google Workspace se entregue sin interrupciones por fallas de ruta.
+              </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Conteo de Lookups SPF (RFC 7208)
+              </h3>
+              <p>
+                El estándar <strong class="text-slate-900">SPF (Sender Policy Framework)</strong> establece qué servidores tienen permiso de enviar correos en nombre de tu dominio. El estándar técnico limita estrictamente a un máximo de <strong class="text-slate-900">10 consultas DNS anidadas (lookups)</strong>; superar este umbral invalida por completo la directiva, dejando el dominio desprotegido.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2 mt-4">
+            <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+              <span class="text-amber-600">■</span> Cumplimiento y Políticas DMARC
+            </h3>
+            <p>
+              Implementar políticas estrictas de rechazo (<code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">-all</code> en SPF) combinadas con registros <strong class="text-slate-900">DMARC (Domain-based Message Authentication, Reporting, and Conformance)</strong> garantiza la integridad del canal de mensajería, permitiendo monitorear intentos de fraude y bloquear de forma automatizada los correos no autorizados antes de que lleguen a las bandejas de entrada de los usuarios.
+            </p>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>

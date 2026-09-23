@@ -16,14 +16,27 @@ import Layout from '../../layouts/Layout.astro';
         </a>
       </div>
 
-      <div class="space-y-2 text-center max-w-xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
-          Analizador de Cabeceras de Correo
-        </h1>
-        <p class="text-neutral-700 font-medium text-base">
-          Inspecciona los saltos de red detallados, latencias y validaciones SPF, DKIM y DMARC.
-        </p>
-      </div>
+      <!-- Cabecera Semántica SEO On-Page (Estilo Tarjeta) -->
+      <header class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-semibold text-slate-600">
+          <span class="inline-block px-3 py-1 bg-amber-200/70 border border-amber-300 text-amber-900 rounded-full w-fit">
+            Seguridad de Correo & Forense TI
+          </span>
+          <div class="flex items-center gap-4 font-mono">
+            <span>Actualizado: 22 Sept, 2026</span>
+            <span>Versión: 2.0.4</span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 tracking-wide">
+            Analizador de Cabeceras de Correo
+          </h1>
+          <p class="text-neutral-700 font-medium text-base leading-relaxed">
+            Inspecciona los saltos de red detallados (Hops), latencias de entrega y validaciones criptográficas de autenticación SPF, DKIM y DMARC a partir de las cabeceras raw (completas) de mensajes de correo electrónico.
+          </p>
+        </div>
+      </header>
       
       <div class="bg-slate-950 border-2 border-slate-900 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
         <form id="header-form" method="POST" autocomplete="off" class="space-y-4">
@@ -106,6 +119,48 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
       </div>
+
+      <!-- Sección de Contenido Técnico y Semántico para Motores de Búsqueda (Google & Bing) -->
+      <section class="bg-slate-100 border border-slate-300 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-2xl font-bold text-slate-950 border-b border-slate-300 pb-3">
+          Guía Técnica: Análisis Forense de Cabeceras de Correo y Trazabilidad SMTP
+        </h2>
+        
+        <div class="space-y-4 text-sm leading-relaxed text-slate-700">
+          <p>
+            Las cabeceras <span class="italic">raw</span> (completas) de un correo electrónico contienen el rastro criptográfico y de red indispensable para auditar incidentes de seguridad, investigar campañas de <strong class="text-slate-900">phishing</strong> o diagnosticar retrasos graves en la entrega de mensajes corporativos gestionados en plataformas como Exchange On-Premises, Microsoft 365 o Google Workspace.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6 pt-2">
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Saltos de Red y Retrasos (Received Hops)
+              </h3>
+              <p>
+                Cada servidor MTA intermediario que procesa un correo añade una cabecera <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">Received:</code> en orden inverso. Analizar estos saltos permite reconstruir la ruta exacta del remitente original, identificar servidores comprometidos y medir los <span class="italic">delays</span> de latencia acumulados en la red.
+              </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2">
+              <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                <span class="text-amber-600">■</span> Validación Criptográfica DKIM y Selectores
+              </h3>
+              <p>
+                El mecanismo <strong class="text-slate-900">DKIM (DomainKeys Identified Mail)</strong> adjunta una firma digital cifrada al mensaje. El uso de un <span class="italic">Selector DKIM</span> adecuado permite a los servidores receptores verificar la clave pública publicada en el DNS del dominio origen, garantizando que el cuerpo y las cabeceras no fueron alterados en tránsito.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-300 shadow-xs space-y-2 mt-4">
+            <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+              <span class="text-amber-600">■</span> Alineación y Resultados SPF / DMARC
+            </h3>
+            <p>
+              Un análisis forense exhaustivo evalúa los resultados de autenticación global (<code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">PASS</code> o <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">FAIL</code>) para verificar si las políticas <strong class="text-slate-900">SPF</strong> y <strong class="text-slate-900">DMARC</strong> se encuentran debidamente alineadas con el dominio remitente visible en el encabezado <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-xs">From:</code>.
+            </p>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
@@ -234,6 +289,6 @@ import Layout from '../../layouts/Layout.astro';
       rawHeaderInput.value = '';
       rawHeaderInput.focus();
     }
-    window.scrollTo({ top: `0`, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
