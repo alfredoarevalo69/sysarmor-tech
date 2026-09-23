@@ -1,111 +1,164 @@
 ---
-// src/pages/tools/what-is-my-ip.astro
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "¿Cuál es mi IP y Geolocalización | SysArmor Tech";
+const pageDescription = "Diagnóstico en tiempo real de tus direcciones IP, geolocalización y entorno de conexión.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title="¿Cuál es mi IP y Geolocalización | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
-      <div>
-        <a 
-          href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
-        >
-          <span>←</span> Volver a Herramientas
-        </a>
-      </div>
+<Layout 
+  title={pageTitle} 
+  description={pageDescription}
+  canonical={canonicalURL}
+>
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Botón de retorno a herramientas -->
+    <div class="mb-6">
+      <button 
+        type="button"
+        id="back-btn"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md font-mono cursor-pointer"
+      >
+        ← VOLVER A HERRAMIENTAS
+      </button>
+    </div>
 
-      <div class="space-y-3 text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-          ¿Cuál es mi IP y Red?
-        </h1>
-        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+    <!-- Cuadro de Cabecera Estilizado -->
+    <div class="bg-slate-100 border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <span class="inline-block bg-[#FDE047]/60 border border-[#FACC15] text-slate-900 text-xs font-mono font-bold px-3 py-1 rounded-full w-fit">
+          Diagnóstico de Red y Conectividad
+        </span>
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-600">
+          <span>Actualizado: 22 Sept, 2026</span>
+          <span>Versión: 1.2.0</span>
+        </div>
+      </div>
+      <hr class="border-slate-300 mb-6" />
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-mono mb-2">¿Cuál es mi IP y Red?</h1>
+        <p class="text-slate-600 text-sm max-w-2xl mx-auto font-medium">
           Diagnóstico en tiempo real de tus direcciones IP, geolocalización y entorno de conexión.
         </p>
       </div>
+    </div>
 
-      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-        <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
-          Conectividad de Red
+    <!-- Conectividad de Red -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 mb-8 text-slate-200">
+      <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3 font-mono">
+        Conectividad de Red
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">IPv4 Pública</span>
+          <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-[#D4AF37]">
+            Consultando...
+          </span>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">IPv6 Pública</span>
+          <span id="ipv6-display" class="font-mono text-xs sm:text-sm font-bold text-slate-200">
+            Buscando...
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Geolocalización y Entorno del Cliente -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-slate-900 text-slate-100 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 flex flex-col justify-between">
+        <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3 font-mono">
+          Geolocalización
         </h2>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv4 Pública</span>
-            <span id="ipv4-display" class="font-mono text-sm sm:text-base font-bold text-[#D4AF37]">
-              Consultando...
-            </span>
-          </div>
+        <ul class="space-y-3 text-sm divide-y divide-slate-800/80 font-sans">
+          <li class="flex justify-between items-center pt-2">
+            <span class="text-slate-400 text-xs font-semibold font-mono">País</span>
+            <span id="geo-country" class="font-medium text-slate-100 flex items-center gap-1.5">Cargando...</span>
+          </li>
+          <li class="flex justify-between items-center pt-3">
+            <span class="text-slate-400 text-xs font-semibold font-mono">Ciudad / Región</span>
+            <span id="geo-city" class="font-medium text-slate-100">-</span>
+          </li>
+          <li class="flex justify-between items-center pt-3">
+            <span class="text-slate-400 text-xs font-semibold font-mono">ISP / Proveedor</span>
+            <span id="geo-isp" class="font-mono text-xs text-slate-300 truncate max-w-[180px] sm:max-w-[200px]" title="-">-</span>
+          </li>
+          <li class="flex justify-between items-center pt-3">
+            <span class="text-slate-400 text-xs font-semibold font-mono">Coordenadas</span>
+            <span id="geo-coords" class="font-mono text-xs text-slate-300">-</span>
+          </li>
+        </ul>
+      </div>
 
-          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-3 shadow-inner">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">IPv6 Pública</span>
-            <span id="ipv6-display" class="font-mono text-xs sm:text-sm font-bold text-slate-200">
-              Buscando...
-            </span>
-          </div>
-        </div>
+      <div class="bg-slate-900 text-slate-100 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 flex flex-col justify-between">
+        <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3 font-mono">
+          Entorno del Cliente
+        </h2>
+        
+        <ul class="space-y-3 text-sm divide-y divide-slate-800/80 font-sans">
+          <li class="flex justify-between items-center pt-2">
+            <span class="text-slate-400 text-xs font-semibold font-mono">Sistema Operativo</span>
+            <span id="client-os" class="font-medium text-slate-100">Detectando...</span>
+          </li>
+          <li class="flex justify-between items-center pt-3">
+            <span class="text-slate-400 text-xs font-semibold font-mono">Navegador Web</span>
+            <span id="client-browser" class="font-medium text-slate-100">Detectando...</span>
+          </li>
+          <li class="flex justify-between items-center pt-3">
+            <span class="text-slate-400 text-xs font-semibold font-mono">Protocolo / Puerto</span>
+            <span id="connection-protocol" class="font-mono text-xs text-slate-300">-</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Botón de Actualizar -->
+    <div class="flex justify-end mb-12">
+      <button 
+        id="client-refresh"
+        class="w-full sm:w-auto bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-md font-mono inline-flex items-center justify-center gap-2 cursor-pointer"
+      >
+        🔄 Actualizar Información
+      </button>
+    </div>
+
+    <!-- Bloque de Contenido Técnico y Semántico para SEO -->
+    <article class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 text-slate-200 font-sans text-sm leading-relaxed shadow-xl">
+      <div class="border-b border-slate-800 pb-4">
+        <h2 class="text-lg font-bold font-mono text-slate-100 flex items-center gap-2">
+          <span class="text-[#D4AF37]">#</span> Guía Técnica: Identificación de Direcciones IP y Enrutamiento Perimetral
+        </h2>
+        <p class="text-xs text-slate-400 font-mono mt-1">Análisis de visibilidad pública, NAT (Network Address Translation) y protocolos de red.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
-          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
-            Geolocalización
-          </h2>
-          
-          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
-            <li class="flex justify-between items-center pt-2">
-              <span class="text-slate-400 text-xs font-semibold">País</span>
-              <span id="geo-country" class="font-medium text-slate-100 flex items-center gap-1.5">Cargando...</span>
-            </li>
-            <li class="flex justify-between items-center pt-3">
-              <span class="text-slate-400 text-xs font-semibold">Ciudad / Región</span>
-              <span id="geo-city" class="font-medium text-slate-100">-</span>
-            </li>
-            <li class="flex justify-between items-center pt-3">
-              <span class="text-slate-400 text-xs font-semibold">ISP / Proveedor</span>
-              <span id="geo-isp" class="font-mono text-xs text-slate-300 truncate max-w-[180px] sm:max-w-[200px]" title="-">-</span>
-            </li>
-            <li class="flex justify-between items-center pt-3">
-              <span class="text-slate-400 text-xs font-semibold">Coordenadas</span>
-              <span id="geo-coords" class="font-mono text-xs text-slate-300">-</span>
-            </li>
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">¿Cómo funciona la detección de IP?</h3>
+          <p class="text-slate-300">
+            La dirección IP pública es el identificador único asignado por tu Proveedor de Servicios de Internet (ISP) con el que te presentas ante la red global. Mediante pasarelas optimizadas, esta utilidad separa y analiza la conectividad en dos capas distintas:
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">IPv4 vs IPv6:</strong> Evalúa la coexistencia de protocolos dual-stack y el comportamiento de traducción de direcciones de red (<span class="text-amber-400 font-mono">NAT/CGNAT</span>).</li>
+            <li><strong class="text-slate-100">Geolocalización por ASN:</strong> Mapea bases de datos de encaminamiento para estimar la ubicación regional y el sistema autónomo de tu proveedor.</li>
           </ul>
         </div>
 
-        <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col justify-between">
-          <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3">
-            Entorno del Cliente
-          </h2>
-          
-          <ul class="space-y-3 text-sm divide-y divide-slate-800/80">
-            <li class="flex justify-between items-center pt-2">
-              <span class="text-slate-400 text-xs font-semibold">Sistema Operativo</span>
-              <span id="client-os" class="font-medium text-slate-100">Detectando...</span>
-            </li>
-            <li class="flex justify-between items-center pt-3">
-              <span class="text-slate-400 text-xs font-semibold">Navegador Web</span>
-              <span id="client-browser" class="font-medium text-slate-100">Detectando...</span>
-            </li>
-            <li class="flex justify-between items-center pt-3">
-              <span class="text-slate-400 text-xs font-semibold">Protocolo / Puerto</span>
-              <span id="connection-protocol" class="font-mono text-xs text-slate-300">-</span>
-            </li>
-          </ul>
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Seguridad y Privacidad Perimetral</h3>
+          <p class="text-slate-300">
+            Conocer los parámetros visibles desde el exterior es fundamental para auditar la postura de seguridad de una infraestructura corporativa:
+          </p>
+          <ol class="list-decimal pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">Evaluación de Fugas VPN:</strong> Comprueba si tu túnel cifrado oculta correctamente la IP real y evita filtraciones de DNS locales.</li>
+            <li><strong class="text-slate-100">Inspección de Cabeceras:</strong> Analiza el agente de usuario y los protocolos de transporte para optimizar la compatibilidad con servicios web corporativos.</li>
+          </ol>
         </div>
       </div>
-
-      <div class="flex justify-end pt-2">
-        <button 
-          id="client-refresh"
-          class="w-full sm:w-auto bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg inline-flex items-center justify-center gap-2 cursor-pointer"
-        >
-          🔄 Actualizar Información
-        </button>
-      </div>
-
-    </div>
-  </main>
+    </article>
+  </section>
 </Layout>
 
 <script>
@@ -175,6 +228,16 @@ import Layout from '../../layouts/Layout.astro';
       if (coordsElement) coordsElement.textContent = '-';
     }
   }
+
+  // Manejar el botón de regreso de forma segura
+  const backBtn = document.getElementById('back-btn');
+  backBtn?.addEventListener('click', () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = '/tools';
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', fetchNetworkData);
   document.addEventListener('astro:page-load', fetchNetworkData);

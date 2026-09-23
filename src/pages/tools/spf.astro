@@ -1,76 +1,150 @@
 ---
-// src/pages/tools/spf.astro
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Validador de Registro SPF | SysArmor Tech";
+const pageDescription = "Verifica la política de SPF (Sender Policy Framework) de un dominio para prevenir la suplantación de identidad en el correo.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title="Validador de Registro SPF | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-slate-200 border-t border-slate-300 text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
-      <div>
-        <a 
-          href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-lg transition-colors shadow-sm"
-        >
-          <span>←</span> Volver a Herramientas
-        </a>
-      </div>
+<Layout 
+  title={pageTitle} 
+  description={pageDescription}
+  canonical={canonicalURL}
+>
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Botón de retorno a herramientas -->
+    <div class="mb-6">
+      <button 
+        type="button"
+        id="back-btn"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md font-mono cursor-pointer"
+      >
+        ← VOLVER A HERRAMIENTAS
+      </button>
+    </div>
 
-      <div class="space-y-2 text-center max-w-2xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-950 tracking-wide uppercase">
-          Validador de Registro SPF
-        </h1>
-        <p class="text-slate-700 font-medium text-base">
+    <!-- Cuadro de Cabecera Estilizado -->
+    <div class="bg-slate-100 border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <span class="inline-block bg-[#FDE047]/60 border border-[#FACC15] text-slate-900 text-xs font-mono font-bold px-3 py-1 rounded-full w-fit">
+          Seguridad de Correo y Autenticación
+        </span>
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-600">
+          <span>Actualizado: 22 Sept, 2026</span>
+          <span>Versión: 1.1.0</span>
+        </div>
+      </div>
+      <hr class="border-slate-300 mb-6" />
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-mono mb-2">Validador de Registro SPF</h1>
+        <p class="text-slate-600 text-sm max-w-2xl mx-auto font-medium">
           Verifica la política de SPF (Sender Policy Framework) de un dominio para prevenir la suplantación de identidad en el correo.
         </p>
       </div>
+    </div>
 
-      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl">
-        <form id="spf-form" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="domain-input" 
-            placeholder="Ej. midominio.com" 
-            required
-            class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white font-mono text-base focus:outline-none focus:border-amber-500 shadow-inner placeholder-slate-500"
-          />
-          <button 
-            type="submit"
-            class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-colors shadow-sm cursor-pointer"
-          >
-            Consultar SPF
-          </button>
-        </form>
-      </div>
+    <!-- Formulario de Consulta -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl mb-8">
+      <form id="spf-form" class="space-y-4">
+        <div>
+          <label for="domain-input" class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">
+            Dominio a Analizar
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input 
+              type="text" 
+              id="domain-input" 
+              placeholder="Ej. midominio.com" 
+              required
+              class="w-full sm:flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4AF37] transition-all font-mono"
+            />
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="w-full sm:w-auto px-6 py-3 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-sm transition-all shadow-md font-mono flex items-center justify-center sm:min-w-[160px] cursor-pointer"
+            >
+              Consultar SPF
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
 
-      <div id="results-container" class="space-y-4">
-        <h2 class="text-xl font-bold text-slate-950">Resultado del Registro SPF</h2>
+    <!-- Resultados -->
+    <div id="results-container" class="space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">Resultado del Registro SPF</h2>
         
-        <div id="results-content" class="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center text-slate-400 font-medium shadow-xl">
+        <div id="results-content" class="text-center text-slate-400 font-medium py-6">
           Ingresa un dominio para analizar su registro SPF.
         </div>
       </div>
-
     </div>
-  </main>
+
+    <!-- Bloque de Contenido Técnico y Semántico para SEO -->
+    <article class="mt-12 bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 text-slate-200 font-sans text-sm leading-relaxed shadow-xl">
+      <div class="border-b border-slate-800 pb-4">
+        <h2 class="text-lg font-bold font-mono text-slate-100 flex items-center gap-2">
+          <span class="text-[#D4AF37]">#</span> Guía Técnica: Validación de Políticas SPF y Control de Lookups DNS
+        </h2>
+        <p class="text-xs text-slate-400 font-mono mt-1">Prevención de spoofing y cumplimiento del estándar RFC 7208 para servidores de correo.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">¿Qué valida esta herramienta?</h3>
+          <p class="text-slate-300">
+            El marco SPF (Sender Policy Framework) permite a los propietarios de dominios publicar qué servidores de correo están autorizados a transmitir mensajes en su nombre mediante registros TXT en el DNS. Esta utilidad analiza la sintaxis, detecta mecanismos de inclusión y computa de forma precisa el número total de consultas DNS (lookups).
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">Límite RFC 7208 (10 Lookups):</strong> Monitorea que la cadena no exceda el máximo permitido para evitar fallos permanentes de validación (<span class="text-amber-400 font-mono">PermError</span>).</li>
+            <li><strong class="text-slate-100">Mecanismos de Autorización:</strong> Evalúa directivas <code class="text-amber-400 font-mono">include</code>, <code class="text-amber-400 font-mono">ip4</code>, <code class="text-amber-400 font-mono">ip6</code>, <code class="text-amber-400 font-mono">a</code> y <code class="text-amber-400 font-mono">mx</code>.</li>
+            <li><strong class="text-slate-100">Directiva All:</strong> Identifica el comportamiento ante servidores no autorizados (<code class="text-amber-400 font-mono">~all</code>, <code class="text-amber-400 font-mono">-all</code> o <code class="text-amber-400 font-mono">+all</code>).</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Buenas Prácticas de Infraestructura</h3>
+          <p class="text-slate-300">
+            Una mala configuración de SPF compromete de manera directa la reputación del dominio y la entregabilidad corporativa:
+          </p>
+          <ol class="list-decimal pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">Evitar múltiples registros TXT:</strong> Un dominio solo debe contar con una única cadena SPF activa; múltiples registros anulan la directiva por ambigüedad.</li>
+            <li><strong class="text-slate-100">Controlar proveedores externos:</strong> Limita el uso excesivo de etiquetas <code class="text-amber-400 font-mono">include</code> de terceros para mantenerte por debajo del umbral de 10 consultas.</li>
+            <li><strong class="text-slate-100">Combinar con DKIM y DMARC:</strong> SPF por sí solo no protege contra todas las formas de suplantación; debe complementarse con una política DMARC estricta de cuarentena o rechazo.</li>
+          </ol>
+        </div>
+      </div>
+    </article>
+  </section>
 
   <script>
     const form = document.getElementById('spf-form') as HTMLFormElement;
     const input = document.getElementById('domain-input') as HTMLInputElement;
     const content = document.getElementById('results-content') as HTMLDivElement;
+    const backBtn = document.getElementById('back-btn');
 
-    form.addEventListener('submit', async (e) => {
+    // Manejar el botón de regreso de forma segura
+    backBtn?.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
+
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const domain = input.value.trim();
       if (!domain) return;
 
       content.innerHTML = `
-        <div class="py-8 flex justify-center items-center gap-3">
-          <svg class="animate-spin h-6 w-6 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <div class="py-8 flex justify-center items-center gap-3 font-mono text-sm">
+          <svg class="animate-spin h-5 w-5 text-[#D4AF37]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span class="font-semibold text-slate-300">Analizando registros TXT/SPF y conteo de saltos...</span>
+          <span class="text-slate-300">Analizando registros TXT/SPF y conteo de saltos...</span>
         </div>
       `;
 
@@ -79,15 +153,15 @@ import Layout from '../../layouts/Layout.astro';
         const result = await response.json();
 
         if (!result.success) {
-          content.innerHTML = `<p class="text-red-400 font-semibold py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
+          content.innerHTML = `<p class="text-red-400 font-mono text-sm py-4">${result.error || 'Ocurrió un error al procesar la solicitud.'}</p>`;
           return;
         }
 
         if (!result.found) {
           content.innerHTML = `
-            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl text-left shadow-inner">
-              <p class="font-bold text-amber-400">Aviso de Configuración</p>
-              <p class="text-slate-300 text-sm mt-1">${result.message}</p>
+            <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl text-left shadow-inner font-sans">
+              <p class="font-bold text-amber-400 font-mono text-sm">Aviso de Configuración</p>
+              <p class="text-slate-300 text-xs mt-1">${result.message}</p>
             </div>
           `;
           return;
@@ -97,7 +171,7 @@ import Layout from '../../layouts/Layout.astro';
         const lookupCount = result.lookupCount as number;
         const exceedsLimit = result.exceedsLimit as boolean;
 
-        let lookupBadgeColor = "bg-slate-900 border-slate-800 text-slate-300";
+        let lookupBadgeColor = "bg-slate-950 border-slate-800 text-slate-300";
         let lookupText = "Óptimo (Dentro del límite permitido de 10)";
         if (lookupCount > 10) {
           lookupBadgeColor = "bg-red-950/40 border-red-900/50 text-red-300";
@@ -108,61 +182,61 @@ import Layout from '../../layouts/Layout.astro';
         }
 
         const mechanisms = record.split(' ');
-        let explanationHtml = `<ul class="space-y-2 text-sm text-slate-300">`;
+        let explanationHtml = `<ul class="space-y-2 text-xs text-slate-300 font-sans">`;
         mechanisms.forEach((mech) => {
           if (mech.startsWith('include:')) {
             const service = mech.replace('include:', '');
-            explanationHtml += `<li class="flex items-start gap-2"><span class="text-amber-400 font-bold">✔ Autoriza a:</span> El proveedor externo <strong>${service}</strong> para enviar correos en nombre de este dominio. <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded font-mono">+1 Lookups</span></li>`;
+            explanationHtml += `<li class="flex items-start gap-2"><span class="text-[#D4AF37] font-bold font-mono">✔ Autoriza a:</span> El proveedor externo <strong class="text-slate-100">${service}</strong> para enviar correos en nombre de este dominio. <span class="text-[10px] text-slate-400 bg-slate-950 border border-slate-800 px-1.5 py-0.5 rounded font-mono">+1 Lookup</span></li>`;
           } else if (mech.startsWith('ip4:') || mech.startsWith('ip6:')) {
             const ip = mech.replace(/ip[46]:/, '');
-            explanationHtml += `<li class="flex items-start gap-2"><span class="text-amber-400 font-bold">✔ IP Autorizada:</span> Se permite el envío directo desde la dirección <strong>${ip}</strong>. <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded font-mono">0 Lookups</span></li>`;
+            explanationHtml += `<li class="flex items-start gap-2"><span class="text-[#D4AF37] font-bold font-mono">✔ IP Autorizada:</span> Se permite el envío directo desde la dirección <strong class="text-slate-100">${ip}</strong>. <span class="text-[10px] text-slate-400 bg-slate-950 border border-slate-800 px-1.5 py-0.5 rounded font-mono">0 Lookups</span></li>`;
           } else if (mech.startsWith('a') || mech.startsWith('mx')) {
-            explanationHtml += `<li class="flex items-start gap-2"><span class="text-amber-400 font-bold">✔ Mecanismo local:</span> <strong>${mech}</strong> evaluado contra registros DNS del dominio. <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded font-mono">+1 Lookups</span></li>`;
+            explanationHtml += `<li class="flex items-start gap-2"><span class="text-[#D4AF37] font-bold font-mono">✔ Mecanismo local:</span> <strong class="text-slate-100">${mech}</strong> evaluado contra registros DNS del dominio. <span class="text-[10px] text-slate-400 bg-slate-950 border border-slate-800 px-1.5 py-0.5 rounded font-mono">+1 Lookup</span></li>`;
           } else if (mech.endsWith('all')) {
             let policyDesc = "Política estricta de rechazo.";
             if (mech.startsWith('~')) policyDesc = "SoftFail (Los correos de servidores no autorizados se marcan como sospechosos/spam).";
             else if (mech.startsWith('-')) policyDesc = "Fail (Los correos de servidores no autorizados se rechazan por completo).";
             else if (mech.startsWith('+')) policyDesc = "Pass (Advertencia: Permite cualquier servidor, baja seguridad).";
             
-            explanationHtml += `<li class="flex items-start gap-2"><span class="text-purple-400 font-bold">⚙ Política final (${mech}):</span> ${policyDesc}</li>`;
+            explanationHtml += `<li class="flex items-start gap-2"><span class="text-purple-400 font-bold font-mono">⚙ Política final (${mech}):</span> ${policyDesc}</li>`;
           }
         });
         explanationHtml += `</ul>`;
 
         content.innerHTML = `
           <div class="space-y-6 text-left">
-            <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl shadow-inner">
-              <p class="font-bold text-amber-400">¡Registro SPF Válido Encontrado!</p>
-              <p class="text-slate-300 text-sm mt-1">El dominio cuenta con directrices configuradas para autorizar servidores de correo.</p>
+            <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl shadow-inner font-sans">
+              <p class="font-bold text-emerald-400 font-mono text-sm">¡Registro SPF Válido Encontrado!</p>
+              <p class="text-slate-300 text-xs mt-1">El dominio cuenta con directrices configuradas para autorizar servidores de correo.</p>
             </div>
 
-            <div class="p-4 border rounded-xl ${lookupBadgeColor} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-inner">
+            <div class="p-4 border rounded-xl ${lookupBadgeColor} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-inner font-sans">
               <div>
-                <p class="font-bold text-sm uppercase tracking-wider">Límite de Consultas DNS (RFC 7208)</p>
-                <p class="text-sm mt-0.5 opacity-90">${lookupText}</p>
+                <p class="font-bold text-xs uppercase tracking-wider font-mono">Límite de Consultas DNS (RFC 7208)</p>
+                <p class="text-xs mt-0.5 opacity-90">${lookupText}</p>
               </div>
-              <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-center shadow-inner">
-                <span class="block text-2xl font-black font-mono ${exceedsLimit ? 'text-red-400' : 'text-amber-400'}">${lookupCount} / 10</span>
-                <span class="text-[10px] uppercase font-bold text-slate-400">Lookups</span>
+              <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 text-center shadow-inner">
+                <span class="block text-2xl font-black font-mono ${exceedsLimit ? 'text-red-400' : 'text-[#D4AF37]'}">${lookupCount} / 10</span>
+                <span class="text-[9px] uppercase font-bold text-slate-400 font-mono">Lookups</span>
               </div>
             </div>
             
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-inner">
-              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Cadena TXT Completa:</p>
-              <code class="block bg-slate-950 border border-slate-800 text-amber-400 p-3 rounded-lg font-mono text-xs break-all shadow-inner">
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 shadow-inner">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-mono">Cadena TXT Completa:</p>
+              <code class="block bg-slate-900 border border-slate-800 text-amber-400 p-3 rounded-lg font-mono text-xs break-all shadow-inner">
                 ${record}
               </code>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 shadow-inner">
-              <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Desglose y Significado (Para no expertos):</h3>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 shadow-inner">
+              <h3 class="font-bold text-slate-100 text-sm border-b border-slate-800 pb-2 font-mono">Desglose y Significado:</h3>
               ${explanationHtml}
             </div>
           </div>
         `;
 
       } catch (error) {
-        content.innerHTML = `<p class="text-red-400 font-semibold py-4">Error de red al conectar con el servidor.</p>`;
+        content.innerHTML = `<p class="text-red-400 font-mono text-xs py-4">Error de red al conectar con el servidor.</p>`;
       }
     });
   </script>

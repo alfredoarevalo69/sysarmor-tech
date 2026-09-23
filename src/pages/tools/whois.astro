@@ -1,69 +1,136 @@
 ---
-// src/pages/tools/whois.astro
 import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Buscador WHOIS de Dominios | SysArmor Tech";
+const pageDescription = "Consulta registros detallados de dominios globales y ccTLDs, contactos, fechas y servidores de nombres.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title="Buscador WHOIS de Dominios | SysArmor Tech">
-  <main class="w-full min-h-[calc(100vh-76px)] py-12 px-4 sm:px-6 bg-[#cbd5e1] text-slate-900">
-    <div class="max-w-4xl mx-auto space-y-8">
-      
-      <div>
-        <a 
-          href="/tools" 
-          class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-md"
-        >
-          <span>←</span> Volver a Herramientas
-        </a>
-      </div>
+<Layout 
+  title={pageTitle} 
+  description={pageDescription}
+  canonical={canonicalURL}
+>
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Botón de retorno a herramientas -->
+    <div class="mb-6">
+      <button 
+        type="button"
+        id="back-btn"
+        class="inline-flex items-center gap-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md font-mono cursor-pointer"
+      >
+        ← VOLVER A HERRAMIENTAS
+      </button>
+    </div>
 
-      <div class="space-y-3 text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-          Buscador WHOIS de Dominios
-        </h1>
-        <p class="text-slate-800 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+    <!-- Cuadro de Cabecera Estilizado -->
+    <div class="bg-slate-100 border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <span class="inline-block bg-[#FDE047]/60 border border-[#FACC15] text-slate-900 text-xs font-mono font-bold px-3 py-1 rounded-full w-fit">
+          Inteligencia de Dominios y DNS
+        </span>
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-600">
+          <span>Actualizado: 22 Sept, 2026</span>
+          <span>Versión: 1.2.0</span>
+        </div>
+      </div>
+      <hr class="border-slate-300 mb-6" />
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 font-mono mb-2">Buscador WHOIS de Dominios</h1>
+        <p class="text-slate-600 text-sm max-w-2xl mx-auto font-medium">
           Consulta registros detallados de dominios globales y ccTLDs, contactos, fechas y servidores de nombres.
         </p>
       </div>
-
-      <div class="bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <form id="whois-form" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="domain-input" 
-            placeholder="ej. sysarmortech.com o mintic.gov.co" 
-            required
-            class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 text-sm transition-all"
-          />
-          <button 
-            type="submit" 
-            id="submit-btn"
-            class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-lg cursor-pointer"
-          >
-            Consultar WHOIS
-          </button>
-        </form>
-      </div>
-
-      <div id="result-container" class="hidden bg-slate-900 text-slate-100 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <h2 class="text-lg font-bold text-white border-b border-slate-800 pb-3">Resultados de la Consulta</h2>
-        <div id="result-content" class="overflow-x-auto"></div>
-      </div>
-
     </div>
-  </main>
+
+    <!-- Formulario de Consulta WHOIS -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-4 mb-8 text-slate-200">
+      <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3 font-mono">
+        Consulta de Registros
+      </h2>
+      <form id="whois-form" class="flex flex-col sm:flex-row gap-3">
+        <input 
+          type="text" 
+          id="domain-input" 
+          placeholder="ej. sysarmortech.com o mintic.gov.co" 
+          required
+          class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] text-sm font-mono transition-all"
+        />
+        <button 
+          type="submit" 
+          id="submit-btn"
+          class="bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-sm shadow-md font-mono cursor-pointer"
+        >
+          Consultar WHOIS
+        </button>
+      </form>
+    </div>
+
+    <!-- Contenedor de Resultados -->
+    <div id="result-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl space-y-4 mb-12 text-slate-200">
+      <h2 class="text-xs uppercase tracking-wider text-[#D4AF37] font-bold border-b border-slate-800 pb-3 font-mono">
+        Resultados de la Consulta
+      </h2>
+      <div id="result-content" class="overflow-x-auto"></div>
+    </div>
+
+    <!-- Bloque de Contenido Técnico y Semántico para SEO -->
+    <article class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 text-slate-200 font-sans text-sm leading-relaxed shadow-xl">
+      <div class="border-b border-slate-800 pb-4">
+        <h2 class="text-lg font-bold font-mono text-slate-100 flex items-center gap-2">
+          <span class="text-[#D4AF37]">#</span> Guía Técnica: Protocolo WHOIS y Auditoría de Activos de Dominio
+        </h2>
+        <p class="text-xs text-slate-400 font-mono mt-1">Análisis de la base de datos de registro de dominios, metadatos y ciclo de vida de identidades en Internet.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">¿Qué es una consulta WHOIS?</h3>
+          <p class="text-slate-300">
+            El protocolo <strong class="text-slate-100">WHOIS</strong> es una herramienta estándar de consulta que permite acceder a las bases de datos de los registradores acreditados para verificar la titularidad, fechas de expiración y estado administrativo de nombres de dominio en Internet.
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">Validación de Ciclo de Vida:</strong> Monitorea fechas críticas de creación, actualización y expiración para prevenir la pérdida de dominios corporativos.</li>
+            <li><strong class="text-slate-100">Nameservers y Registradores:</strong> Identifica con precisión los servidores de nombres autoritativos (<span class="text-amber-400 font-mono">DNS</span>) asociados al dominio.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Seguridad y Privacidad de Registros</h3>
+          <p class="text-slate-300">
+            En la gestión moderna de infraestructura TI, la auditoría continua de dominios previene ataques de suplantación y secuestro:
+          </p>
+          <ol class="list-decimal pl-5 space-y-1 text-xs text-slate-300">
+            <li><strong class="text-slate-100">Protección de Privacidad:</strong> Muchos dominios enmascaran datos de contacto directo mediante servicios de proxy por normativas de privacidad.</li>
+            <li><strong class="text-slate-100">Verificación de ccTLDs y gTLDs:</strong> Facilita el análisis cruzado tanto de extensiones genéricas (.com, .net) como territoriales (.co, .gov.co).</li>
+          </ol>
+        </div>
+      </div>
+    </article>
+  </section>
 
   <script>
     /* ========================================================
-       DEPLOY CACHE-BUSTER & VERSION CONTROL
-       Timestamp: 2026-09-18T16:35:00Z 
-       Forza la invalidación del CDN edge en Vercel para este módulo
-       ======================================================== */
+        DEPLOY CACHE-BUSTER & VERSION CONTROL
+        Timestamp: 2026-09-18T16:35:00Z 
+        Forza la invalidación del CDN edge en Vercel para este módulo
+        ======================================================== */
     
     const form = document.getElementById('whois-form') as HTMLFormElement;
     const input = document.getElementById('domain-input') as HTMLInputElement;
     const container = document.getElementById('result-container') as HTMLDivElement;
     const resultContent = document.getElementById('result-content') as HTMLDivElement;
     const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+    // Manejar el botón de regreso de forma segura
+    const backBtn = document.getElementById('back-btn');
+    backBtn?.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/tools';
+      }
+    });
 
     const sanitizeValue = (val: any): string => {
       if (val === null || val === undefined || val === '') return '';
@@ -123,7 +190,7 @@ import Layout from '../../layouts/Layout.astro';
           
           if (data && data.status && ['NOT_FOUND_OR_PROTECTED', 'PRIVACY_RESTRICTED', 'LOOKUP_NOTICE', 'NOTICE'].includes(data.status[0])) {
             resultContent.innerHTML = `
-              <div class="bg-amber-950/40 border border-amber-500/40 text-amber-200 p-4 rounded-xl text-sm font-medium space-y-2">
+              <div class="bg-amber-950/40 border border-amber-500/40 text-amber-200 p-4 rounded-xl text-sm font-medium space-y-2 font-mono">
                 <div class="flex items-center gap-2 font-bold">
                   Aviso de Registro
                 </div>
@@ -143,14 +210,14 @@ import Layout from '../../layouts/Layout.astro';
               rows.push([key, formattedVal]);
             }
 
-            resultContent.innerHTML = rows.length > 0 ? renderTable(rows) : `<p class="text-slate-400 font-semibold text-sm">No se encontraron datos públicos para mostrar.</p>`;
+            resultContent.innerHTML = rows.length > 0 ? renderTable(rows) : `<p class="text-slate-400 font-semibold text-sm font-mono">No se encontraron datos públicos para mostrar.</p>`;
           }
         } else {
-          resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm">Error: ${result.error}</p>`;
+          resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm font-mono">Error: ${result.error}</p>`;
         }
         container.classList.remove('hidden');
       } catch (err) {
-        resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm">Error de conexión con el servidor.</p>`;
+        resultContent.innerHTML = `<p class="text-rose-400 font-semibold text-sm font-mono">Error de conexión con el servidor.</p>`;
         container.classList.add('hidden');
       } finally {
         btn.textContent = 'Consultar WHOIS';
