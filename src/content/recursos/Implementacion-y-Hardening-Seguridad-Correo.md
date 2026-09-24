@@ -4,7 +4,6 @@ description: "Aprende a configurar e implementar SPF, DKIM y DMARC en plataforma
 pubDate: 2026-08-27
 category: "Ciberseguridad Enterprise"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/Asegurar_Correo/Correo.jpeg"
 pdfUrl: "/docs/Hardening-Correo-SPF-DKIM-Y-DMARC.pdf"
 ---

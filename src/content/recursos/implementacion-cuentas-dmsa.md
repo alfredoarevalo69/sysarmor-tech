@@ -4,7 +4,6 @@ description: "Aprende a configurar cuentas dMSA en Windows Server 2025 para vinc
 pubDate: 2026-08-17
 category: "Infraestructura TI"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/dMSA/dMSA_blog.jpeg"
 pdfUrl: "/docs/implementacion-cuentas-dmsa.pdf"
 ---

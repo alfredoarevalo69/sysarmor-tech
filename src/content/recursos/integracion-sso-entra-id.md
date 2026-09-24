@@ -4,7 +4,6 @@ description: "Guía técnica paso a paso para configurar Inicio de Sesión Únic
 pubDate: 2026-08-18
 category: "Seguridad e Infraestructura TI"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/SAML/SAML_SSO.jpeg"
 pdfUrl: "/docs/integracion-sso-entra-id.pdf"
 ---

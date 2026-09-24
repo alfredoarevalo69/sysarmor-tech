@@ -1,17 +1,10 @@
 ---
 title: "Despliegue y Provisionamiento Zero-Touch de Windows 11 con Windows Autopilot y Microsoft Intune"
-description: "Guía técnica para la extracción de HardwareID, importación de hashes en Intune, configuración de perfiles User-Driven, grupos dinámicos en Entra ID y validación de la experiencia OOBE con reglas de menor privilegio."
-pubDate: 2026-08-25
-category: "Infraestructura TI"
-isFeatured: true
-author: "SYSARMOR TECH"
+description: "Guía técnica para la extracción de HardwareID, importación de hashes en Intune..."
+blogCategory: "Infraestructura TI"
+pubDate: "25 de agosto de 2026"
+author: "Alfredo Arévalo"
 image: "/images/AutoPilot/AutoPilot.jpeg"
-pdfUrl: "/docs/despliegue-windows11-con-intunet-autopilot.pdf"
----
-
-> **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Operación, Ciberseguridad e Innovación  
-
 ---
 
 ## Introducción
@@ -173,7 +166,7 @@ Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Win32App
 
 ![Validación con dsregcmd /status](/images/AutoPilot/autopilot5.png)
 
-> **Criterio de Éxito:** `dsregcmd /status` confirmará `AzureAdJoined : YES` y la cuenta de usuario operará en modo **Standard User**.
+> **Criterio de Éxito:** `dsregcmd /status` confirmará `AzureAdJoined : YES` y la cuenta de usuario operará en modo **Standard User**. Asimismo, recuerda que puedes complementar estas auditorías de infraestructura y conectividad consultando nuestras herramientas de diagnóstico para validar la correcta resolución de nombres en tu red local mediante la [herramienta de validación DNS](/herramientas/validador-dns).
 
 ---
 

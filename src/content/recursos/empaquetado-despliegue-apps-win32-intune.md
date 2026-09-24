@@ -3,13 +3,12 @@ title: "Empaquetado y Despliegue de Aplicaciones Win32 con Microsoft Intune"
 description: "Guía paso a paso para el empaquetado, configuración, despliegue silencioso y validación técnica de aplicaciones Win32 mediante Intune, asegurando ejecución con privilegios SYSTEM y reglas de detección precisas."
 pubDate: 2026-08-24
 category: "Infraestructura TI"
+author: "Alfredo Arévalo"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/Despliegue-Apps-Win32-con-Intune/Despliegue-Apps-Intune.jpeg"
 pdfUrl: "/docs/empaquetado-despliegue-apps-win32-intune.pdf"
 ---
 
-> **Autor:** SYSARMOR TECH  
 > **Enfoque:** Infraestructura, Operación, Seguridad e Innovación  
 
 ---

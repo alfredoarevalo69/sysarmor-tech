@@ -4,7 +4,6 @@ description: "Aprende a configurar Windows LAPS nativo en Active Directory, exte
 pubDate: 2026-08-15
 category: "Seguridad e Infraestructura TI"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/LAPS/LAPS.jpeg"
 pdfUrl: "/docs/instalar-configurar-laps.pdf"
 ---

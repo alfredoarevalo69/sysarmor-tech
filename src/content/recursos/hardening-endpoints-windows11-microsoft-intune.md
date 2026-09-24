@@ -3,14 +3,10 @@ title: "Hardening Mínimo de Endpoints Windows 11 con Microsoft Intune"
 description: "Aprende a desplegar políticas de hardening básico en Windows 11 utilizando Microsoft Intune y Entra ID: BitLocker, ASR Rules, Schannel, Defender AV, WUfB y control de USB."
 pubDate: 2026-08-23
 category: "Ciberseguridad"
+author: "Alfredo Arévalo"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/Hardening_Endpoints/Hardening_Endpoints.jpeg"
 pdfUrl: "/docs/hardening-endpoints-windows11-intune.pdf"
----
-
-> **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Seguridad de la Información, Operación e Innovación  
 
 ---
 

@@ -5,11 +5,11 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ReactionButtons from '../../components/ReactionButtons.astro';
 
-// 1. Definir rutas estáticas para la colección
 export async function getStaticPaths() {
   const posts = await getCollection('recursos');
   return posts.map((post) => {
-    const slug = post.slug || post.id;
+    // Usamos post.id para asegurar un enrutamiento limpio y compatible con Astro v5+
+    const slug = post.id || post.slug;
     return {
       params: { slug },
       props: { post },
@@ -17,82 +17,58 @@ export async function getStaticPaths() {
   });
 }
 
-// 2. Extraer datos de la entrada actual
 const { post } = Astro.props;
 const data = post?.data || {};
 const title = data.title || "Artículo del Blog";
-const description = data.description || "Caso práctico de infraestructura TI.";
+const description = data.description || "Caso práctico de infraestructura TI y hardening.";
 const category = data.category || "Infraestructura TI";
-const pubDate = data.pubDate || null;
 
-// 3. Renderizar el Markdown con la API de Astro 5
+// Formatear la fecha de forma limpia y legible si existe
+let formattedDate = data.pubDate || "";
+if (formattedDate) {
+  try {
+    const dateObj = new Date(formattedDate);
+    if (!isNaN(dateObj.getTime())) {
+      formattedDate = dateObj.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+  } catch (e) {
+    // Si falla el parseo, se mantiene el string original
+  }
+}
+
+const author = data.author || "Alfredo Arévalo";
+const enfoque = data.enfoque || "";
+const image = data.image || "/images/og-image.png";
+
 const { Content } = await render(post);
-
-// 4. Formateo de fecha seguro evitando desfase por zona horaria (UTC-5)
-const formattedDate = pubDate 
-  ? new Date(pubDate).toLocaleDateString('es-ES', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' })
-  : null;
-
-// 5. Construcción de URL canónica para posicionamiento e indexación en Google
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout 
-  title={`${title} | SysArmor Tech`} 
+  title={title} 
   description={description} 
-  canonical={canonicalUrl}
+  variant="blog"
+  blogCategory={category}
+  pubDate={formattedDate}
+  author={author}
+  enfoque={enfoque}
+  ogImage={image}
   bgColor="#ffffff"
 >
-  
-  <main class="bg-white min-h-screen py-8 text-slate-800" style="background-color: #ffffff !important;">
-    <article class="container mx-auto max-w-4xl px-4">
-      
-      {/* --- BARRA SUPERIOR DE NAVEGACIÓN --- */}
-      <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl shadow-lg mb-8 border border-slate-800">
-        <a 
-          href="/blog" 
-          class="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 font-semibold text-xs md:text-sm transition-colors cursor-pointer"
-        >
-          &larr; Volver al Blog
-        </a>
+  <!-- CONTENIDO PRINCIPAL DEL BLOG -->
+  <article class="blog-content text-slate-800 space-y-6 max-w-none">
+    <Content />
+  </article>
 
-        {category && (
-          <span class="text-xs font-semibold px-3 py-1 bg-slate-900 text-amber-400 rounded-full border border-slate-800 uppercase tracking-wide">
-            {category}
-          </span>
-        )}
-      </div>
-
-      {/* --- ENCABEZADO PRINCIPAL (SEO H1) --- */}
-      <header class="mb-8 border-b border-slate-200 pb-6">
-        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
-          {title}
-        </h1>
-        <p class="text-slate-600 text-base md:text-lg leading-relaxed mb-4">
-          {description}
-        </p>
-        
-        {formattedDate && (
-          <div class="text-xs text-slate-400 font-medium">
-            Publicado el {formattedDate}
-          </div>
-        )}
-      </header>
-
-      {/* --- CONTENIDO MARKDOWN RENDERIZADO --- */}
-      <div class="blog-content text-slate-800 space-y-6">
-        <Content />
-      </div>
-
-      {/* --- COMPONENTE DE REACCIONES (TELEGRAM) --- */}
-      <ReactionButtons articleTitle={title} />
-
-    </article>
-  </main>
-
+  <!-- SECCIÓN DE REACCIONES -->
+  <div class="mt-12 pt-6 border-t border-slate-200">
+    <ReactionButtons articleTitle={title} />
+  </div>
 </Layout>
 
-<!-- BLOQUEO DE CLIC DERECHO EN EL ARTÍCULO -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const article = document.querySelector('article');
@@ -102,9 +78,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   });
 </script>
 
-<!-- ESTILOS GLOBALES Y PROTECCIÓN CONTRA COPIA DE TEXTO -->
 <style is:global>
-  /* Inhabilitar selección de texto en todo el cuerpo del artículo */
   article, .blog-content {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -112,7 +86,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     user-select: none;
   }
 
-  /* Excepción: Permitir la selección e interacción en bloques de código PowerShell */
   .blog-content pre, 
   .blog-content code {
     -webkit-user-select: text !important;
@@ -121,14 +94,13 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     user-select: text !important;
   }
 
-  /* Estilos de renderizado Markdown */
   .blog-content h2 {
     font-size: 1.75rem;
     font-weight: 700;
     color: #0f172a;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #cbd5e1;
     padding-bottom: 0.5rem;
   }
   .blog-content h3 {
@@ -173,7 +145,22 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     padding: 0;
   }
   .blog-content hr {
-    border-color: #e2e8f0;
+    border-color: #cbd5e1;
     margin: 2rem 0;
+  }
+  .blog-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  .blog-content th, .blog-content td {
+    border: 1px solid #cbd5e1;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  .blog-content th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #0f172a;
   }
 </style>

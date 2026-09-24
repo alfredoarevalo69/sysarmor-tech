@@ -3,14 +3,11 @@ title: "Implementación Híbrida de Microsoft Intune y Entra ID Join en Entornos
 description: "Guía paso a paso para la configuración de Microsoft Entra Connect, sincronización de identidades y la inscripción automática de dispositivos (MDM/Intune) en escenarios híbridos."
 pubDate: 2026-08-21
 category: "Infraestructura TI"
+author: "Alfredo Arévalo"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/MDM_Intune/MDM_Intune.jpeg"
 pdfUrl: "/docs/intune-implementacion-hibrida.pdf"
----
 
-> **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Operación, Seguridad e Innovación  
 
 ---
 

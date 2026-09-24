@@ -9,25 +9,33 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
-  variant?: 'home' | 'legal' | 'tool';
+  variant?: 'home' | 'legal' | 'tool' | 'blog';
   ogImage?: string;
   bgColor?: string;
   lcpImage?: string;
   toolCategory?: string;
   toolLastUpdated?: string;
   toolVersion?: string;
+  blogCategory?: string;
+  pubDate?: string;
+  author?: string;
+  enfoque?: string;
 }
 
 const { 
   title, 
   description = "Ingeniería de Infraestructura y Seguridad IT. Evaluaciones técnicas y hardening sin compromiso.", 
   ogImage = '/images/og-image.png',
-  bgColor = '#cbd5e1', // <-- Aquí fijamos tu color de fondo unificado por defecto
+  bgColor = '#cbd5e1',
   lcpImage,
   variant,
   toolCategory,
   toolLastUpdated,
-  toolVersion
+  toolVersion,
+  blogCategory,
+  pubDate,
+  author = "Alfredo Arévalo",
+  enfoque
 } = Astro.props;
 
 const siteURL = Astro.site ? Astro.site.origin : 'https://sysarmortech.com';
@@ -71,35 +79,25 @@ const schemaOrgData = {
       },
       "inLanguage": "es-CO"
     },
-    {
-      "@type": "ProfessionalService",
-      "@id": `${siteURL}/#service`,
-      "name": "SysArmor Tech",
-      "url": siteURL,
-      "image": fullOgImageUrl,
+    ...(variant === 'blog' ? [{
+      "@type": "TechArticle",
+      "@id": `${canonicalURL}#article`,
+      "isPartOf": {
+        "@id": `${siteURL}/#website`
+      },
+      "headline": title,
       "description": description,
-      "priceRange": "$$$",
-      "parentOrganization": {
+      "image": fullOgImageUrl,
+      "datePublished": pubDate,
+      "author": {
+        "@type": "Person",
+        "name": author
+      },
+      "publisher": {
         "@id": `${siteURL}/#organization`
       },
-      "areaServed": [
-        {
-          "@type": "AdministrativeArea",
-          "name": "Engativá, Bogotá"
-        },
-        {
-          "@type": "Country",
-          "name": "Colombia"
-        }
-      ],
-      "serviceType": [
-        "Ingeniería de Infraestructura IT",
-        "SecOps y Hardening",
-        "Active Directory & Windows Server",
-        "Soporte Nivel 3",
-        "Migraciones Corporativas"
-      ]
-    }
+      "mainEntityOfPage": canonicalURL
+    }] : [])
   ]
 };
 ---
@@ -126,11 +124,12 @@ const schemaOrgData = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={variant === 'blog' ? 'article' : 'website'} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullOgImageUrl} />
+    {pubDate && <meta property="article:published_time" content={pubDate} />}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
@@ -140,7 +139,6 @@ const schemaOrgData = {
 
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
 
-    <!-- Corrección de scroll exclusivo para móviles (no afecta escritorio) -->
     <style is:global>
       @media (max-width: 768px) {
         section[id], div[id] {
@@ -190,7 +188,52 @@ const schemaOrgData = {
         </div>
       )}
 
-      <slot />
+      {variant === 'blog' ? (
+        <div class="max-w-4xl mx-auto pt-12 px-4 sm:px-6 w-full">
+          <div class="mb-6">
+            <a href="/blog" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-amber-400 border border-slate-700 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors shadow-xs">
+              <span>←</span> Volver al Blog
+            </a>
+          </div>
+
+          <header class="space-y-4 bg-slate-200 border border-slate-300 p-6 sm:p-8 rounded-xl shadow-xs mb-8 w-full">
+            {blogCategory && (
+              <div>
+                <span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full border border-amber-300 uppercase tracking-wider text-[10px]">
+                  {blogCategory}
+                </span>
+              </div>
+            )}
+
+            <div class="space-y-3 text-left">
+              <h1 class="text-2xl sm:text-4xl font-display font-bold text-neutral-900 tracking-tight leading-tight">
+                {title.split('|')[0]}
+              </h1>
+              <p class="text-neutral-700 text-sm sm:text-base leading-relaxed">
+                {description}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-300 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-700 font-mono">
+              {pubDate && <span>📅 Publicado el: {pubDate}</span>}
+              {author && <span>👤 {author}</span>}
+              <span>💻 SYSARMOR TECH</span>
+            </div>
+
+            {enfoque && (
+              <div class="text-xs text-slate-700 font-mono pt-1">
+                <strong>Enfoque:</strong> {enfoque}
+              </div>
+            )}
+          </header>
+
+          <div class="mb-16 w-full bg-white p-6 sm:p-10 rounded-xl border border-slate-200 shadow-xs">
+            <slot />
+          </div>
+        </div>
+      ) : (
+        <slot />
+      )}
     </main>
     
     <Feedback />

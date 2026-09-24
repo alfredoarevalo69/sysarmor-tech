@@ -3,14 +3,11 @@ title: "Optimización de DNS en Active Directory: Arquitectura Hub & Spoke para 
 description: "Caso práctico de diseño, configuración y hardening de DNS en Active Directory sobre EDC, IDC y Azure."
 pubDate: 2026-08-14
 category: "Infraestructura TI"
+author: "Alfredo Arévalo"
 isFeatured: true
-author: "SYSARMOR TECH"
 image: "/images/DNS-HUB/dns-architecture.jpeg"
 pdfUrl: "/docs/optimizacion-dns-active-directory-hub-spoke-hibrido.pdf"
----
 
-> **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Operación, Seguridad e Innovación  
 
 ---
 
