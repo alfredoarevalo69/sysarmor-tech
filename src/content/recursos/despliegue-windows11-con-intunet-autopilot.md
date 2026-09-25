@@ -2,7 +2,7 @@
 title: "Despliegue y Provisionamiento Zero-Touch de Windows 11 con Windows Autopilot y Microsoft Intune"
 description: "Guía técnica para la extracción de HardwareID, importación de hashes en Intune..."
 blogCategory: "Infraestructura TI"
-pubDate: "25 de agosto de 2026"
+pubDate: "2026-08-24"
 author: "Alfredo Arévalo"
 image: "/images/AutoPilot/AutoPilot.jpeg"
 ---
