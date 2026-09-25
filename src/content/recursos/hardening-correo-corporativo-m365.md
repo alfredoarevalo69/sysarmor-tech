@@ -1,17 +1,11 @@
 ---
 title: "Hardening de Correo Corporativo en Microsoft 365: Guía Técnica con EOP y Defender"
-description: "Aprende a configurar el endurecimiento técnico de correo en Microsoft 365 mediante EOP y comprende el alcance avanzado de Microsoft Defender P1/P2."
-pubDate: 2026-08-19
+description: "Guía técnica para configurar el endurecimiento de correo en Microsoft 365 mediante Exchange Online Protection (EOP) y Microsoft Defender P1/P2."
 category: "Ciberseguridad"
-isFeatured: true
+pubDate: "2026-08-19"
 author: "SYSARMOR TECH"
 image: "/images/MS-Defender/MS-Defender.jpeg"
 pdfUrl: "/docs/hardening-correo-corporativo-m365.pdf"
----
-
-> **Autor:** SYSARMOR TECH  
-> **Enfoque:** Infraestructura, Ciberseguridad, Operación e Innovación  
-
 ---
 
 ## Introducción
@@ -41,6 +35,9 @@ Las directivas se administran desde el Portal de Microsoft Defender en la secci�
 * **Antispam:** Bloquea o pone en cuarentena mensajes de correo no deseado tanto entrantes como salientes.
 * **Antimalware:** Detecta y bloquea archivos o códigos maliciosos en los mensajes adjuntos.
 * **Antisuplantación (Anti-phishing):** Protege contra ataques de suplantación de identidad (*spoofing*) y fraudes de tipo CEO.
+
+---
+
 ## PARTE 1: Hardening con Licenciamiento Estándar (EOP)
 
 ### Fase 1: Política Anti-Phishing por Defecto (`Office365 AntiPhish Default`)
@@ -61,9 +58,11 @@ Abre la política predeterminada, haz clic en **Editar acciones** (*Edit actions
 
 #### Configuración vía PowerShell (Exchange Online Module)
 
+```powershell
 Connect-ExchangeOnline
 
 Set-AntiPhishPolicy -Identity "Office365 AntiPhish Default" -SpoofProtectionAction Quarantine -EnableFirstContactSafetyTips $true -EnableUnauthenticatedSender $true -EnableViaTag $true
+```
 
 ---
 
@@ -95,6 +94,9 @@ Asegurar que **Spam ZAP** y **Phish ZAP** estén marcados como **Habilitados**. 
 3. **Notificaciones:** Configurar alerta por correo al equipo técnico (`ti-soc@sysarmortech.com`) cuando se intercepte malware.
 
 ![Edite la configuración de protección Anti-Malware](/images/MS-Defender/Defender5.png)
+
+---
+
 ## PARTE 2: Capítulo Especial – Capacidades Avanzadas con Defender for Office 365 (Plan 1 / Plan 2)
 
 En esta sección se detallan las funcionalidades adicionales que se desbloquean al adquirir licencias **Microsoft Defender for Office 365 Plan 1/P2** (o *Business Premium*). Este cuadro sirve como matriz de justificación técnica ante la gerencia:
@@ -143,6 +145,12 @@ A diferencia del filtro básico de EOP, el Plan 1/P2 permite:
 
 ---
 
+## Artículos Relacionados
+
+* **[Despliegue y Provisionamiento Zero-Touch de Windows 11 con Windows Autopilot y Microsoft Intune](/blog/despliegue-windows11-con-intunet-autopilot)**: Optimiza el aprovisionamiento de estaciones de trabajo bajo principios de menor privilegio y gestión Cloud-Native.
+
+---
+
 ## Alcance del Servicio SysArmorTech
 
 En **SysArmorTech** convertimos el licenciamiento de Microsoft en una postura real de ciberdefensa, aplicando configuraciones de endurecimiento técnico y alineación de identidad que fortalecen la seguridad del correo corporativo.
@@ -159,7 +167,3 @@ En **SysArmorTech** convertimos el licenciamiento de Microsoft en una postura re
 * Defensa contra suplantación de identidad con Inteligencia Artificial.
 * Análisis de adjuntos y enlaces de día cero mediante Safe Attachments y Safe Links.
 * Gestión activa de amenazas y campañas de concientización con Threat Explorer y simuladores de ataque.
-
-> **Compromiso SysArmorTech:** Independientemente del tipo de licencia, garantizamos una implementación alineada con las mejores prácticas y una operación continua que optimiza la seguridad sin afectar la productividad.
-
-👉 **Solicita tu consultoría personalizada en:** [https://sysarmortech.com](https://sysarmortech.com)
