@@ -61,9 +61,9 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 4. Configuración del Transporte SMTP (Gmail)
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
+    // 4. Configuración del Transporte SMTP (Soporte dual Astro y Node para evitar fallos)
+    const smtpUser = import.meta.env.SMTP_USER || process.env.SMTP_USER;
+    const smtpPass = import.meta.env.SMTP_PASS || process.env.SMTP_PASS;
 
     if (!smtpUser || !smtpPass) {
       console.error('[CRITICAL]: Faltan credenciales SMTP_USER o SMTP_PASS.');
@@ -87,7 +87,6 @@ export const POST: APIRoute = async ({ request }) => {
     let pdfFileName = '';
 
     if (pdfUrl) {
-      // Extrae el nombre del archivo eliminando la ruta /docs/
       pdfFileName = decodeURIComponent(pdfUrl.split('/').pop() || '');
     }
 
@@ -101,6 +100,8 @@ export const POST: APIRoute = async ({ request }) => {
         lowerTitle.includes('endpoints')
       ) {
         pdfFileName = 'hardening-endpoints-ms-intune.pdf';
+      } else if (lowerTitle.includes('terraform') || lowerTitle.includes('iac')) {
+        pdfFileName = 'Infraestructura-IaC-con-Terraform-Parte1.pdf';
       } else if (lowerTitle.includes('correo')) {
         pdfFileName = 'Hardening Correo Corporativo.pdf';
       } else if (lowerTitle.includes('dmsa')) {
@@ -123,7 +124,6 @@ export const POST: APIRoute = async ({ request }) => {
       pdfFileName += '.pdf';
     }
 
-    // Formatear espacios únicamente a %20 para prevenir URLs rotas por encodeURIComponent excesivo
     const cleanFileName = pdfFileName.replace(/ /g, '%20');
     const fullPdfUrl = `https://sysarmortech.com/docs/${cleanFileName}`;
 
