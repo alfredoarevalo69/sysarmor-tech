@@ -6,7 +6,7 @@ category: "Infraestructura TI"
 author: "Alfredo Arévalo"
 isFeatured: true
 image: "/images/iac-azure-terraform/iac1.jpeg"
-pdfUrl: "/docs/infraestructura-iac-con-terraform-parte1.pdf"
+pdfUrl: "/docs/iac-en-azure-con-terraform.pdf"
 tags: ["Terraform", "Infrastructure as Code", "Azure", "DevOps", "SysArmor Tech"]
 ---
 
