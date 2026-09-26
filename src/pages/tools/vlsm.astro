@@ -59,7 +59,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
         <!-- PASO 1 -->
         <div id="step-1-container" class="space-y-4">
           <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4 shadow-inner">
-            <h3 class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">Asistente IPv4 - Red Principal</h3>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">Asistente IPv4 - Red Principal</h3>
+                <p class="text-xs text-slate-400 mt-1 font-mono">Define el bloque CIDR raíz y consulta la guía técnica en caso de requerirlo.</p>
+              </div>
+              <button
+                type="button"
+                id="btn-open-manual"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#D4AF37] hover:bg-[#c29d31] text-slate-950 text-xs font-bold font-mono rounded-lg transition-colors shadow-sm cursor-pointer"
+              >
+                Ver Manual
+              </button>
+            </div>
+
             <div class="space-y-1">
               <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">Bloque IPv4 CIDR Base</label>
               <input
@@ -196,6 +209,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
     </article>
   </section>
 
+  <!-- Modal del Manual (Optimizado con max-w-6xl y h-[90vh]) -->
+  <div id="manual-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+    <div class="bg-white w-full max-w-6xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-300">
+      <div class="flex justify-between items-center px-6 py-4 bg-[#0b0f19] text-white">
+        <h3 class="text-xs font-bold uppercase tracking-wider font-mono">Guía Práctica: Fundamentos de Subnetting y VLSM en IPv4</h3>
+        <button
+          type="button"
+          id="btn-close-manual"
+          class="text-slate-400 hover:text-white bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg transition-colors cursor-pointer text-xs font-bold font-mono"
+        >
+          ✕ Cerrar
+        </button>
+      </div>
+      <div class="flex-1 bg-slate-100 p-2">
+        <iframe
+          src="/docs/manual-subnetting-ipv4.pdf"
+          class="w-full h-full rounded-lg border border-slate-300 bg-white"
+          title="Manual de Subnetting IPv4"
+        />
+      </div>
+    </div>
+  </div>
+
   <!-- Script Nativo de Control e Interacción -->
   <script>
     interface Requirement {
@@ -206,6 +242,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 
     let requirements: Requirement[] = [];
     let currentStep = 1;
+
+    // Control del Modal del Manual
+    const modal = document.getElementById('manual-modal');
+    document.getElementById('btn-open-manual')?.addEventListener('click', () => modal?.classList.remove('hidden'));
+    document.getElementById('btn-close-manual')?.addEventListener('click', () => modal?.classList.add('hidden'));
 
     const ipToInt = (ip: string) => ip.split('.').reduce((acc, octet) => ((acc << 8) + parseInt(octet, 10)) >>> 0, 0);
     const intToIp = (int: number) => [
