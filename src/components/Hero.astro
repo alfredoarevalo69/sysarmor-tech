@@ -5,7 +5,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- La imagen se muestra nítida y completa en todo el fondo -->
+  <!-- Imagen de fondo limpia en toda la sección -->
   <div class="hero-bg-wrapper">
     <Image 
       src={heroBgImg} 
@@ -19,10 +19,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       decoding="sync"
       class="hero-bg"
     />
+    <!-- Gradiente lateral suave que oscurece el fondo solo a la izquierda para contraste natural sin "cajas" -->
+    <div class="hero-fade-overlay"></div>
   </div>
 
   <div class="hero-inner">
-    <!-- Contenedor de texto con panel de contraste exclusivo (sin afectar la imagen general) -->
     <div class="hero-content">
       
       <!-- Isotipo con animación de pulso sutil (EXCLUSIVO PARA MÓVIL) -->
@@ -90,8 +91,22 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Imagen centrada y nítida en alta calidad sin filtros generales de opacidad */
     object-position: 70% center; 
+  }
+
+  /* Capa de fundido lateral: oscurece progresivamente la izquierda sin formar un recuadro rígido */
+  .hero-fade-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg, 
+      #050a14 0%, 
+      #050a14 35%, 
+      rgba(5, 10, 20, 0.75) 55%, 
+      rgba(5, 10, 20, 0.2) 80%, 
+      transparent 100%
+    );
+    z-index: 2;
   }
 
   .hero-inner {
@@ -120,19 +135,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
   }
 
-  /* Panel exclusivo para el texto: aplica fondo oscuro y desenfoque solo detrás de las letras */
+  /* Sin cajas ni bordes: el texto flota directamente sobre el fondo degradado fluido */
   .hero-content {
     width: 100%;
     max-width: 580px; 
     text-align: left;
     z-index: 3;
-    padding: 2.5rem;
-    border-radius: 16px;
-    background-color: rgba(5, 10, 20, 0.78);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(217, 119, 6, 0.15);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
   }
 
   .mobile-badge-container {
@@ -145,6 +157,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     color: #ffffff;
     line-height: 1.15;
     margin-bottom: 1.25rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
   }
 
   .highlight {
@@ -156,6 +169,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     color: #e2e8f0;
     line-height: 1.5;
     margin-bottom: 1.5rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   }
 
   .hero-cta {
@@ -203,6 +217,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     color: #f8fafc;
     font-size: 0.9rem;
     font-weight: 600;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
   }
 
   .feature-icon {
@@ -245,10 +260,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     .hero-content {
       max-width: 100%;
       text-align: center;
-      padding: 1.5rem;
-      background-color: rgba(15, 23, 42, 0.85);
-      border: none;
-      box-shadow: none;
+      padding: 0;
     }
 
     .hero-bg-wrapper {
