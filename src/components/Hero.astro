@@ -5,21 +5,24 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <Image 
-    src={heroBgImg} 
-    alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
-    width={1920}
-    height={1080}
-    format="webp"
-    quality={75}
-    loading="eager" 
-    fetchpriority="high"
-    decoding="sync"
-    class="hero-bg"
-  />
+  <!-- La imagen se muestra nítida y completa en todo el fondo -->
+  <div class="hero-bg-wrapper">
+    <Image 
+      src={heroBgImg} 
+      alt="Fondo Infraestructura Crítica y Ecosistema Microsoft" 
+      width={1920}
+      height={1080}
+      format="webp"
+      quality={85}
+      loading="eager" 
+      fetchpriority="high"
+      decoding="sync"
+      class="hero-bg"
+    />
+  </div>
 
-  <!-- Contenedor idéntico al <nav> del Navbar, sin restricciones de max-width para evitar el centrado en pantallas ultra-wide -->
   <div class="hero-inner">
+    <!-- Contenedor de texto con panel de contraste exclusivo (sin afectar la imagen general) -->
     <div class="hero-content">
       
       <!-- Isotipo con animación de pulso sutil (EXCLUSIVO PARA MÓVIL) -->
@@ -32,7 +35,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       </div>
 
       <h1 class="hero-title">
-        Portafolio técnico en infraestructura crítica y <br />
+        Arquitectura en infraestructura crítica y <br />
         <span class="highlight">actualización de sistemas legados</span>
       </h1>
 
@@ -66,7 +69,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .hero-container {
     position: relative;
     width: 100%;
-    padding: 3rem 0;
+    padding: 4rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
@@ -74,18 +77,27 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     background-color: #050a14;
   }
 
-  .hero-bg {
+  .hero-bg-wrapper {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: right center; 
     z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Imagen centrada y nítida en alta calidad sin filtros generales de opacidad */
+    object-position: 70% center; 
   }
 
   .hero-inner {
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
     padding-left: 1rem;
     padding-right: 1rem;
     position: relative;
@@ -108,24 +120,30 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     }
   }
 
+  /* Panel exclusivo para el texto: aplica fondo oscuro y desenfoque solo detrás de las letras */
   .hero-content {
     width: 100%;
-    max-width: 620px;
+    max-width: 580px; 
     text-align: left;
     z-index: 3;
-    margin-right: auto;
+    padding: 2.5rem;
+    border-radius: 16px;
+    background-color: rgba(5, 10, 20, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(217, 119, 6, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
 
-  /* Oculto por defecto en escritorio */
   .mobile-badge-container {
     display: none;
   }
 
   .hero-title {
-    font-size: clamp(2rem, 3.2vw, 3.1rem);
+    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
     font-weight: 800;
     color: #ffffff;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 1.25rem;
   }
 
@@ -134,7 +152,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   .hero-description {
-    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     color: #e2e8f0;
     line-height: 1.5;
     margin-bottom: 1.5rem;
@@ -147,12 +165,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   .btn-primary {
     display: inline-block;
     width: 100%;
-    max-width: 360px;
-    padding: 0.9rem 1.5rem;
+    max-width: 340px;
+    padding: 0.85rem 1.4rem;
     background-color: #d97706;
     color: #0f172a;
     font-weight: 700;
-    font-size: 1.05rem;
+    font-size: 1rem;
     text-align: center;
     text-decoration: none;
     border-radius: 8px;
@@ -183,12 +201,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     align-items: center;
     gap: 0.75rem;
     color: #f8fafc;
-    font-size: 0.93rem;
+    font-size: 0.9rem;
     font-weight: 600;
   }
 
   .feature-icon {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
     width: 24px;
     text-align: center;
@@ -227,6 +245,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     .hero-content {
       max-width: 100%;
       text-align: center;
+      padding: 1.5rem;
+      background-color: rgba(15, 23, 42, 0.85);
+      border: none;
+      box-shadow: none;
+    }
+
+    .hero-bg-wrapper {
+      display: none;
     }
 
     .mobile-badge-container {
@@ -257,10 +283,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       min-width: 28px;
       min-height: 28px;
       color: #f59e0b;
-    }
-
-    .hero-bg {
-      display: none;
     }
 
     .hero-title {
