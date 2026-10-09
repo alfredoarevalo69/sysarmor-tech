@@ -5,7 +5,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo limpia en toda la sección -->
+  <!-- Imagen de fondo base limpia sin degradado frontal -->
   <div class="hero-bg-wrapper">
     <Image 
       src={heroBgImg} 
@@ -19,8 +19,6 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       decoding="sync"
       class="hero-bg"
     />
-    <!-- Degradado ultra-reducido: solo protege el área del texto (35% inicial) y deja libre el procesador -->
-    <div class="hero-fade-overlay"></div>
   </div>
 
   <div class="hero-inner">
@@ -35,19 +33,23 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
         </div>
       </div>
 
+      <!-- TÍTULO AJUSTADO (Más elegante, equilibrado y sin saturar) -->
       <h1 class="hero-title">
-        Arquitectura en infraestructura crítica y <br />
-        <span class="highlight">actualización de sistemas legados</span>
+        Arquitectura y modernización de <br />
+        <span class="highlight">infraestructura crítica en entornos híbridos</span>
       </h1>
 
+      <!-- DESCRIPCIÓN (Portal Técnico) -->
       <p class="hero-description">
-        Comparto soluciones, aprendizajes y buenas prácticas sobre continuidad operativa, seguridad y modernización de plataformas, basados en más de dos décadas de experiencia técnica en entornos on-premise y en la nube.
+        Este espacio documenta soluciones de ingeniería, aprendizajes y buenas prácticas en entornos híbridos y en la nube. Un recorrido técnico por la arquitectura de sistemas, la seguridad corporativa y la automatización aplicada.
       </p>
 
+      <!-- CTA LIMPIO -->
       <div class="hero-cta">
         <a href="/blog" class="btn-primary">Explorar Artículos Técnicos</a>
       </div>
 
+      <!-- CARACTERÍSTICAS -->
       <ul class="hero-features">
         <li>
           <span class="feature-icon" aria-hidden="true">🛡️</span>
@@ -67,17 +69,20 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 </section>
 
 <style>
+  /* --- CONTENEDOR BASE --- */
   .hero-container {
     position: relative;
     width: 100%;
-    padding: 4rem 0;
+    padding: 3rem 0;
     min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
     overflow: hidden;
-    background-color: #050a14;
+    background-color: #000000; 
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
 
+  /* --- ENVOLTORIO DE FONDO --- */
   .hero-bg-wrapper {
     position: absolute;
     inset: 0;
@@ -87,30 +92,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     overflow: hidden;
   }
 
+  /* --- IMAGEN DE FONDO --- */
   .hero-bg {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 70% center; 
-    /* Incrementamos ligeramente la viveza y el brillo natural de la imagen base */
-    filter: brightness(1.08) saturate(1.1);
+    object-position: center center; 
+    filter: brightness(1.1) saturate(1.05);
   }
 
-  /* Degradado ajustado: se desvanece por completo al 45% para que el procesador de la derecha conserve todo su brillo */
-  .hero-fade-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg, 
-      #050a14 0%, 
-      rgba(5, 10, 20, 0.9) 25%, 
-      rgba(5, 10, 20, 0.4) 40%, 
-      transparent 50%
-    );
-    z-index: 2;
-    pointer-events: none;
-  }
-
+  /* --- CONTENIDO DE TEXTO --- */
   .hero-inner {
     width: 100%;
     max-width: 1400px;
@@ -124,234 +115,144 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   @media (min-width: 640px) {
-    .hero-inner {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
+    .hero-inner { padding-left: 2rem; padding-right: 2rem; }
   }
 
   @media (min-width: 1024px) {
-    .hero-inner {
-      padding-left: 3rem;
-      padding-right: 3rem;
-    }
+    .hero-inner { padding-left: 3rem; padding-right: 3rem; }
   }
 
   .hero-content {
     width: 100%;
-    max-width: 580px; 
+    max-width: 650px;
     text-align: left;
-    z-index: 3;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
+    z-index: 4;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
   }
 
-  .mobile-badge-container {
-    display: none;
-  }
+  .mobile-badge-container { display: none; }
 
+  /* --- TÍTULO RECALIBRADO (Proporción perfecta) --- */
   .hero-title {
-    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.15;
-    margin-bottom: 1.25rem;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    font-size: clamp(1.7rem, 2.3vw, 2.3rem) !important; /* Ligeramente más contenido para elegancia visual */
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.5);
+    margin: 0 !important;
   }
 
-  .highlight {
-    color: #eab308;
-  }
+  .highlight { color: #f59e0b !important; }
 
   .hero-description {
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-    color: #e2e8f0;
-    line-height: 1.5;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+    font-size: 1.1rem !important; /* Balance perfecto entre legibilidad y respiro */
+    font-weight: 400 !important;
+    color: #cbd5e1 !important;
+    line-height: 1.6 !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    margin: 0 !important;
   }
 
-  .hero-cta {
-    margin-bottom: 1.5rem;
+  .hero-cta { 
+    margin-top: 0.1rem !important;
+    margin-bottom: 0.4rem !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .btn-primary {
-    display: inline-block;
-    width: 100%;
-    max-width: 340px;
-    padding: 0.85rem 1.4rem;
-    background-color: #d97706;
-    color: #0f172a;
-    font-weight: 700;
-    font-size: 1rem;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 8px;
+    display: inline-flex !important;
+    width: auto !important;
+    padding: 0.75rem 1.7rem !important;
+    background-color: #d97706 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
     position: relative;
     z-index: 5;
-    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
     animation: cta-pulse 3s infinite ease-in-out;
+    border: 1px solid transparent;
   }
 
   .btn-primary:hover {
-    background-color: #b45309;
+    background-color: #b45309 !important;
     transform: translateY(-2px);
     animation: none; 
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.5);
+    border-color: rgba(245, 158, 11, 0.3);
   }
 
   .hero-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.8rem !important;
   }
 
   .hero-features li {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #f8fafc;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    color: #f8fafc !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    margin: 0 !important;
   }
 
-  .feature-icon {
-    font-size: 1.1rem;
-    flex-shrink: 0;
-    width: 24px;
-    text-align: center;
-  }
+  .feature-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
+  .feature-link { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+  .feature-link:hover { color: #eab308; text-decoration: underline; }
 
-  .feature-link {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .feature-link:hover {
-    color: #eab308;
-    text-decoration: underline;
-  }
-
+  /* --- MEDIA QUERIES (Móvil) --- */
   @media (max-width: 968px) {
     .hero-container {
-      padding: 2.5rem 0 3.5rem 0;
+      padding: 3rem 0;
       min-height: auto;
-      background-color: #070b12;
-      background-image: 
-        radial-gradient(circle at 50% 15%, rgba(217, 119, 6, 0.12) 0%, transparent 60%),
-        linear-gradient(to right, rgba(30, 41, 59, 0.2) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
-      background-size: 100% 100%, 2.5rem 2.5rem, 2.5rem 2.5rem;
+      background-color: #000000;
       border-bottom: 1px solid rgba(217, 119, 6, 0.2);
     }
-
-    .hero-inner {
-      display: flex;
-      flex-direction: column;
-      z-index: 2;
-    }
-
-    .hero-content {
-      max-width: 100%;
-      text-align: center;
-      padding: 0;
-    }
-
-    .hero-bg-wrapper {
-      display: none;
-    }
-
-    .mobile-badge-container {
-      display: flex !important;
-      justify-content: center;
-      width: 100%;
-      margin-bottom: 1.25rem;
-    }
-
+    .hero-inner { display: flex; flex-direction: column; z-index: 2; }
+    .hero-content { max-width: 100%; text-align: center; padding: 0; gap: 1.25rem; }
+    .hero-bg-wrapper { display: none; }
+    .mobile-badge-container { display: flex !important; justify-content: center; width: 100%; margin-bottom: 1rem; }
     .mobile-badge {
-      width: 60px !important;
-      height: 60px !important;
-      min-width: 60px;
-      min-height: 60px;
-      border-radius: 1rem;
-      background-color: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 20px -3px rgba(245, 158, 11, 0.15);
-      animation: subtle-pulse 3s infinite ease-in-out;
+      width: 60px !important; height: 60px !important; border-radius: 1rem;
+      background-color: rgba(15, 23, 42, 0.95); border: 1px solid rgba(245, 158, 11, 0.5);
+      display: flex; align-items: center; justify-content: center; animation: subtle-pulse 3s infinite ease-in-out;
     }
-
-    .mobile-badge svg {
-      width: 28px !important;
-      height: 28px !important;
-      min-width: 28px;
-      min-height: 28px;
-      color: #f59e0b;
-    }
-
-    .hero-title {
-      font-size: 1.85rem;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-
-    .hero-description {
-      font-size: 1.05rem;
-      line-height: 1.5;
-      margin-bottom: 1.25rem;
-      color: #cbd5e1;
-    }
-
-    .hero-cta {
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-primary {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      padding: 1rem 1.25rem;
-      font-size: 1.05rem;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .hero-features {
-      gap: 0.6rem;
-      text-align: left;
-    }
-
-    .hero-features li {
-      font-size: 0.9rem;
-    }
+    .mobile-badge svg { width: 28px !important; height: 28px !important; color: #f59e0b; }
+    .hero-title { font-size: 1.75rem !important; line-height: 1.15 !important; text-shadow: 0 2px 8px rgba(0,0,0,1); }
+    .hero-description { font-size: 1.05rem !important; line-height: 1.5 !important; margin: 0 0.5rem !important; color: #e2e8f0 !important; text-shadow: 0 2px 6px rgba(0,0,0,1); }
+    .hero-cta { margin: 0 !important; }
+    .btn-primary { display: inline-flex !important; width: auto !important; padding: 0.8rem 1.8rem !important; font-size: 1rem !important; border-radius: 10px !important; }
+    .hero-features { gap: 0.7rem !important; margin-top: 0.5rem !important; }
+    .hero-features li { font-size: 0.95rem !important; justify-content: center !important; }
   }
 
+  /* --- ANIMACIONES --- */
   @keyframes subtle-pulse {
-    0%, 100% {
-      transform: scale(1);
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
-    }
+    0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); }
   }
 
   @keyframes cta-pulse {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(217, 119, 6, 0);
-    }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(217, 119, 6, 0); }
   }
 </style>
