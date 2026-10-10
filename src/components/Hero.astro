@@ -33,18 +33,18 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
         </div>
       </div>
 
-      <!-- TÍTULO AJUSTADO (Más elegante, equilibrado y sin saturar) -->
+      <!-- TÍTULO -->
       <h1 class="hero-title">
         Arquitectura y modernización de <br />
         <span class="highlight">infraestructura crítica en entornos híbridos</span>
       </h1>
 
-      <!-- DESCRIPCIÓN (Portal Técnico) -->
+      <!-- DESCRIPCIÓN -->
       <p class="hero-description">
         Este espacio documenta soluciones de ingeniería, aprendizajes y buenas prácticas en entornos híbridos y en la nube. Un recorrido técnico por la arquitectura de sistemas, la seguridad corporativa y la automatización aplicada.
       </p>
 
-      <!-- CTA LIMPIO -->
+      <!-- CTA -->
       <div class="hero-cta">
         <a href="/blog" class="btn-primary">Explorar Artículos Técnicos</a>
       </div>
@@ -101,31 +101,39 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     filter: brightness(1.1) saturate(1.05);
   }
 
-  /* --- CONTENIDO DE TEXTO --- */
+  /* --- CONTENEDOR GENERAL DE ESCRITORIO --- */
   .hero-inner {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     position: relative;
     z-index: 3;
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* FUERZA ALINEACIÓN A LA IZQUIERDA EN PANTALLAS GRANDES */
   }
 
   @media (min-width: 640px) {
-    .hero-inner { padding-left: 2rem; padding-right: 2rem; }
+    .hero-inner { padding-left: 3rem; padding-right: 3rem; }
   }
 
   @media (min-width: 1024px) {
-    .hero-inner { padding-left: 3rem; padding-right: 3rem; }
+    .hero-inner { padding-left: 4rem; padding-right: 4rem; }
+  }
+
+  @media (min-width: 1440px) {
+    /* En pantallas muy grandes (2K/4K), aseguramos un margen izquierdo limpio y controlado */
+    .hero-inner {
+      padding-left: 5rem;
+    }
   }
 
   .hero-content {
     width: 100%;
-    max-width: 650px;
-    text-align: left;
+    max-width: 680px;
+    text-align: left !important;
     z-index: 4;
     background: transparent !important;
     border: none !important;
@@ -134,30 +142,33 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     display: flex;
     flex-direction: column;
     gap: 1.4rem;
+    margin-right: auto; /* Empuja el contenido firmemente hacia la izquierda */
   }
 
   .mobile-badge-container { display: none; }
 
-  /* --- TÍTULO RECALIBRADO (Proporción perfecta) --- */
+  /* --- TÍTULO --- */
   .hero-title {
-    font-size: clamp(1.7rem, 2.3vw, 2.3rem) !important; /* Ligeramente más contenido para elegancia visual */
+    font-size: clamp(1.7rem, 2.3vw, 2.3rem) !important;
     font-weight: 800 !important;
     color: #ffffff !important;
     line-height: 1.2 !important;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.5);
     margin: 0 !important;
+    text-align: left !important;
   }
 
   .highlight { color: #f59e0b !important; }
 
   .hero-description {
-    font-size: 1.1rem !important; /* Balance perfecto entre legibilidad y respiro */
+    font-size: 1.1rem !important;
     font-weight: 400 !important;
     color: #cbd5e1 !important;
     line-height: 1.6 !important;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
     margin: 0 !important;
+    text-align: left !important;
   }
 
   .hero-cta { 
@@ -167,6 +178,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
+    text-align: left !important;
   }
 
   .btn-primary {
@@ -202,6 +214,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     display: flex !important;
     flex-direction: column !important;
     gap: 0.8rem !important;
+    text-align: left !important;
   }
 
   .hero-features li {
@@ -213,6 +226,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     font-weight: 500 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     margin: 0 !important;
+    text-align: left !important;
   }
 
   .feature-icon { font-size: 1.1rem; flex-shrink: 0; width: 22px; text-align: center; }
@@ -227,8 +241,8 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       background-color: #000000;
       border-bottom: 1px solid rgba(217, 119, 6, 0.2);
     }
-    .hero-inner { display: flex; flex-direction: column; z-index: 2; }
-    .hero-content { max-width: 100%; text-align: center; padding: 0; gap: 1.25rem; }
+    .hero-inner { display: flex; flex-direction: column; z-index: 2; padding-left: 1rem; padding-right: 1rem; }
+    .hero-content { max-width: 100%; text-align: center !important; padding: 0; gap: 1.25rem; margin-right: 0; }
     .hero-bg-wrapper { display: none; }
     .mobile-badge-container { display: flex !important; justify-content: center; width: 100%; margin-bottom: 1rem; }
     .mobile-badge {
@@ -237,12 +251,12 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       display: flex; align-items: center; justify-content: center; animation: subtle-pulse 3s infinite ease-in-out;
     }
     .mobile-badge svg { width: 28px !important; height: 28px !important; color: #f59e0b; }
-    .hero-title { font-size: 1.75rem !important; line-height: 1.15 !important; text-shadow: 0 2px 8px rgba(0,0,0,1); }
-    .hero-description { font-size: 1.05rem !important; line-height: 1.5 !important; margin: 0 0.5rem !important; color: #e2e8f0 !important; text-shadow: 0 2px 6px rgba(0,0,0,1); }
-    .hero-cta { margin: 0 !important; }
+    .hero-title { font-size: 1.75rem !important; line-height: 1.15 !important; text-shadow: 0 2px 8px rgba(0,0,0,1); text-align: center !important; }
+    .hero-description { font-size: 1.05rem !important; line-height: 1.5 !important; margin: 0 0.5rem !important; color: #e2e8f0 !important; text-shadow: 0 2px 6px rgba(0,0,0,1); text-align: center !important; }
+    .hero-cta { margin: 0 !important; text-align: center !important; }
     .btn-primary { display: inline-flex !important; width: auto !important; padding: 0.8rem 1.8rem !important; font-size: 1rem !important; border-radius: 10px !important; }
-    .hero-features { gap: 0.7rem !important; margin-top: 0.5rem !important; }
-    .hero-features li { font-size: 0.95rem !important; justify-content: center !important; }
+    .hero-features { gap: 0.7rem !important; margin-top: 0.5rem !important; align-items: center !important; }
+    .hero-features li { font-size: 0.95rem !important; justify-content: center !important; text-align: center !important; }
   }
 
   /* --- ANIMACIONES --- */
