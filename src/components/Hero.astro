@@ -103,46 +103,45 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   /* --- CONTENEDOR GENERAL DE ESCRITORIO --- */
   .hero-inner {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin-left: max(2rem, calc((100vw - 1400px) / 2)) !important; /* ANCLAJE MATEMÁTICO AL BORDE IZQUIERDO EN MONITORES GRANDES */
+    margin-right: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
     position: relative;
     z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* FUERZA ALINEACIÓN A LA IZQUIERDA EN PANTALLAS GRANDES */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
   }
 
   @media (min-width: 640px) {
-    .hero-inner { padding-left: 3rem; padding-right: 3rem; }
+    .hero-inner { padding-left: 2rem !important; padding-right: 2rem !important; }
   }
 
   @media (min-width: 1024px) {
-    .hero-inner { padding-left: 4rem; padding-right: 4rem; }
-  }
-
-  @media (min-width: 1440px) {
-    /* En pantallas muy grandes (2K/4K), aseguramos un margen izquierdo limpio y controlado */
-    .hero-inner {
-      padding-left: 5rem;
+    .hero-inner { 
+      padding-left: 3rem !important; 
+      padding-right: 3rem !important;
+      margin-left: 5rem !important; /* Fuerza una distancia fija elegante desde el borde izquierdo en escritorio */
     }
   }
 
   .hero-content {
-    width: 100%;
-    max-width: 680px;
+    width: 100% !important;
+    max-width: 680px !important;
     text-align: left !important;
     z-index: 4;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
-    margin-right: auto; /* Empuja el contenido firmemente hacia la izquierda */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.4rem !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
   }
 
   .mobile-badge-container { display: none; }
@@ -241,8 +240,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       background-color: #000000;
       border-bottom: 1px solid rgba(217, 119, 6, 0.2);
     }
-    .hero-inner { display: flex; flex-direction: column; z-index: 2; padding-left: 1rem; padding-right: 1rem; }
-    .hero-content { max-width: 100%; text-align: center !important; padding: 0; gap: 1.25rem; margin-right: 0; }
+    .hero-inner { 
+      display: flex !important; 
+      flex-direction: column !important; 
+      z-index: 2 !important; 
+      padding-left: 1rem !important; 
+      padding-right: 1rem !important; 
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    .hero-content { max-width: 100% !important; text-align: center !important; padding: 0 !important; gap: 1.25rem !important; margin-left: auto !important; margin-right: auto !important; }
     .hero-bg-wrapper { display: none; }
     .mobile-badge-container { display: flex !important; justify-content: center; width: 100%; margin-bottom: 1rem; }
     .mobile-badge {
