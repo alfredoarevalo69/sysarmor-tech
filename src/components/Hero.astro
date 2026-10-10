@@ -101,13 +101,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     filter: brightness(1.1) saturate(1.05);
   }
 
-  /* --- CONTENEDOR GENERAL DE ESCRITORIO --- */
+  /* --- CONTENEDOR GENERAL (SINCRONIZADO CON EL NAVBAR) --- */
   .hero-inner {
     width: 100% !important;
-    max-width: 1400px !important;
-    margin-left: max(2rem, calc((100vw - 1400px) / 2)) !important; /* ANCLAJE MATEMÁTICO AL BORDE IZQUIERDO EN MONITORES GRANDES */
+    max-width: 100% !important; /* Permitimos que use el ancho completo para heredar los paddings idénticos del navbar */
+    margin-left: auto !important;
     margin-right: auto !important;
-    padding-left: 1rem !important;
+    padding-left: 1rem !important;  /* px-4 del navbar */
     padding-right: 1rem !important;
     position: relative;
     z-index: 3;
@@ -117,14 +117,16 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   }
 
   @media (min-width: 640px) {
-    .hero-inner { padding-left: 2rem !important; padding-right: 2rem !important; }
+    .hero-inner { 
+      padding-left: 2rem !important;  /* sm:px-8 del navbar */
+      padding-right: 2rem !important; 
+    }
   }
 
   @media (min-width: 1024px) {
     .hero-inner { 
-      padding-left: 3rem !important; 
+      padding-left: 3rem !important;  /* lg:px-12 del navbar (12 * 0.25rem = 3rem) */
       padding-right: 3rem !important;
-      margin-left: 5rem !important; /* Fuerza una distancia fija elegante desde el borde izquierdo en escritorio */
     }
   }
 
