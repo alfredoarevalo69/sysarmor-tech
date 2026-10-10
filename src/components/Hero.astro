@@ -104,10 +104,10 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
   /* --- CONTENEDOR GENERAL (SINCRONIZADO CON EL NAVBAR) --- */
   .hero-inner {
     width: 100% !important;
-    max-width: 100% !important; /* Permitimos que use el ancho completo para heredar los paddings idénticos del navbar */
+    max-width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    padding-left: 1rem !important;  /* px-4 del navbar */
+    padding-left: 1rem !important;
     padding-right: 1rem !important;
     position: relative;
     z-index: 3;
@@ -118,14 +118,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 
   @media (min-width: 640px) {
     .hero-inner { 
-      padding-left: 2rem !important;  /* sm:px-8 del navbar */
+      padding-left: 2rem !important; 
       padding-right: 2rem !important; 
     }
   }
 
   @media (min-width: 1024px) {
     .hero-inner { 
-      padding-left: 3rem !important;  /* lg:px-12 del navbar (12 * 0.25rem = 3rem) */
+      padding-left: 3rem !important;  
       padding-right: 3rem !important;
     }
   }
@@ -141,7 +141,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     padding: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 1.4rem !important;
+    gap: 0 !important; /* Desactivamos el gap genérico para controlar los márgenes individualmente */
     margin-left: 0 !important;
     margin-right: auto !important;
   }
@@ -156,25 +156,26 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     line-height: 1.2 !important;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.5);
-    margin: 0 !important;
+    margin: 0 0 1.5rem 0 !important; /* Espacio añadido debajo del título */
     text-align: left !important;
   }
 
   .highlight { color: #f59e0b !important; }
 
+  /* --- DESCRIPCIÓN --- */
   .hero-description {
     font-size: 1.1rem !important;
     font-weight: 400 !important;
     color: #cbd5e1 !important;
     line-height: 1.6 !important;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-    margin: 0 !important;
+    margin: 0 0 1.8rem 0 !important; /* Espacio añadido debajo de la descripción */
     text-align: left !important;
   }
 
+  /* --- CTA --- */
   .hero-cta { 
-    margin-top: 0.1rem !important;
-    margin-bottom: 0.4rem !important;
+    margin: 0 0 1.8rem 0 !important; /* Espacio añadido debajo del botón de llamada a la acción */
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -208,13 +209,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     border-color: rgba(245, 158, 11, 0.3);
   }
 
+  /* --- CARACTERÍSTICAS --- */
   .hero-features {
     list-style: none !important;
     padding: 0 !important;
     margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.8rem !important;
+    gap: 0.9rem !important; /* Espacio interno entre cada elemento de la lista */
     text-align: left !important;
   }
 
@@ -251,7 +253,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       margin-left: auto !important;
       margin-right: auto !important;
     }
-    .hero-content { max-width: 100% !important; text-align: center !important; padding: 0 !important; gap: 1.25rem !important; margin-left: auto !important; margin-right: auto !important; }
+    .hero-content { max-width: 100% !important; text-align: center !important; padding: 0 !important; gap: 0 !important; margin-left: auto !important; margin-right: auto !important; }
     .hero-bg-wrapper { display: none; }
     .mobile-badge-container { display: flex !important; justify-content: center; width: 100%; margin-bottom: 1rem; }
     .mobile-badge {
@@ -260,11 +262,11 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       display: flex; align-items: center; justify-content: center; animation: subtle-pulse 3s infinite ease-in-out;
     }
     .mobile-badge svg { width: 28px !important; height: 28px !important; color: #f59e0b; }
-    .hero-title { font-size: 1.75rem !important; line-height: 1.15 !important; text-shadow: 0 2px 8px rgba(0,0,0,1); text-align: center !important; }
-    .hero-description { font-size: 1.05rem !important; line-height: 1.5 !important; margin: 0 0.5rem !important; color: #e2e8f0 !important; text-shadow: 0 2px 6px rgba(0,0,0,1); text-align: center !important; }
-    .hero-cta { margin: 0 !important; text-align: center !important; }
+    .hero-title { font-size: 1.75rem !important; line-height: 1.15 !important; text-shadow: 0 2px 8px rgba(0,0,0,1); text-align: center !important; margin: 0 0 1.25rem 0 !important; }
+    .hero-description { font-size: 1.05rem !important; line-height: 1.5 !important; margin: 0 auto 1.5rem auto !important; color: #e2e8f0 !important; text-shadow: 0 2px 6px rgba(0,0,0,1); text-align: center !important; }
+    .hero-cta { margin: 0 0 1.5rem 0 !important; text-align: center !important; }
     .btn-primary { display: inline-flex !important; width: auto !important; padding: 0.8rem 1.8rem !important; font-size: 1rem !important; border-radius: 10px !important; }
-    .hero-features { gap: 0.7rem !important; margin-top: 0.5rem !important; align-items: center !important; }
+    .hero-features { gap: 0.8rem !important; margin-top: 0 !important; align-items: center !important; }
     .hero-features li { font-size: 0.95rem !important; justify-content: center !important; text-align: center !important; }
   }
 
