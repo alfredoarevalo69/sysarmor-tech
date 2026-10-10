@@ -5,7 +5,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
 ---
 
 <section class="hero-container">
-  <!-- Imagen de fondo base limpia sin degradado frontal -->
+  <!-- Imagen de fondo base -->
   <div class="hero-bg-wrapper">
     <Image 
       src={heroBgImg} 
@@ -19,6 +19,14 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
       decoding="sync"
       class="hero-bg"
     />
+
+    <!-- LIENZO PROPORCIONAL 16:9 PARA ANCLAJE PERFECTO -->
+    <div class="hero-canvas-art">
+      <div class="cpu-anchor">
+        <div class="cpu-core-glow"></div>
+        <div class="light-beam"></div>
+      </div>
+    </div>
   </div>
 
   <div class="hero-inner">
@@ -90,6 +98,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     height: 100%;
     z-index: 1;
     overflow: hidden;
+    contain: layout paint; 
   }
 
   /* --- IMAGEN DE FONDO --- */
@@ -99,6 +108,80 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     object-fit: cover;
     object-position: center center; 
     filter: brightness(1.1) saturate(1.05);
+  }
+
+  /* --- LIENZO PROPORCIONAL 16:9 --- */
+  .hero-canvas-art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    max-width: 1920px;
+    max-height: 1080px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* --- ANCLAJE AJUSTADO LIGERAMENTE HACIA ARRIBA --- */
+  .cpu-anchor {
+    position: absolute;
+    top: 87.0% !important;
+    left: 51.0% !important;
+    width: 60px;
+    height: 500px;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+    will-change: opacity, transform;
+  }
+
+  .cpu-core-glow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(245, 158, 11, 0.8) 40%, transparent 100%);
+    border-radius: 50%;
+    animation: corePulse 2s infinite ease-in-out;
+  }
+
+  .light-beam {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(to top, 
+      rgba(255, 255, 255, 1) 0%, 
+      rgba(245, 158, 11, 0.8) 15%,
+      rgba(56, 189, 248, 0.7) 45%, 
+      rgba(56, 189, 248, 0.1) 85%, 
+      transparent 100%
+    );
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.8), 0 0 40px rgba(245, 158, 11, 0.5);
+    animation: beamFluctuation 2.5s infinite ease-in-out;
+    transform-origin: bottom center;
+  }
+
+  @keyframes corePulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+    50% { transform: translateX(-50%) scale(1.3); opacity: 1; filter: brightness(1.4); }
+  }
+
+  @keyframes beamFluctuation {
+    0%, 100% {
+      opacity: 0.6;
+      transform: translateX(-50%) scaleX(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-50%) scaleX(1.25);
+    }
   }
 
   /* --- CONTENEDOR GENERAL (SINCRONIZADO CON EL NAVBAR) --- */
@@ -156,7 +239,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     line-height: 1.2 !important;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.5);
-    margin: 0 0 2rem 0 !important; /* Espacio mayor debajo del título */
+    margin: 0 0 2rem 0 !important;
     text-align: left !important;
   }
 
@@ -169,13 +252,13 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     color: #cbd5e1 !important;
     line-height: 1.6 !important;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-    margin: 0 0 2.5rem 0 !important; /* Espacio sustancial debajo de la descripción */
+    margin: 0 0 2.5rem 0 !important;
     text-align: left !important;
   }
 
   /* --- CTA --- */
   .hero-cta { 
-    margin: 0 0 2.5rem 0 !important; /* Espacio generoso debajo del botón para separarlo de la lista */
+    margin: 0 0 2.5rem 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -216,7 +299,7 @@ import heroBgImg from '../assets/images/hero-datacenter.webp';
     margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 1rem !important; /* Mayor separación entre cada elemento de la lista inferior */
+    gap: 1rem !important;
     text-align: left !important;
   }
 
